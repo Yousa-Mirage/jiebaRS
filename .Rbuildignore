@@ -5,5 +5,6 @@
 ^src/Makevars$
 ^src/Makevars\.win$
 ^\.vscode$
+^\.zed$
 ^[.]?air[.]toml$
 ^LICENSE\.md$
