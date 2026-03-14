@@ -10,7 +10,9 @@
 #' @useDynLib jiebaRS, .registration = TRUE
 NULL
 
-hello_world <- function() .Call(wrap__hello_world)
+new_worker <- function(kind, use_hmm) .Call(wrap__new_worker, kind, use_hmm)
+
+segment_worker <- function(text, worker) .Call(wrap__segment_worker, text, worker)
 
 
 # nolint end

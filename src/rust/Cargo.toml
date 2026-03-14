@@ -6,13 +6,21 @@ edition = '2021'
 rust-version = '1.65'
 
 [lib]
-crate-type = [ 'staticlib' ]
+crate-type = ['staticlib']
 name = 'jieba_rs'
 
 [dependencies]
 extendr-api = '0.8.1'
 jieba-rs = "0.8.1"
 
+[lints.rust]
+warnings = "deny"
+
+[lints.clippy]
+unwrap_used = "deny"
+expect_used = "deny"
+
 [profile.release]
 lto = true
+opt-level = 3
 codegen-units = 1
