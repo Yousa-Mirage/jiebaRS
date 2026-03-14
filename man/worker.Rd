@@ -2,18 +2,22 @@
 % Please edit documentation in R/worker.R
 \name{worker}
 \alias{worker}
-\title{Create a jieba worker}
+\title{Initialize a jiebaRS worker}
 \usage{
-worker(type = "mix", hmm = TRUE)
+worker(type = "mix", hmm = TRUE, topn = 5L, symbol = FALSE)
 }
 \arguments{
-\item{type}{Segmentation worker type. Only \code{"mix"} is currently supported.}
+\item{type}{Worker type. Supported values are \code{"mix"} and \code{"keywords"}. Default is \code{"mix"}.}
 
 \item{hmm}{Whether to enable HMM fallback in mixed mode.}
+
+\item{topn}{Integer. The number of keywords returned by \code{keywords} or \code{simhash} workers. Default is \code{5}.}
+
+\item{symbol}{Logical. Whether to keep symbol-like tokens in the sentence. Default is \code{FALSE}.}
 }
 \value{
 A \code{jieba_worker} S3 object.
 }
 \description{
-Create a segmentation worker backed by the Rust \code{jieba-rs} engine.
+This function can initialize a jiebaRS worker. See Details for more information.
 }

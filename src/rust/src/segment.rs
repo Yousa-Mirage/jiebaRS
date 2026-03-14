@@ -1,0 +1,20 @@
+use extendr_api::prelude::*;
+
+use crate::worker::{JiebaWorker, SegmentMode, WorkerFamily};
+
+impl JiebaWorker {
+    pub fn segment_text(&self, text: &str) -> Result<Vec<String>> {
+        self.validate()?;
+
+        let tokens = match self.family {
+            WorkerFamily::Segment(SegmentMode::Mix) => self.engine.cut(text, self.use_hmm),
+            WorkerFamily::Keywords => {
+                return Err(Error::Other(
+                    "`segment()` requires a segmentation worker, not a keyword worker.".to_string(),
+                ))
+            }
+        };
+
+        Ok(tokens.into_iter().map(str::to_string).collect())
+    }
+}

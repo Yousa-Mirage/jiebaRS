@@ -8,5 +8,15 @@ print.jieba_worker <- function(x, ...) {
     cat("  hmm: ", hmm, "\n", sep = "")
   }
 
+  topn <- x$config$topn
+  if (!is.null(topn) && identical(x$type, "keywords")) {
+    cat("  topn: ", topn, "\n", sep = "")
+  }
+
+  symbol <- x$config$symbol
+  if (!is.null(symbol)) {
+    cat("  symbol: ", symbol, "\n", sep = "")
+  }
+
   invisible(x)
 }

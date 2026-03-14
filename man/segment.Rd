@@ -15,5 +15,5 @@ segment(code, jiebar)
 A character vector of segmented tokens.
 }
 \description{
-Segment a single in-memory string with a \code{jieba_worker} created by \code{\link[=worker]{worker()}}.
+Segment a single string with a \code{jieba_worker} created by \code{\link[=worker]{worker()}}.
 }
