@@ -1,0 +1,166 @@
+args <- commandArgs(trailingOnly = FALSE)
+file_arg <- grep("^--file=", args, value = TRUE)
+script_path <- normalizePath(sub("^--file=", "", file_arg))
+repo_root <- normalizePath(file.path(dirname(script_path), "..", ".."))
+text_path <- file.path(dirname(script_path), "weicheng.txt")
+
+if (!requireNamespace("jiebaR", quietly = TRUE)) {
+  stop("The `jiebaR` package is required to run this script.", call. = FALSE)
+}
+
+mode <- tolower(Sys.getenv("JIEBARS_COMPARE_MODE", unset = "release"))
+
+load_jiebars <- function(repo_root, mode) {
+  if (identical(mode, "dev")) {
+    if (!requireNamespace("pkgload", quietly = TRUE)) {
+      stop("The `pkgload` package is required for development mode.", call. = FALSE)
+    }
+
+    pkgload::load_all(repo_root, quiet = TRUE)
+    return(invisible(NULL))
+  }
+
+  if (!identical(mode, "release")) {
+    stop("`JIEBARS_COMPARE_MODE` must be either 'release' or 'dev'.", call. = FALSE)
+  }
+
+  lib <- tempfile("jiebaRS-release-lib-")
+  dir.create(lib, recursive = TRUE)
+
+  install_args <- c("CMD", "INSTALL", "-l", shQuote(lib), shQuote(repo_root))
+  status <- system2(
+    file.path(R.home("bin"), "R"),
+    install_args,
+    env = c("DEBUG=", "NOT_CRAN="),
+    stdout = "",
+    stderr = ""
+  )
+
+  if (!identical(status, 0L)) {
+    stop("Release installation of `jiebaRS` failed.", call. = FALSE)
+  }
+
+  library("jiebaRS", lib.loc = lib, character.only = TRUE)
+
+  lib
+}
+
+release_lib <- load_jiebars(repo_root, mode)
+if (!is.null(release_lib)) {
+  on.exit(unlink(release_lib, recursive = TRUE, force = TRUE), add = TRUE)
+}
+
+rs_worker <- getExportedValue("jiebaRS", "worker")
+rs_segment <- getExportedValue("jiebaRS", "segment")
+
+read_weicheng <- function(path) {
+  size <- file.info(path)$size
+  con <- file(path, open = "rb")
+  on.exit(close(con), add = TRUE)
+  enc2utf8(readChar(con, nchars = size, useBytes = TRUE))
+}
+
+bench_once <- function(f, text, worker, reps) {
+  invisible(f(text, worker))
+  gc()
+  unname(system.time(
+    for (i in seq_len(reps)) {
+      invisible(f(text, worker))
+    }
+  )[["elapsed"]]) / reps
+}
+
+safe_slice <- function(x, center, radius = 3L) {
+  if (length(x) == 0L || is.na(center)) {
+    return(character())
+  }
+
+  start <- max(1L, center - radius)
+  end <- min(length(x), center + radius)
+  x[start:end]
+}
+
+top_count_diffs <- function(x, y, top_n = 15L) {
+  tx <- sort(table(x), decreasing = TRUE)
+  ty <- sort(table(y), decreasing = TRUE)
+  terms <- union(names(tx), names(ty))
+  count_x <- as.integer(tx[terms])
+  count_y <- as.integer(ty[terms])
+  count_x[is.na(count_x)] <- 0L
+  count_y[is.na(count_y)] <- 0L
+
+  out <- data.frame(
+    term = terms,
+    jiebaRS = count_x,
+    jiebaR = count_y,
+    diff = count_x - count_y,
+    abs_diff = abs(count_x - count_y),
+    stringsAsFactors = FALSE,
+    check.names = FALSE
+  )
+
+  out <- out[order(-out$abs_diff, out$term), , drop = FALSE]
+  head(out[out$abs_diff > 0L, c("term", "jiebaRS", "jiebaR", "diff")], top_n)
+}
+
+text <- read_weicheng(text_path)
+config <- list(reps = 3L, context_radius = 4L, top_n = 15L)
+
+jr_engine <- jiebaR::worker(type = "mix")
+rs_engine <- rs_worker(type = "mix")
+
+rs_tokens <- rs_segment(text, rs_engine)
+jr_tokens <- jiebaR::segment(text, jr_engine)
+
+min_len <- min(length(rs_tokens), length(jr_tokens))
+cmp <- if (min_len == 0L) logical() else rs_tokens[seq_len(min_len)] == jr_tokens[seq_len(min_len)]
+same_prefix <- sum(cmp)
+diff_positions <- which(!cmp)
+first_diff <- if (length(diff_positions) > 0L) diff_positions[[1]] else if (length(rs_tokens) != length(jr_tokens)) min_len + 1L else NA_integer_
+
+benchmark <- data.frame(
+  package = c("jiebaRS", "jiebaR"),
+  seconds = c(
+    bench_once(rs_segment, text, rs_engine, config$reps),
+    bench_once(jiebaR::segment, text, jr_engine, config$reps)
+  ),
+  token_count = c(length(rs_tokens), length(jr_tokens)),
+  unique_tokens = c(length(unique(rs_tokens)), length(unique(jr_tokens))),
+  stringsAsFactors = FALSE,
+  check.names = FALSE
+)
+rs_row <- benchmark[benchmark$package == "jiebaRS", , drop = FALSE]
+jr_row <- benchmark[benchmark$package == "jiebaR", , drop = FALSE]
+
+cat("weicheng mix segmentation comparison\n")
+cat(sprintf("repo_root: %s\n", repo_root))
+cat(sprintf("text_path: %s\n", text_path))
+cat(sprintf("mode: %s\n", mode))
+cat(sprintf("characters: %d\n", nchar(text, type = "chars")))
+cat(sprintf("benchmark_reps: %d\n\n", config$reps))
+
+print(benchmark, row.names = FALSE)
+
+cat("\nsummary\n")
+cat(sprintf("identical_tokens: %s\n", identical(rs_tokens, jr_tokens)))
+cat(sprintf("shared_prefix_length: %d\n", min_len))
+cat(sprintf("same_token_positions: %d\n", same_prefix))
+cat(sprintf("same_token_ratio: %.4f\n", if (min_len == 0L) NA_real_ else same_prefix / min_len))
+cat(sprintf("jiebaRS_vs_jiebaR_speedup: %.3f x\n", jr_row$seconds / rs_row$seconds))
+
+if (!is.na(first_diff)) {
+  cat(sprintf("\nfirst_difference_at: %d\n", first_diff))
+  cat("jiebaRS context:\n")
+  print(safe_slice(rs_tokens, first_diff, config$context_radius))
+  cat("jiebaR context:\n")
+  print(safe_slice(jr_tokens, first_diff, config$context_radius))
+}
+
+cat("\ntokens only in jiebaRS (first 15)\n")
+print(utils::head(setdiff(unique(rs_tokens), unique(jr_tokens)), 15L))
+
+cat("\ntokens only in jiebaR (first 15)\n")
+print(utils::head(setdiff(unique(jr_tokens), unique(rs_tokens)), 15L))
+
+cat("\nlargest count differences\n")
+print(top_count_diffs(rs_tokens, jr_tokens, top_n = config$top_n), row.names = FALSE)

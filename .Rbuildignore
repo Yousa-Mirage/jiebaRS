@@ -9,3 +9,4 @@
 ^[.]?air[.]toml$
 ^LICENSE\.md$
 ^tools/bench($|/)
+^examples$
