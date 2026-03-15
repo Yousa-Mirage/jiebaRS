@@ -34,20 +34,20 @@ keywords <- function(code, jiebar, format = c("numeric", "data.frame", "legacy")
   code <- enc2utf8(code)
   code <- symbol_handle(code, jiebar$config$symbol)
 
-  result <- keywords_worker(code, jiebar$ptr) # A list with `keyword` and `weight` vectors.
-  terms <- result$keyword
+  result <- keywords_worker(code, jiebar$ptr)
+  keywords <- result$keyword
   weights <- result$weight
 
   switch(
     format,
-    "numeric" = stats::setNames(weights, terms),
+    "numeric" = stats::setNames(weights, keywords),
     "data.frame" = data.frame(
-      term = terms,
+      term = keywords,
       weight = weights,
       stringsAsFactors = FALSE,
       check.names = FALSE
     ),
-    "legacy" = stats::setNames(terms, sprintf("%.17g", weights))
+    "legacy" = stats::setNames(keywords, sprintf("%.17g", weights))
   )
 }
 
