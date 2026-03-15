@@ -8,6 +8,8 @@
 #' @return A character vector of segmented tokens.
 #' @export
 segment <- function(code, jiebar) {
+  # TODO: Is the `mod` arg in `jiebaR` necessary?
+
   if (!inherits(jiebar, "jieba_segmenter")) {
     cli::cli_abort("`jiebar` must be a `jieba_segmenter` object.")
   }

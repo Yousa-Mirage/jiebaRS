@@ -11,7 +11,8 @@ use worker::JiebaWorker;
 /// Internal bridge used by [worker()] to allocate a native `JiebaWorker`.
 ///
 /// @param worker_type Character scalar naming the worker type. Currently
-///   supports `"mix"`, `"full"`, `"query"`, and `"keywords"`.
+///   supports `"mix"`, `"mp"`, `"hmm"`, `"full"`, `"query"`, and
+///   `"keywords"`.
 /// @param use_hmm Logical scalar indicating whether HMM fallback should be
 ///   enabled for segmentation.
 /// @param top_n Integer scalar giving the number of keywords retained by

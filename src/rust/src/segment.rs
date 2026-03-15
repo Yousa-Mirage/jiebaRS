@@ -8,6 +8,8 @@ impl JiebaWorker {
 
         let tokens = match self.family {
             WorkerFamily::Segment(SegmentMode::Mix) => self.engine.cut(text, self.use_hmm),
+            WorkerFamily::Segment(SegmentMode::Mp) => self.engine.cut(text, false),
+            WorkerFamily::Segment(SegmentMode::Hmm) => self.engine.cut(text, true),
             WorkerFamily::Segment(SegmentMode::Full) => self.engine.cut_all(text),
             WorkerFamily::Segment(SegmentMode::Query) => {
                 self.engine.cut_for_search(text, self.use_hmm)

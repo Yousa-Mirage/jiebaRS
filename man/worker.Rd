@@ -5,18 +5,18 @@
 \title{Initialize a jiebaRS worker}
 \usage{
 worker(
-  type = c("mix", "full", "query", "keywords"),
+  type = c("mix", "mp", "hmm", "full", "query", "keywords"),
   hmm = TRUE,
   topn = 5L,
   symbol = FALSE
 )
 }
 \arguments{
-\item{type}{Worker type. Supported values are \code{"mix"}, \code{"full"}, \code{"query"},
-and \code{"keywords"}. Default is \code{"mix"}.}
+\item{type}{Worker type. Supported values are \code{"mix"}, \code{"mp"}, \code{"hmm"},
+\code{"full"}, \code{"query"}, and \code{"keywords"}. Default is \code{"mix"}.}
 
 \item{hmm}{Whether to enable HMM fallback when the selected worker type uses
-mixed-mode segmentation.}
+mixed-mode segmentation. Default is \code{TRUE}.}
 
 \item{topn}{Integer. The number of keywords returned by \code{keywords}
 workers. Default is \code{5}.}
@@ -37,8 +37,14 @@ search-mode segmentation without a configurable query threshold. To avoid
 user confusion, jiebaRS omits the qmax argument entirely rather than
 retaining a no-op parameter.
 
-The \code{hmm} flag currently affects \code{mix} and \code{query} workers. \code{full} workers
-ignore \code{hmm}, and \code{keywords} workers currently keep the value only for API
-compatibility while the Rust keyword backend still uses its default HMM
-behavior.
+\code{jieba-rs} does not expose dedicated public implementations for \code{mp} or
+\code{hmm} workers. \code{jiebaRS} therefore maps \code{mp} to \code{cut(..., false)} and \code{hmm}
+to \code{cut(..., true)}. This is a compatibility approximation rather than a
+byte-for-byte reimplementation of \code{jiebaR}, and \code{jiebaRS} warns once per R
+session when either type is requested.
+
+The \code{hmm} flag currently affects \code{mix} and \code{query} workers. \code{mp}, \code{hmm}, and
+\code{full} workers ignore \code{hmm}, and \code{keywords} workers currently keep the value
+only for API compatibility while the Rust keyword backend still uses its
+default HMM behavior.
 }

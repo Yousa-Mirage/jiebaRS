@@ -25,6 +25,22 @@ test_that("query worker uses search mode segmentation", {
   )
 })
 
+test_that("mp and hmm workers follow documented mix mappings", {
+  text <- "南京市长江大桥"
+
+  mp_worker <- suppressWarnings(worker(type = "mp"))
+  hmm_worker <- suppressWarnings(worker(type = "hmm"))
+
+  expect_identical(
+    segment(text, mp_worker),
+    segment(text, worker(type = "mix", hmm = FALSE))
+  )
+  expect_identical(
+    segment(text, hmm_worker),
+    segment(text, worker(type = "mix", hmm = TRUE))
+  )
+})
+
 test_that("mix matches jiebaR on representative text", {
   skip_if_not_installed("jiebaR")
 
