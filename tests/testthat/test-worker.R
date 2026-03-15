@@ -19,3 +19,10 @@ test_that("keyword worker returns a S3 object", {
   expect_equal(engine1$config$topn, 3L)
   expect_equal(engine1$config$symbol, FALSE)
 })
+
+test_that("worker snapshots invalid type input", {
+  expect_snapshot(
+    worker(type = "nope"),
+    error = TRUE
+  )
+})

@@ -9,13 +9,12 @@
 #'
 #' @return A `jieba_worker` S3 object.
 #' @export
-worker <- function(type = "mix", hmm = TRUE, topn = 5L, symbol = FALSE) {
-  valid_type_list <- c("mix", "keywords")
+worker <- function(type = c("mix", "keywords"), hmm = TRUE, topn = 5L, symbol = FALSE) {
+  type <- match.arg(type)
   if (
     !is.character(type) ||
       length(type) != 1L ||
-      is.na(type) ||
-      !(type %in% valid_type_list)
+      is.na(type)
   ) {
     cli::cli_abort("`type` must be a character scalar and one of: {paste(valid_type_list, collapse = ', ')}.")
   }
