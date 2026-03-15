@@ -63,5 +63,16 @@ keywords_worker <- function(text, worker) .Call(wrap__keywords_worker, text, wor
 #' @keywords internal
 add_user_words <- function(worker, words, tags) .Call(wrap__add_user_words, worker, words, tags)
 
+#' Convert a decimal simhash value to a 64-bit binary string.
+#'
+#' Internal bridge used by [tobin()] for formatting simhash values.
+#'
+#' @param x Character scalar containing an unsigned 64-bit integer in base 10.
+#'
+#' @return A length-1 character vector containing the 64-bit binary string.
+#'   If `x` is not a valid unsigned 64-bit integer, `NA` is returned.
+#' @keywords internal
+tobin_rs <- function(x) .Call(wrap__tobin_rs, x)
+
 
 # nolint end

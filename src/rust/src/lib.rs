@@ -75,6 +75,20 @@ fn add_user_words(worker: &mut JiebaWorker, words: Vec<String>, tags: Vec<String
     worker.add_user_words(&words, &tags)
 }
 
+/// Convert a decimal simhash value to a 64-bit binary string.
+///
+/// Internal bridge used by [tobin()] for formatting simhash values.
+///
+/// @param x Character scalar containing an unsigned 64-bit integer in base 10.
+///
+/// @return A length-1 character vector containing the 64-bit binary string.
+///   If `x` is not a valid unsigned 64-bit integer, `NA` is returned.
+/// @keywords internal
+#[extendr]
+fn tobin_rs(x: &str) -> Option<String> {
+    x.parse::<u64>().ok().map(|v| format!("{v:064b}"))
+}
+
 extendr_module! {
     mod jiebaRS;
 
@@ -83,4 +97,5 @@ extendr_module! {
     fn keywords_worker;
 
     fn add_user_words;
+    fn tobin_rs;
 }
