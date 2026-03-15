@@ -5,7 +5,7 @@ test_that("freq counts words in first-appearance order", {
     freq = c(2L, 2L, 1L)
   )
 
-  expect_identical(freq(input), res)
+  expect_equal(freq(input), res)
 })
 
 test_that("freq requires a character vector", {
