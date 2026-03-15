@@ -4,3 +4,5 @@ src/Makevars
 src/Makevars.win
 
 .zed/
+
+src/rust/vendor*
