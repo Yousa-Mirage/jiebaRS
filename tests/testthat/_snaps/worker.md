@@ -4,7 +4,7 @@
       worker(type = "nope")
     Condition
       Error in `worker()`:
-      ! `type` must be one of "mix", "mp", "hmm", "full", "query", or "keywords", not "nope".
+      ! `type` must be one of "mix", "mp", "hmm", "full", "query", "tag", or "keywords", not "nope".
 
 # worker warns once for approximate mp and hmm mappings
 

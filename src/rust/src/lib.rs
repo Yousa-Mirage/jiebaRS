@@ -1,5 +1,6 @@
 mod keywords;
 mod segment;
+mod tag;
 mod user_dict;
 mod worker;
 
@@ -12,7 +13,7 @@ use worker::JiebaWorker;
 ///
 /// @param worker_type Character scalar naming the worker type. Currently
 ///   supports `"mix"`, `"mp"`, `"hmm"`, `"full"`, `"query"`, and
-///   `"keywords"`.
+///   `"tag"`, and `"keywords"`.
 /// @param use_hmm Logical scalar indicating whether HMM fallback should be
 ///   enabled for segmentation.
 /// @param top_n Integer scalar giving the number of keywords retained by
@@ -40,6 +41,25 @@ fn segment_worker(text: &str, worker: &JiebaWorker) -> Result<Vec<String>> {
     worker.segment_text(text)
 }
 
+/// Tag text with an internal native worker.
+///
+/// Internal bridge used by [tagging()] to tag a single UTF-8 string.
+///
+/// @param text Character scalar containing the input text.
+/// @param worker A native `JiebaWorker` handle created by the internal worker
+///   constructor.
+///
+/// @return A named list with `term` and `tag` vectors.
+/// @keywords internal
+#[extendr]
+fn tagging_worker(text: &str, worker: &JiebaWorker) -> Result<List> {
+    let records = worker.tag_text(text)?;
+    Ok(list!(
+        term = Strings::from_values(records.iter().map(|record| record.word)),
+        tag = Strings::from_values(records.iter().map(|record| record.tag))
+    ))
+}
+
 /// Extract keywords with an internal native worker.
 ///
 /// Internal bridge used by [keywords()] to extract keywords from a single UTF-8
@@ -55,7 +75,7 @@ fn segment_worker(text: &str, worker: &JiebaWorker) -> Result<Vec<String>> {
 fn keywords_worker(text: &str, worker: &JiebaWorker) -> Result<List> {
     let records = worker.extract_keywords(text)?;
     Ok(list!(
-        keyword = Strings::from_values(records.iter().map(|record| record.keyword.as_str())),
+        keyword = Strings::from_values(records.iter().map(|record| &record.keyword)),
         weight = Doubles::from_values(records.iter().map(|record| record.weight))
     ))
 }
@@ -95,6 +115,7 @@ extendr_module! {
 
     fn new_worker;
     fn segment_worker;
+    fn tagging_worker;
     fn keywords_worker;
 
     fn add_user_words;

@@ -6,6 +6,7 @@ pub const WORKER_ABI_VERSION: i32 = 1;
 #[derive(Clone, Copy)]
 pub enum WorkerFamily {
     Segment(SegmentMode),
+    Tag,
     Keywords,
 }
 
@@ -26,9 +27,10 @@ impl WorkerFamily {
             "hmm" => Ok(Self::Segment(SegmentMode::Hmm)),
             "full" => Ok(Self::Segment(SegmentMode::Full)),
             "query" => Ok(Self::Segment(SegmentMode::Query)),
+            "tag" => Ok(Self::Tag),
             "keywords" => Ok(Self::Keywords),
             _ => Err(Error::Other(format!(
-                "Unsupported worker type `{worker_type}`. Supported types are `mix`, `mp`, `hmm`, `full`, `query`, and `keywords`."
+                "Unsupported worker type `{worker_type}`. Supported types are `mix`, `mp`, `hmm`, `full`, `query`, `tag`, and `keywords`."
             ))),
         }
     }
@@ -57,7 +59,7 @@ impl JiebaWorker {
         // - Split keyword-specific config into a dedicated struct once more
         //   keyword options are supported.
         let keyword_extractor = match family {
-            WorkerFamily::Segment(_) => None,
+            WorkerFamily::Segment(_) | WorkerFamily::Tag => None,
             WorkerFamily::Keywords => Some(TfIdf::default()),
         };
 

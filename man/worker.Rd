@@ -5,7 +5,7 @@
 \title{Initialize a jiebaRS worker}
 \usage{
 worker(
-  type = c("mix", "mp", "hmm", "full", "query", "keywords"),
+  type = c("mix", "mp", "hmm", "full", "query", "tag", "keywords"),
   hmm = TRUE,
   topn = 5L,
   symbol = FALSE
@@ -13,7 +13,7 @@ worker(
 }
 \arguments{
 \item{type}{Worker type. Supported values are \code{"mix"}, \code{"mp"}, \code{"hmm"},
-\code{"full"}, \code{"query"}, and \code{"keywords"}. Default is \code{"mix"}.}
+\code{"full"}, \code{"query"}, \code{"tag"}, and \code{"keywords"}. Default is \code{"mix"}.}
 
 \item{hmm}{Whether to enable HMM fallback when the selected worker type uses
 mixed-mode segmentation. Default is \code{TRUE}.}
@@ -43,8 +43,12 @@ to \code{cut(..., true)}. This is a compatibility approximation rather than a
 byte-for-byte reimplementation of \code{jiebaR}, and \code{jiebaRS} warns once per R
 session when either type is requested.
 
+\code{tag} workers use \code{jieba-rs} tagging on top of the default mixed
+segmentation path, which is the closest public behavior to \code{jiebaR}.
+
 The \code{hmm} flag currently affects \code{mix} and \code{query} workers. \code{mp}, \code{hmm}, and
-\code{full} workers ignore \code{hmm}, and \code{keywords} workers currently keep the value
-only for API compatibility while the Rust keyword backend still uses its
-default HMM behavior.
+\code{full} workers ignore \code{hmm}. \code{tag} workers use it for the underlying mixed
+segmentation step, and \code{keywords} workers currently keep the value only for
+API compatibility while the Rust keyword backend still uses its default HMM
+behavior.
 }

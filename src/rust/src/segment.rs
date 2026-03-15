@@ -14,6 +14,11 @@ impl JiebaWorker {
             WorkerFamily::Segment(SegmentMode::Query) => {
                 self.engine.cut_for_search(text, self.use_hmm)
             }
+            WorkerFamily::Tag => {
+                return Err(Error::Other(
+                    "`segment()` requires a segmentation worker, not a tag worker.".to_string(),
+                ))
+            }
             WorkerFamily::Keywords => {
                 return Err(Error::Other(
                     "`segment()` requires a segmentation worker, not a keyword worker.".to_string(),

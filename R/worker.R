@@ -16,13 +16,17 @@
 #' byte-for-byte reimplementation of `jiebaR`, and `jiebaRS` warns once per R
 #' session when either type is requested.
 #'
+#' `tag` workers use `jieba-rs` tagging on top of the default mixed
+#' segmentation path, which is the closest public behavior to `jiebaR`.
+#'
 #' The `hmm` flag currently affects `mix` and `query` workers. `mp`, `hmm`, and
-#' `full` workers ignore `hmm`, and `keywords` workers currently keep the value
-#' only for API compatibility while the Rust keyword backend still uses its
-#' default HMM behavior.
+#' `full` workers ignore `hmm`. `tag` workers use it for the underlying mixed
+#' segmentation step, and `keywords` workers currently keep the value only for
+#' API compatibility while the Rust keyword backend still uses its default HMM
+#' behavior.
 #'
 #' @param type Worker type. Supported values are `"mix"`, `"mp"`, `"hmm"`,
-#'   `"full"`, `"query"`, and `"keywords"`. Default is `"mix"`.
+#'   `"full"`, `"query"`, `"tag"`, and `"keywords"`. Default is `"mix"`.
 #' @param hmm Whether to enable HMM fallback when the selected worker type uses
 #'   mixed-mode segmentation. Default is `TRUE`.
 #' @param topn Integer. The number of keywords returned by `keywords`
@@ -32,7 +36,7 @@
 #' @return A `jieba_worker` S3 object.
 #' @export
 worker <- function(
-  type = c("mix", "mp", "hmm", "full", "query", "keywords"),
+  type = c("mix", "mp", "hmm", "full", "query", "tag", "keywords"),
   hmm = TRUE,
   topn = 5L,
   symbol = FALSE
@@ -86,7 +90,12 @@ worker <- function(
   #   not consume it yet on the Rust side.
 
   classes <- c(
-    ifelse(type == "keywords", "jieba_keywords", "jieba_segmenter"),
+    switch(
+      type,
+      keywords = "jieba_keywords",
+      tag = "jieba_tagger",
+      "jieba_segmenter"
+    ),
     "jieba_worker"
   )
 

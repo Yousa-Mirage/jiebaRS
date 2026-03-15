@@ -16,7 +16,7 @@ NULL
 #'
 #' @param worker_type Character scalar naming the worker type. Currently
 #'   supports `"mix"`, `"mp"`, `"hmm"`, `"full"`, `"query"`, and
-#'   `"keywords"`.
+#'   `"tag"`, and `"keywords"`.
 #' @param use_hmm Logical scalar indicating whether HMM fallback should be
 #'   enabled for segmentation.
 #' @param top_n Integer scalar giving the number of keywords retained by
@@ -37,6 +37,18 @@ new_worker <- function(worker_type, use_hmm, top_n) .Call(wrap__new_worker, work
 #' @return A character vector of segmented tokens.
 #' @keywords internal
 segment_worker <- function(text, worker) .Call(wrap__segment_worker, text, worker)
+
+#' Tag text with an internal native worker.
+#'
+#' Internal bridge used by [tagging()] to tag a single UTF-8 string.
+#'
+#' @param text Character scalar containing the input text.
+#' @param worker A native `JiebaWorker` handle created by the internal worker
+#'   constructor.
+#'
+#' @return A named list with `term` and `tag` vectors.
+#' @keywords internal
+tagging_worker <- function(text, worker) .Call(wrap__tagging_worker, text, worker)
 
 #' Extract keywords with an internal native worker.
 #'
