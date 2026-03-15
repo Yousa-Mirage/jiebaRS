@@ -1,70 +1,86 @@
+mod keywords;
+mod segment;
+mod user_dict;
+mod worker;
+
 use extendr_api::prelude::*;
-use jieba_rs::Jieba;
+use worker::JiebaWorker;
 
-const WORKER_ABI_VERSION: i32 = 1;
-
-#[derive(Clone, Copy)]
-enum WorkerKind {
-    Mix,
-}
-
-impl WorkerKind {
-    fn from_str(kind: &str) -> Result<Self> {
-        match kind {
-            "mix" => Ok(Self::Mix),
-            _ => Err(Error::Other(format!(
-                "Unsupported worker type `{kind}`. Only `mix` is implemented right now."
-            ))),
-        }
-    }
-}
-
+/// Create an internal native jieba worker.
+///
+/// Internal bridge used by [worker()] to allocate a native `JiebaWorker`.
+///
+/// @param worker_type Character scalar naming the worker type. Currently
+///   supports `"mix"` and `"keywords"`.
+/// @param use_hmm Logical scalar indicating whether HMM fallback should be
+///   enabled for segmentation.
+/// @param top_n Integer scalar giving the number of keywords retained by
+///   keyword workers.
+///
+/// @return A native `JiebaWorker` handle.
+/// @keywords internal
 #[extendr]
-struct JiebaWorker {
-    engine: Jieba,
-    kind: WorkerKind,
-    use_hmm: bool,
-    version: i32,
+fn new_worker(worker_type: &str, use_hmm: bool, top_n: u32) -> Result<JiebaWorker> {
+    JiebaWorker::new(worker_type, use_hmm, top_n)
 }
 
-impl JiebaWorker {
-    fn new(kind: WorkerKind, use_hmm: bool) -> Self {
-        Self {
-            engine: jieba_rs::Jieba::new(),
-            kind,
-            use_hmm,
-            version: WORKER_ABI_VERSION,
-        }
-    }
-
-    fn segment_text(&self, text: &str) -> Vec<String> {
-        let tokens = match self.kind {
-            WorkerKind::Mix => self.engine.cut(text, self.use_hmm),
-        };
-
-        tokens.into_iter().map(str::to_string).collect()
-    }
-}
-
-#[extendr]
-fn new_worker(kind: &str, use_hmm: bool) -> Result<JiebaWorker> {
-    let kind = WorkerKind::from_str(kind)?;
-    Ok(JiebaWorker::new(kind, use_hmm))
-}
-
+/// Segment text with an internal native worker.
+///
+/// Internal bridge used by [segment()] to segment a single UTF-8 string.
+///
+/// @param text Character scalar containing the input text.
+/// @param worker A native `JiebaWorker` handle created by the internal worker
+///   constructor.
+///
+/// @return A character vector of segmented tokens.
+/// @keywords internal
 #[extendr]
 fn segment_worker(text: &str, worker: &JiebaWorker) -> Result<Vec<String>> {
-    if worker.version != WORKER_ABI_VERSION {
-        return Err(Error::Other(
-            "Worker ABI version mismatch. Please create a new worker.".to_string(),
-        ));
-    }
+    worker.segment_text(text)
+}
 
-    Ok(worker.segment_text(text))
+/// Extract keywords with an internal native worker.
+///
+/// Internal bridge used by [keywords()] to extract keywords from a single UTF-8
+/// string.
+///
+/// @param text Character scalar containing the input text.
+/// @param worker A native `JiebaWorker` handle created by the internal worker
+///   constructor.
+///
+/// @return A named list with `keyword` and `weight` vectors.
+/// @keywords internal
+#[extendr]
+fn keywords_worker(text: &str, worker: &JiebaWorker) -> Result<List> {
+    let records = worker.extract_keywords(text)?;
+    Ok(list!(
+        keyword = Strings::from_values(records.iter().map(|record| record.keyword.as_str())),
+        weight = Doubles::from_values(records.iter().map(|record| record.weight))
+    ))
+}
+
+/// Add user-defined words with an internal native worker.
+///
+/// Internal bridge used by [new_user_word()] to mutate an existing native
+/// worker in place.
+///
+/// @param worker A mutable native `JiebaWorker` handle.
+/// @param words Character vector of custom words.
+/// @param tags Character vector of tags aligned with `words`.
+///
+/// @return `NULL`, invisibly, after the worker has been updated.
+/// @keywords internal
+#[extendr]
+fn add_user_words(worker: &mut JiebaWorker, words: Vec<String>, tags: Vec<String>) -> Result<()> {
+    worker.add_user_words(&words, &tags)
 }
 
 extendr_module! {
     mod jiebaRS;
+
     fn new_worker;
     fn segment_worker;
+    fn keywords_worker;
+
+    fn add_user_words;
 }

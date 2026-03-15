@@ -10,9 +10,58 @@
 #' @useDynLib jiebaRS, .registration = TRUE
 NULL
 
-new_worker <- function(kind, use_hmm) .Call(wrap__new_worker, kind, use_hmm)
+#' Create an internal native jieba worker.
+#'
+#' Internal bridge used by [worker()] to allocate a native `JiebaWorker`.
+#'
+#' @param worker_type Character scalar naming the worker type. Currently
+#'   supports `"mix"` and `"keywords"`.
+#' @param use_hmm Logical scalar indicating whether HMM fallback should be
+#'   enabled for segmentation.
+#' @param top_n Integer scalar giving the number of keywords retained by
+#'   keyword workers.
+#'
+#' @return A native `JiebaWorker` handle.
+#' @keywords internal
+new_worker <- function(worker_type, use_hmm, top_n) .Call(wrap__new_worker, worker_type, use_hmm, top_n)
 
+#' Segment text with an internal native worker.
+#'
+#' Internal bridge used by [segment()] to segment a single UTF-8 string.
+#'
+#' @param text Character scalar containing the input text.
+#' @param worker A native `JiebaWorker` handle created by the internal worker
+#'   constructor.
+#'
+#' @return A character vector of segmented tokens.
+#' @keywords internal
 segment_worker <- function(text, worker) .Call(wrap__segment_worker, text, worker)
+
+#' Extract keywords with an internal native worker.
+#'
+#' Internal bridge used by [keywords()] to extract keywords from a single UTF-8
+#' string.
+#'
+#' @param text Character scalar containing the input text.
+#' @param worker A native `JiebaWorker` handle created by the internal worker
+#'   constructor.
+#'
+#' @return A named list with `keyword` and `weight` vectors.
+#' @keywords internal
+keywords_worker <- function(text, worker) .Call(wrap__keywords_worker, text, worker)
+
+#' Add user-defined words with an internal native worker.
+#'
+#' Internal bridge used by [new_user_word()] to mutate an existing native
+#' worker in place.
+#'
+#' @param worker A mutable native `JiebaWorker` handle.
+#' @param words Character vector of custom words.
+#' @param tags Character vector of tags aligned with `words`.
+#'
+#' @return `NULL`, invisibly, after the worker has been updated.
+#' @keywords internal
+add_user_words <- function(worker, words, tags) .Call(wrap__add_user_words, worker, words, tags)
 
 
 # nolint end

@@ -3,6 +3,7 @@
 S3method(print,jieba_worker)
 export(freq)
 export(keywords)
+export(keywords_df)
 export(new_user_word)
 export(segment)
 export(worker)
