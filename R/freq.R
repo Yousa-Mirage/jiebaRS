@@ -35,8 +35,6 @@ freq <- function(x, sort = FALSE) {
 
   data.frame(
     char = chars,
-    freq = counts,
-    stringsAsFactors = FALSE,
-    check.names = FALSE
+    freq = counts
   )
 }

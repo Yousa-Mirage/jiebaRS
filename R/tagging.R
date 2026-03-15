@@ -43,9 +43,7 @@ tagging <- function(code, jiebar, format = c("vector", "data.frame", "legacy")) 
     "vector" = stats::setNames(tags, terms),
     "data.frame" = data.frame(
       term = terms,
-      tag = tags,
-      stringsAsFactors = FALSE,
-      check.names = FALSE
+      tag = tags
     ),
     "legacy" = stats::setNames(terms, tags)
   )

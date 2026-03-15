@@ -42,9 +42,7 @@ keywords <- function(code, jiebar, format = c("numeric", "data.frame", "legacy")
     "numeric" = stats::setNames(weights, keywords),
     "data.frame" = data.frame(
       term = keywords,
-      weight = weights,
-      stringsAsFactors = FALSE,
-      check.names = FALSE
+      weight = weights
     ),
     "legacy" = stats::setNames(keywords, sprintf("%.17g", weights))
   )

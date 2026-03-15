@@ -64,9 +64,7 @@ results <- data.frame(
   input = c("vector", "list"),
   jiebaRS = c(vec_rs_time, list_rs_time),
   jiebaR = c(vec_jr_time, list_jr_time),
-  speedup = c(vec_jr_time / vec_rs_time, list_jr_time / list_rs_time),
-  stringsAsFactors = FALSE,
-  check.names = FALSE
+  speedup = c(vec_jr_time / vec_rs_time, list_jr_time / list_rs_time)
 )
 
 cat("filter_segment benchmark\n")

@@ -95,9 +95,7 @@ top_count_diffs <- function(x, y, top_n = 15L) {
     jiebaRS = count_x,
     jiebaR = count_y,
     diff = count_x - count_y,
-    abs_diff = abs(count_x - count_y),
-    stringsAsFactors = FALSE,
-    check.names = FALSE
+    abs_diff = abs(count_x - count_y)
   )
 
   out <- out[order(-out$abs_diff, out$term), , drop = FALSE]
@@ -132,9 +130,7 @@ benchmark <- data.frame(
     bench_once(jiebaR::segment, text, jr_engine, config$reps)
   ),
   token_count = c(length(rs_tokens), length(jr_tokens)),
-  unique_tokens = c(length(unique(rs_tokens)), length(unique(jr_tokens))),
-  stringsAsFactors = FALSE,
-  check.names = FALSE
+  unique_tokens = c(length(unique(rs_tokens)), length(unique(jr_tokens)))
 )
 rs_row <- benchmark[benchmark$package == "jiebaRS", , drop = FALSE]
 jr_row <- benchmark[benchmark$package == "jiebaR", , drop = FALSE]

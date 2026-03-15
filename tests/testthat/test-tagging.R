@@ -10,9 +10,7 @@ test_that("tagging supports vector, data frame and legacy formats", {
     tagging("这是一个测试", engine1, format = "data.frame"),
     data.frame(
       term = c("这是", "一个", "测试"),
-      tag = c("x", "m", "vn"),
-      stringsAsFactors = FALSE,
-      check.names = FALSE
+      tag = c("x", "m", "vn")
     )
   )
 

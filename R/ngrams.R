@@ -66,9 +66,7 @@
     results[[i]] <- data.frame(
       term = uniq_terms,
       n = rep.int(n_i, length(uniq_terms)),
-      count = counts,
-      stringsAsFactors = FALSE,
-      check.names = FALSE
+      count = counts
     )
   }
 
@@ -76,9 +74,7 @@
     return(data.frame(
       term = character(),
       n = integer(),
-      count = integer(),
-      stringsAsFactors = FALSE,
-      check.names = FALSE
+      count = integer()
     ))
   }
 
@@ -218,9 +214,7 @@ get_tuple <- function(x, size = 2, dataframe = TRUE) {
     if (isTRUE(dataframe)) {
       return(data.frame(
         name = character(),
-        count = integer(),
-        stringsAsFactors = FALSE,
-        check.names = FALSE
+        count = integer()
       ))
     }
     return(stats::setNames(integer(), character()))
@@ -240,8 +234,6 @@ get_tuple <- function(x, size = 2, dataframe = TRUE) {
 
   data.frame(
     name = terms,
-    count = counts,
-    stringsAsFactors = FALSE,
-    check.names = FALSE
+    count = counts
   )
 }

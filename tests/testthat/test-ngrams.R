@@ -4,9 +4,7 @@ test_that("count_ngrams counts a single n", {
     data.frame(
       term = c("我 爱", "爱 R", "R 语言"),
       n = c(2L, 2L, 2L),
-      count = c(1L, 1L, 1L),
-      stringsAsFactors = FALSE,
-      check.names = FALSE
+      count = c(1L, 1L, 1L)
     )
   )
 })
@@ -17,9 +15,7 @@ test_that("count_ngrams counts multiple n values", {
     data.frame(
       term = c("sdsd", "sdrd", "sdsdsd", "sdsdrd"),
       n = c(2L, 2L, 3L, 3L),
-      count = c(2L, 1L, 1L, 1L),
-      stringsAsFactors = FALSE,
-      check.names = FALSE
+      count = c(2L, 1L, 1L, 1L)
     )
   )
 })
@@ -30,9 +26,7 @@ test_that("count_ngrams supports list input", {
     data.frame(
       term = c("a b", "b c"),
       n = c(2L, 2L),
-      count = c(2L, 1L),
-      stringsAsFactors = FALSE,
-      check.names = FALSE
+      count = c(2L, 1L)
     )
   )
 })
@@ -53,9 +47,7 @@ test_that("count_ngrams sorts by count by default", {
     data.frame(
       term = c("b", "a"),
       n = c(1L, 1L),
-      count = c(3L, 2L),
-      stringsAsFactors = FALSE,
-      check.names = FALSE
+      count = c(3L, 2L)
     )
   )
 
@@ -71,9 +63,7 @@ test_that("count_ngrams can keep first-appearance order", {
     data.frame(
       term = c("a", "b"),
       n = c(1L, 1L),
-      count = c(2L, 3L),
-      stringsAsFactors = FALSE,
-      check.names = FALSE
+      count = c(2L, 3L)
     )
   )
 
@@ -101,9 +91,7 @@ test_that("get_tuple is a deprecated compatibility wrapper", {
     res,
     data.frame(
       name = c("sdsd", "sdrd"),
-      count = c(2L, 1L),
-      stringsAsFactors = FALSE,
-      check.names = FALSE
+      count = c(2L, 1L)
     )
   )
 
