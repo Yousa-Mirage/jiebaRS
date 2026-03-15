@@ -14,7 +14,6 @@
 #' @export
 keywords <- function(code, jiebar, format = c("numeric", "data.frame", "legacy")) {
   # TODO: Fill in the remaining jiebaR keyword API surface.
-  # - Support file-path inputs like `jiebaR::keywords()`.
   # - Implement `vector_keywords()` for pre-tokenized input.
   # - Add the `<=` / `[` sugar methods once the core API stabilizes.
   format <- rlang::arg_match(format)

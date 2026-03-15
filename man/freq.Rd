@@ -4,14 +4,21 @@
 \alias{freq}
 \title{The frequency of words}
 \usage{
-freq(x)
+freq(x, sort = FALSE)
 }
 \arguments{
 \item{x}{A character vector of words.}
+
+\item{sort}{Whether to sort the result by descending frequency. The default
+\code{FALSE} keeps the first-appearance order.}
 }
 \value{
 A data frame with \code{char} and \code{freq} columns.
 }
 \description{
 This function returns the frequency of words.
+}
+\examples{
+freq(c("b", "a", "b", "c", "a"))
+freq(c("b", "a", "b", "c", "a"), sort = TRUE)
 }

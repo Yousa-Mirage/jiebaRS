@@ -6,3 +6,11 @@
       Error in `freq()`:
       ! `x` must be a character vector.
 
+# freq validates sort
+
+    Code
+      freq(c("a", "b"), sort = NA)
+    Condition
+      Error in `freq()`:
+      ! `sort` must be `TRUE` or `FALSE`.
+
