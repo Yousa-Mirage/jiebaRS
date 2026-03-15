@@ -20,7 +20,7 @@ document:
     Rscript -e "rextendr::document()"
 
 test:
-    TESTTHAT_CPUS=4 Rscript -e "devtools::test(reporter = 'summary')"
+    TESTTHAT_CPUS=8 Rscript -e "devtools::test(reporter = 'summary')"
     cargo test --quiet --manifest-path src/rust/Cargo.toml
 
 site:
