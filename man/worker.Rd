@@ -4,14 +4,22 @@
 \alias{worker}
 \title{Initialize a jiebaRS worker}
 \usage{
-worker(type = c("mix", "keywords"), hmm = TRUE, topn = 5L, symbol = FALSE)
+worker(
+  type = c("mix", "full", "query", "keywords"),
+  hmm = TRUE,
+  topn = 5L,
+  symbol = FALSE
+)
 }
 \arguments{
-\item{type}{Worker type. Supported values are \code{"mix"} and \code{"keywords"}. Default is \code{"mix"}.}
+\item{type}{Worker type. Supported values are \code{"mix"}, \code{"full"}, \code{"query"},
+and \code{"keywords"}. Default is \code{"mix"}.}
 
-\item{hmm}{Whether to enable HMM fallback in mixed mode.}
+\item{hmm}{Whether to enable HMM fallback when the selected worker type uses
+mixed-mode segmentation.}
 
-\item{topn}{Integer. The number of keywords returned by \code{keywords} or \code{simhash} workers. Default is \code{5}.}
+\item{topn}{Integer. The number of keywords returned by \code{keywords} or
+\code{simhash} workers. Default is \code{5}.}
 
 \item{symbol}{Logical. Whether to keep symbol-like tokens in the sentence. Default is \code{FALSE}.}
 }
@@ -20,4 +28,17 @@ A \code{jieba_worker} S3 object.
 }
 \description{
 This function can initialize a jiebaRS worker. See Details for more information.
+}
+\details{
+\strong{The \code{qmax} argument is not supported.} Although \code{jiebaR} documented
+\code{qmax} for query workers, the value was never actually passed to the
+underlying segmentation call. Similarly, the \code{jieba-rs} backend implements
+search-mode segmentation without a configurable query threshold. To avoid
+user confusion, jiebaRS omits the qmax argument entirely rather than
+retaining a no-op parameter.
+
+The \code{hmm} flag currently affects \code{mix} and \code{query} workers. \code{full} workers
+ignore \code{hmm}, and \code{keywords} workers currently keep the value only for API
+compatibility while the Rust keyword backend still uses its default HMM
+behavior.
 }

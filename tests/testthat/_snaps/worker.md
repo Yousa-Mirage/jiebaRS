@@ -3,6 +3,6 @@
     Code
       worker(type = "nope")
     Condition
-      Error in `match.arg()`:
-      ! 'arg' should be one of "mix", "keywords"
+      Error in `worker()`:
+      ! `type` must be one of "mix", "full", "query", or "keywords", not "nope".
 

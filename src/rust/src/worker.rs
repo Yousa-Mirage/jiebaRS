@@ -12,15 +12,19 @@ pub enum WorkerFamily {
 #[derive(Clone, Copy)]
 pub enum SegmentMode {
     Mix,
+    Full,
+    Query,
 }
 
 impl WorkerFamily {
     fn from_type(worker_type: &str) -> Result<Self> {
         match worker_type {
             "mix" => Ok(Self::Segment(SegmentMode::Mix)),
+            "full" => Ok(Self::Segment(SegmentMode::Full)),
+            "query" => Ok(Self::Segment(SegmentMode::Query)),
             "keywords" => Ok(Self::Keywords),
             _ => Err(Error::Other(format!(
-                "Unsupported worker type `{worker_type}`. Supported types are `mix` and `keywords`."
+                "Unsupported worker type `{worker_type}`. Supported types are `mix`, `full`, `query`, and `keywords`."
             ))),
         }
     }

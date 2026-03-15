@@ -8,7 +8,7 @@ new_worker(worker_type, use_hmm, top_n)
 }
 \arguments{
 \item{worker_type}{Character scalar naming the worker type. Currently
-supports \code{"mix"} and \code{"keywords"}.}
+supports \code{"mix"}, \code{"full"}, \code{"query"}, and \code{"keywords"}.}
 
 \item{use_hmm}{Logical scalar indicating whether HMM fallback should be
 enabled for segmentation.}
