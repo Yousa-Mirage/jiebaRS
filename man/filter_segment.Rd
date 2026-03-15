@@ -29,8 +29,8 @@ of a list of segmented character vectors.
 This is a modern reimplementation of \code{jiebaR::filter_segment()} with the
 same core filtering behavior under the default settings.
 
-In the reproducible benchmark, this version is about 110x to 140x faster
-than \code{jiebaR::filter_segment()} on the tested workloads.
+In the reproducible benchmark, this version is about \strong{110x} to \strong{140x}
+faster than \code{jiebaR::filter_segment()} on the tested workloads.
 }
 \examples{
 filter_segment(c("abc", "def", " ", "."), c("abc"))
