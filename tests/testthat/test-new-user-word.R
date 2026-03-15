@@ -1,5 +1,3 @@
-# TODO: 补充错误测试
-
 test_that("new_user_word updates worker segmentation for a single word", {
   engine1 <- worker()
 
@@ -18,4 +16,29 @@ test_that("new_user_word accepts multiple words", {
 
   expect_identical(segment("超导量子比特", engine1), "超导量子比特")
   expect_identical(segment("量子机器狗", engine1), "量子机器狗")
+})
+
+test_that("new_user_word snapshots invalid inputs", {
+  engine1 <- worker()
+
+  expect_snapshot(
+    new_user_word("not-a-worker", "量子机器狗"),
+    error = TRUE
+  )
+  expect_snapshot(
+    new_user_word(engine1, 1:3),
+    error = TRUE
+  )
+  expect_snapshot(
+    new_user_word(engine1, c("量子机器狗", NA_character_)),
+    error = TRUE
+  )
+  expect_snapshot(
+    new_user_word(engine1, c("量子机器狗", "超导量子比特"), c("n", "nz", "v")),
+    error = TRUE
+  )
+  expect_snapshot(
+    new_user_word(engine1, "量子机器狗", NA_character_),
+    error = TRUE
+  )
 })
