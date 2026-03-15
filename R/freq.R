@@ -9,7 +9,7 @@
 #' @return A data frame with `char` and `freq` columns.
 #' @export
 freq <- function(x) {
-  if (!is.character(x)) {
+  if (!rlang::is_character(x)) {
     cli::cli_abort("`x` must be a character vector.")
   }
 

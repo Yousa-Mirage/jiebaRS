@@ -12,7 +12,7 @@ segment <- function(code, jiebar) {
     cli::cli_abort("`jiebar` must be a `jieba_segmenter` object.")
   }
 
-  if (!is.character(code) || length(code) != 1L || is.na(code)) {
+  if (!rlang::is_string(code)) {
     cli::cli_abort("`code` must be a non-missing character scalar.")
   }
 

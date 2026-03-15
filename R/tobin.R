@@ -11,7 +11,7 @@
 #' tobin("2")
 #' @export
 tobin <- function(x) {
-  if (!is.character(x) || length(x) != 1L || is.na(x)) {
+  if (!rlang::is_string(x)) {
     cli::cli_abort("`x` must be a non-missing character scalar.")
   }
 

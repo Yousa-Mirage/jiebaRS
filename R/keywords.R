@@ -17,7 +17,7 @@ keywords <- function(code, jiebar, format = c("numeric", "data.frame", "legacy")
   # - Support file-path inputs like `jiebaR::keywords()`.
   # - Implement `vector_keywords()` for pre-tokenized input.
   # - Add the `<=` / `[` sugar methods once the core API stabilizes.
-  format <- match.arg(format)
+  format <- rlang::arg_match(format)
 
   if (!inherits(jiebar, "jieba_keywords")) {
     cli::cli_abort(
@@ -25,7 +25,7 @@ keywords <- function(code, jiebar, format = c("numeric", "data.frame", "legacy")
     )
   }
 
-  if (!is.character(code) || length(code) != 1L || is.na(code)) {
+  if (!rlang::is_string(code)) {
     cli::cli_abort(
       r"(`code` must be a single non-NA character string.)"
     )

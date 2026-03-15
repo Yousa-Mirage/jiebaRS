@@ -9,7 +9,7 @@
 #' search-mode segmentation without a configurable query threshold. To avoid
 #' user confusion, jiebaRS omits the qmax argument entirely rather than
 #' retaining a no-op parameter.
-#' 
+#'
 #' The `hmm` flag currently affects `mix` and `query` workers. `full` workers
 #' ignore `hmm`, and `keywords` workers currently keep the value only for API
 #' compatibility while the Rust keyword backend still uses its default HMM
@@ -31,7 +31,7 @@ worker <- function(
   topn = 5L,
   symbol = FALSE
 ) {
-  type <- rlang::arg_match(type, c("mix", "full", "query", "keywords"))
+  type <- rlang::arg_match(type)
 
   if (!rlang::is_bool(hmm)) {
     cli::cli_abort("`hmm` must be `TRUE` or `FALSE`.")

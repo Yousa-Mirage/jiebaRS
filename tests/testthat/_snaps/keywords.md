@@ -3,8 +3,8 @@
     Code
       keywords(keyword_text, keys_worker, format = "bad-format")
     Condition
-      Error in `match.arg()`:
-      ! 'arg' should be one of "numeric", "data.frame", "legacy"
+      Error in `keywords()`:
+      ! `format` must be one of "numeric", "data.frame", or "legacy", not "bad-format".
 
 ---
 

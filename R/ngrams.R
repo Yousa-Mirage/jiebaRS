@@ -1,7 +1,7 @@
 # TODO: Implement n-gram counting in Rust to improve performance.
 
 .validate_ngrams_input <- function(x) {
-  if (is.character(x)) {
+  if (rlang::is_character(x)) {
     return(list(enc2utf8(x)))
   }
 
@@ -15,7 +15,7 @@
 }
 
 .validate_ngrams_n <- function(n) {
-  if (!is.numeric(n) || length(n) < 1L || anyNA(n)) {
+  if (!rlang::is_integerish(n, finite = TRUE) || rlang::is_empty(n)) {
     cli::cli_abort("`n` must be a non-empty integer vector.")
   }
 
@@ -137,11 +137,11 @@ count_ngrams <- function(
   sort = TRUE,
   format = c("data.frame", "vector")
 ) {
-  if (!is.logical(sort) || length(sort) != 1L || is.na(sort)) {
+  if (!rlang::is_bool(sort)) {
     cli::cli_abort("`sort` must be a single `TRUE` or `FALSE` value.")
   }
   sep <- as.character(sep)
-  format <- match.arg(format)
+  format <- rlang::arg_match(format)
 
   res <- .count_ngrams_df(x, n = n, sep = sep)
 
@@ -203,16 +203,12 @@ get_tuple <- function(x, size = 2, dataframe = TRUE) {
     )
   )
 
-  if (!is.numeric(size) || length(size) != 1L || is.na(size)) {
+  if (!rlang::is_integerish(size, n = 1, finite = TRUE) || size < 2L) {
     cli::cli_abort("`size` must be a single integer >= 2.")
   }
-
   size_int <- as.integer(size)
-  if (size_int < 2L || size != size_int) {
-    cli::cli_abort("`size` must be a single integer >= 2.")
-  }
 
-  if (!is.logical(dataframe) || length(dataframe) != 1L || is.na(dataframe)) {
+  if (!rlang::is_bool(dataframe)) {
     cli::cli_abort("`dataframe` must be a single `TRUE` or `FALSE` value.")
   }
 

@@ -25,10 +25,10 @@
 #' filter_segment(list(c("我", "是", "测试"), c("测试", "文本", "我")), "我")
 #' @export
 filter_segment <- function(input, filter_words, keep_na = TRUE, unit = 50) {
-  if (!is.character(filter_words)) {
+  if (!rlang::is_character(filter_words)) {
     cli::cli_abort("`filter_words` must be a character vector.")
   }
-  if (!is.logical(keep_na) || length(keep_na) != 1L || is.na(keep_na)) {
+  if (!rlang::is_bool(keep_na)) {
     cli::cli_abort("`keep_na` must be a single `TRUE` or `FALSE` value.")
   }
   if (!missing(unit)) {
