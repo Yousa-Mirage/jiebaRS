@@ -4,7 +4,7 @@
 \alias{worker}
 \title{Initialize a jiebaRS worker}
 \usage{
-worker(type = "mix", hmm = TRUE, topn = 5L, symbol = FALSE)
+worker(type = c("mix", "keywords"), hmm = TRUE, topn = 5L, symbol = FALSE)
 }
 \arguments{
 \item{type}{Worker type. Supported values are \code{"mix"} and \code{"keywords"}. Default is \code{"mix"}.}

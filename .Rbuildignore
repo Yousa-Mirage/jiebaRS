@@ -8,3 +8,4 @@
 ^\.zed$
 ^[.]?air[.]toml$
 ^LICENSE\.md$
+^tools/bench($|/)
