@@ -1,5 +1,4 @@
-.symbol_text_pattern <-
-  r"([^\x{2E80}-\x{3000}\x{3021}-\x{FE4F}a-zA-Z0-9])"
+.symbol_text_pattern <- r"([^\p{L}\p{M}\p{N}])"
 
 # Internal helper for applying a single, package-wide symbol preprocessing step
 # before calling the Rust backend.

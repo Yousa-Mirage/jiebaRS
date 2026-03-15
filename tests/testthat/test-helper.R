@@ -16,6 +16,13 @@ test_that("symbol_handle works on character vectors", {
   )
 })
 
+test_that("symbol_handle keeps Unicode letters, marks, and numbers", {
+  expect_identical(
+    symbol_handle(c("cafe\u0301!", "β2？"), FALSE),
+    c("cafe\u0301 ", "β2 ")
+  )
+})
+
 test_that("drop_space_tokens removes only literal space tokens", {
   expect_identical(
     drop_space_tokens(c("你好", " ", "世界", "\t")),
