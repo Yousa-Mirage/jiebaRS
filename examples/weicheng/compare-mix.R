@@ -67,7 +67,8 @@ bench_once <- function(f, text, worker, reps) {
     for (i in seq_len(reps)) {
       invisible(f(text, worker))
     }
-  )[["elapsed"]]) / reps
+  )[["elapsed"]]) /
+    reps
 }
 
 safe_slice <- function(x, center, radius = 3L) {
@@ -116,7 +117,13 @@ min_len <- min(length(rs_tokens), length(jr_tokens))
 cmp <- if (min_len == 0L) logical() else rs_tokens[seq_len(min_len)] == jr_tokens[seq_len(min_len)]
 same_prefix <- sum(cmp)
 diff_positions <- which(!cmp)
-first_diff <- if (length(diff_positions) > 0L) diff_positions[[1]] else if (length(rs_tokens) != length(jr_tokens)) min_len + 1L else NA_integer_
+first_diff <- if (length(diff_positions) > 0L) {
+  diff_positions[[1]]
+} else if (length(rs_tokens) != length(jr_tokens)) {
+  min_len + 1L
+} else {
+  NA_integer_
+}
 
 benchmark <- data.frame(
   package = c("jiebaRS", "jiebaR"),
