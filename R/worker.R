@@ -19,8 +19,8 @@
 #'   and `"keywords"`. Default is `"mix"`.
 #' @param hmm Whether to enable HMM fallback when the selected worker type uses
 #'   mixed-mode segmentation.
-#' @param topn Integer. The number of keywords returned by `keywords` or
-#'   `simhash` workers. Default is `5`.
+#' @param topn Integer. The number of keywords returned by `keywords`
+#'   workers. Default is `5`.
 #' @param symbol Logical. Whether to keep symbol-like tokens in the sentence. Default is `FALSE`.
 #'
 #' @return A `jieba_worker` S3 object.

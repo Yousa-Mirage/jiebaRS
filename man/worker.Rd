@@ -18,8 +18,8 @@ and \code{"keywords"}. Default is \code{"mix"}.}
 \item{hmm}{Whether to enable HMM fallback when the selected worker type uses
 mixed-mode segmentation.}
 
-\item{topn}{Integer. The number of keywords returned by \code{keywords} or
-\code{simhash} workers. Default is \code{5}.}
+\item{topn}{Integer. The number of keywords returned by \code{keywords}
+workers. Default is \code{5}.}
 
 \item{symbol}{Logical. Whether to keep symbol-like tokens in the sentence. Default is \code{FALSE}.}
 }
