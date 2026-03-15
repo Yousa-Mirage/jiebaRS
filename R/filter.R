@@ -6,7 +6,7 @@
 #' @details
 #' This is a modern reimplementation of `jiebaR::filter_segment()` with the
 #' same core filtering behavior under the default settings.
-#' 
+#'
 #' In the reproducible benchmark, this version is about 110x to 140x faster
 #' than `jiebaR::filter_segment()` on the tested workloads.
 #'

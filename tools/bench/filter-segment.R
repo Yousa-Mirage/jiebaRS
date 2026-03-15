@@ -19,7 +19,12 @@ jr_filter <- getExportedValue("jiebaR", "filter_segment")
 bench_once <- function(f, input, filter_words, reps) {
   invisible(f(input, filter_words))
   gc()
-  unname(system.time(for (i in seq_len(reps)) invisible(f(input, filter_words)))[["elapsed"]]) / reps
+  unname(system.time(
+    for (i in seq_len(reps)) {
+      invisible(f(input, filter_words))
+    }
+  )[["elapsed"]]) /
+    reps
 }
 
 config <- list(
