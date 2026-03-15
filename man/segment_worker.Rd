@@ -16,6 +16,6 @@ constructor.}
 A character vector of segmented tokens.
 }
 \description{
-Internal bridge used by \code{\link[=segment]{segment()}} to segment a single UTF-8 string.
+Internal bridge used by \code{segment()} to segment a single UTF-8 string.
 }
 \keyword{internal}

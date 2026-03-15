@@ -23,13 +23,6 @@ test_that("symbol_handle keeps Unicode letters, marks, and numbers", {
   )
 })
 
-test_that("drop_space_tokens removes only literal space tokens", {
-  expect_identical(
-    drop_space_tokens(c("你好", " ", "世界", "\t")),
-    c("你好", "世界", "\t")
-  )
-})
-
 test_that("symbol handling is reused by segment", {
   keep_symbols <- worker(symbol = TRUE)
   drop_symbols <- worker(symbol = FALSE)

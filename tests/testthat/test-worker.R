@@ -7,6 +7,7 @@ test_that("segment worker returns a S3 object", {
   expect_identical(engine1$config$hmm, TRUE)
   expect_identical(engine1$config$topn, 5L)
   expect_identical(engine1$config$symbol, FALSE)
+  expect_identical(engine1$config$bylines, FALSE)
 })
 
 test_that("full, query, mp, and hmm workers return segmenter objects", {
@@ -35,6 +36,7 @@ test_that("tag worker returns a tagger object", {
   expect_identical(engine1$config$hmm, TRUE)
   expect_identical(engine1$config$topn, 5L)
   expect_identical(engine1$config$symbol, FALSE)
+  expect_identical(engine1$config$bylines, FALSE)
 })
 
 test_that("keyword worker returns a S3 object", {
@@ -46,6 +48,7 @@ test_that("keyword worker returns a S3 object", {
   expect_identical(engine1$config$hmm, TRUE)
   expect_identical(engine1$config$topn, 3L)
   expect_identical(engine1$config$symbol, FALSE)
+  expect_identical(engine1$config$bylines, FALSE)
 })
 
 test_that("worker snapshots invalid type input", {
@@ -60,4 +63,12 @@ test_that("worker warns once for approximate mp and hmm mappings", {
 
   expect_snapshot_warning(worker(type = "mp"))
   expect_snapshot_warning(worker(type = "hmm"))
+})
+
+test_that("worker warns when bylines is specified for compatibility", {
+  withr::local_options(rlib_warning_verbosity = "verbose")
+
+  expect_snapshot_warning(
+    worker(bylines = TRUE)
+  )
 })

@@ -28,7 +28,7 @@ fn new_worker(worker_type: &str, use_hmm: bool, top_n: u32) -> Result<JiebaWorke
 
 /// Segment text with an internal native worker.
 ///
-/// Internal bridge used by [segment()] to segment a single UTF-8 string.
+/// Internal bridge used by `segment()` to segment a single UTF-8 string.
 ///
 /// @param text Character scalar containing the input text.
 /// @param worker A native `JiebaWorker` handle created by the internal worker

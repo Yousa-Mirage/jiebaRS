@@ -50,3 +50,84 @@ test_that("mix matches jiebaR on representative text", {
 
   expect_identical(jiebaRS_res, jiebaR_res)
 })
+
+test_that("segment supports vector input with explicit output formats", {
+  engine1 <- worker()
+  input <- c("南京市长江大桥", "这是一个测试")
+
+  expect_identical(
+    segment(input, engine1, format = "list"),
+    list(
+      c("南京市", "长江大桥"),
+      c("这是", "一个", "测试")
+    )
+  )
+
+  expect_identical(
+    segment(input, engine1, format = "flatten"),
+    c("南京市", "长江大桥", "这是", "一个", "测试")
+  )
+
+  expect_identical(
+    segment(input, engine1, format = "data.frame"),
+    data.frame(
+      doc_id = c(1L, 1L, 2L, 2L, 2L),
+      word = c("南京市", "长江大桥", "这是", "一个", "测试")
+    )
+  )
+})
+
+test_that("segment uses bylines only when format is omitted", {
+  engine1 <- suppressWarnings(worker(bylines = TRUE))
+  input <- c("南京市长江大桥", "这是一个测试")
+
+  expect_identical(
+    segment(input, engine1),
+    list(
+      c("南京市", "长江大桥"),
+      c("这是", "一个", "测试")
+    )
+  )
+
+  expect_identical(
+    segment(input, engine1, format = "flatten"),
+    c("南京市", "长江大桥", "这是", "一个", "测试")
+  )
+})
+
+test_that("segment handles empty input for each format", {
+  engine1 <- worker()
+
+  expect_snapshot(segment(character(0), engine1), error = TRUE)
+})
+
+test_that("segment_batch defaults to list output and ignores bylines", {
+  engine1 <- suppressWarnings(worker(bylines = FALSE))
+  input <- c("南京市长江大桥", "这是一个测试")
+
+  expect_identical(
+    segment_batch(input, engine1),
+    list(
+      c("南京市", "长江大桥"),
+      c("这是", "一个", "测试")
+    )
+  )
+})
+
+test_that("segment_batch forwards explicit formats", {
+  engine1 <- worker()
+  input <- c("南京市长江大桥", "这是一个测试")
+
+  expect_identical(
+    segment_batch(input, engine1, format = "flatten"),
+    c("南京市", "长江大桥", "这是", "一个", "测试")
+  )
+
+  expect_identical(
+    segment_batch(input, engine1, format = "data.frame"),
+    data.frame(
+      doc_id = c(1L, 1L, 2L, 2L, 2L),
+      word = c("南京市", "长江大桥", "这是", "一个", "测试")
+    )
+  )
+})

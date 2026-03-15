@@ -32,6 +32,11 @@
 #' @param topn Integer. The number of keywords returned by `keywords`
 #'   workers. Default is `5`.
 #' @param symbol Logical. Whether to keep symbol-like tokens in the sentence. Default is `FALSE`.
+#' @param bylines Logical compatibility argument retained from `jiebaR`. When
+#'   `segment()` or `tagging()` are called without an explicit `format`,
+#'   `bylines = TRUE` maps to list output and `bylines = FALSE` maps to a
+#'   flattened vector. Prefer controlling the output with `format` in those
+#'   functions directly.
 #'
 #' @return A `jieba_worker` S3 object.
 #' @export
@@ -39,7 +44,8 @@ worker <- function(
   type = c("mix", "mp", "hmm", "full", "query", "tag", "keywords"),
   hmm = TRUE,
   topn = 5L,
-  symbol = FALSE
+  symbol = FALSE,
+  bylines = FALSE
 ) {
   type <- rlang::arg_match(type)
 
@@ -80,6 +86,20 @@ worker <- function(
     cli::cli_abort("`symbol` must be `TRUE` or `FALSE`.")
   }
 
+  if (!rlang::is_bool(bylines)) {
+    cli::cli_abort("`bylines` must be `TRUE` or `FALSE`.")
+  }
+
+  if (!missing(bylines)) {
+    cli::cli_warn(
+      paste(
+        "`bylines` is retained only for jiebaR compatibility.",
+        "Prefer controlling output shape with the `format` argument in",
+        "`segment()` and `tagging()`."
+      )
+    )
+  }
+
   # TODO: Extend the `keywords` worker config to cover the remaining jiebaR
   # compatibility knobs.
   # - `idf` path is not configurable yet; the Rust backend always uses
@@ -106,7 +126,8 @@ worker <- function(
       config = list(
         hmm = hmm,
         topn = topn,
-        symbol = symbol
+        symbol = symbol,
+        bylines = bylines
       )
     ),
     class = classes

@@ -28,7 +28,7 @@ new_worker <- function(worker_type, use_hmm, top_n) .Call(wrap__new_worker, work
 
 #' Segment text with an internal native worker.
 #'
-#' Internal bridge used by [segment()] to segment a single UTF-8 string.
+#' Internal bridge used by `segment()` to segment a single UTF-8 string.
 #'
 #' @param text Character scalar containing the input text.
 #' @param worker A native `JiebaWorker` handle created by the internal worker

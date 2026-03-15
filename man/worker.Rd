@@ -8,7 +8,8 @@ worker(
   type = c("mix", "mp", "hmm", "full", "query", "tag", "keywords"),
   hmm = TRUE,
   topn = 5L,
-  symbol = FALSE
+  symbol = FALSE,
+  bylines = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,12 @@ mixed-mode segmentation. Default is \code{TRUE}.}
 workers. Default is \code{5}.}
 
 \item{symbol}{Logical. Whether to keep symbol-like tokens in the sentence. Default is \code{FALSE}.}
+
+\item{bylines}{Logical compatibility argument retained from \code{jiebaR}. When
+\code{segment()} or \code{tagging()} are called without an explicit \code{format},
+\code{bylines = TRUE} maps to list output and \code{bylines = FALSE} maps to a
+flattened vector. Prefer controlling the output with \code{format} in those
+functions directly.}
 }
 \value{
 A \code{jieba_worker} S3 object.

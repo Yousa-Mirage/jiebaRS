@@ -9,8 +9,3 @@ symbol_handle <- function(x, symbol) {
 
   gsub(.symbol_text_pattern, " ", x, perl = TRUE)
 }
-
-# Internal helper for removing whitespace tokens introduced by preprocessing.
-drop_space_tokens <- function(x) {
-  x[x != " "]
-}

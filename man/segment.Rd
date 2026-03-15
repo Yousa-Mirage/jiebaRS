@@ -4,16 +4,29 @@
 \alias{segment}
 \title{Segment text with a jieba worker}
 \usage{
-segment(code, jiebar)
+segment(code, jiebar, format = c("list", "data.frame", "flatten"))
 }
 \arguments{
-\item{code}{A character scalar to segment.}
+\item{code}{A character vector to segment.}
 
 \item{jiebar}{A \code{jieba_worker} object.}
+
+\item{format}{Output format. \code{"list"} returns one token vector per input
+string, \code{"data.frame"} returns \code{doc_id} and \code{word} columns, and
+\code{"flatten"} concatenates all token vectors into one character vector. When
+omitted, the worker's \code{bylines} setting is used for compatibility:
+\code{bylines = TRUE} maps to \code{"list"} and \code{bylines = FALSE} maps to
+\code{"flatten"}.}
 }
 \value{
-A character vector of segmented tokens.
+Segmented tokens in the requested format.
 }
 \description{
-Segment a single string with a \code{jieba_worker} created by \code{\link[=worker]{worker()}}.
+Segment one or more strings with a \code{jieba_worker} created by \code{\link[=worker]{worker()}}.
+}
+\examples{
+seg <- worker()
+segment("南京市长江大桥", seg)
+segment(c("南京市长江大桥", "这是一个测试"), seg, format = "list")
+segment(c("南京市长江大桥", "这是一个测试"), seg, format = "data.frame")
 }

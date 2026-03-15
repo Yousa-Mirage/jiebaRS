@@ -16,3 +16,7 @@
     `worker(type = 'hmm')` is currently mapped to `jieba-rs` `cut(..., true)` because `jieba-rs` does not expose a dedicated `hmm` segmenter. Results may differ from `jiebaR`.
     This warning is displayed once per session.
 
+# worker warns when bylines is specified for compatibility
+
+    `bylines` is retained only for jiebaR compatibility. Prefer controlling output shape with the `format` argument in `segment()` and `tagging()`.
+
