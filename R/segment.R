@@ -6,6 +6,17 @@
 #' For a single input string, `segment()` always returns a character vector of
 #' segmented tokens.
 #'
+#' In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
+#' texts, `jiebaRS::segment()` is about **1.1x to 1.2x faster** than
+#' `jiebaR::segment()` when each novel is segmented as one long string.
+#' When the same content is split into many strings and processed in batch,
+#' `jiebaRS::segment()` is about **3x to 7x faster** than `jiebaR`.
+#'
+#' For very long texts, splitting before segmentation is usually faster than
+#' submitting one huge string. In the same release benchmarks, the best results
+#' appeared around **32 to 64 chunks**, while going far beyond roughly **128**
+#' chunks started to reduce the benefit.
+#'
 #' For multiple input strings, the argument `batch` controls how the
 #' per-string token vectors are aggregated:
 #' - `"list"`: one character vector per input string.
@@ -87,6 +98,12 @@ segment <- function(code, jiebar, mod = NULL, batch = c("list", "data.frame", "f
 #' - `"list"`: one character vector per input string.
 #' - `"data.frame"`: a data frame with `doc_id` and `word` columns.
 #' - `"flatten"`: one concatenated character vector.
+#'
+#' In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
+#' texts, batch segmentation is about **3x to 7x faster** than the comparable
+#' `jiebaR` workflow on many-string inputs. For very long texts, the best
+#' throughput was usually reached by splitting into about **32 to 64 chunks**,
+#' while much finer splitting still helped but was no longer optimal.
 #'
 #' @param texts A character vector of strings to segment.
 #' @param jiebar A `jieba_worker` object.

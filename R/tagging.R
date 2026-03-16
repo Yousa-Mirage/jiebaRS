@@ -20,6 +20,17 @@
 #' - `"data.frame"`: a data frame with `term` and `tag` columns.
 #' - `"legacy"`: the old `jiebaR` layout with token values and tag names.
 #'
+#' In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
+#' texts, `jiebaRS::tagging()` is about **1.6x to 1.8x faster** than
+#' `jiebaR::tagging()` when each novel is tagged as one long string. When the
+#' same content is split into many strings and processed in batch,
+#' `jiebaRS::tagging()` is about **2x to 5x faster** than `jiebaR`.
+#'
+#' For very long texts, splitting before tagging is usually faster than sending
+#' one huge string. In the same release benchmarks, the best results appeared
+#' around **32 to 128 chunks**, while much finer splitting still helped but was
+#' no longer optimal.
+#'
 #' When `code` contains multiple strings, `batch` controls how the per-string
 #' results are aggregated:
 #' - `"list"`: one single-string result per input string.
@@ -122,6 +133,12 @@ tagging <- function(
 #'   rows and adds `doc_id`.
 #' - `batch = "flatten"`: requires `format = "vector"` or `"legacy"`;
 #'   concatenates the individual results into one named character vector.
+#'
+#' In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
+#' texts, batch tagging is about **2x to 5x faster** than the comparable
+#' `jiebaR` workflow on many-string inputs. For very long texts, the best
+#' throughput was usually reached by splitting into about **32 to 128 chunks**,
+#' while much finer splitting still helped but was no longer optimal.
 #'
 #' @param texts A non-empty character vector to tag.
 #' @param jiebar A `jieba_worker` object created with `worker(type = "tag")`.

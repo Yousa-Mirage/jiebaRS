@@ -30,6 +30,12 @@ returned object depends on \code{batch}:
 \item \code{"data.frame"}: a data frame with \code{doc_id} and \code{word} columns.
 \item \code{"flatten"}: one concatenated character vector.
 }
+
+In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
+texts, batch segmentation is about \strong{3x to 7x faster} than the comparable
+\code{jiebaR} workflow on many-string inputs. For very long texts, the best
+throughput was usually reached by splitting into about \strong{32 to 64 chunks},
+while much finer splitting still helped but was no longer optimal.
 }
 \examples{
 seg <- worker()
