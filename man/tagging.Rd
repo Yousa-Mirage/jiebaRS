@@ -4,21 +4,54 @@
 \alias{tagging}
 \title{Tag text with a jiebaRS worker}
 \usage{
-tagging(code, jiebar, format = c("vector", "data.frame", "legacy"))
+tagging(
+  code,
+  jiebar,
+  format = c("vector", "data.frame", "legacy"),
+  batch = c("list", "data.frame", "flatten")
+)
 }
 \arguments{
-\item{code}{A character scalar to tag.}
+\item{code}{A non-empty character vector to tag.}
 
 \item{jiebar}{A \code{jieba_worker} object created with \code{worker(type = "tag")}.}
 
-\item{format}{Output format. \code{"vector"} returns a named character vector with
-token names and tag values, \code{"data.frame"} returns \code{term} and \code{tag}
-columns, and \code{"legacy"} returns the old \code{jiebaR} layout with token values
-and tag names.}
+\item{format}{Output format for a single tagged string. Must be one of
+\code{"vector"}, \code{"data.frame"}, or \code{"legacy"}.}
+
+\item{batch}{Aggregation mode for multi-string input. Must be one of
+\code{"list"}, \code{"data.frame"}, or \code{"flatten"}.}
 }
 \value{
 Tagging results in the requested format.
 }
 \description{
-Tag a single string with a \code{jieba_worker} created by \code{\link[=worker]{worker()}}.
+Tag one or more strings with a \code{jieba_worker} created by \code{\link[=worker]{worker()}}.
+}
+\details{
+\code{format} controls the shape of each single-string tagging result:
+\itemize{
+\item \code{"vector"}: a named character vector with token names and tag values.
+\item \code{"data.frame"}: a data frame with \code{term} and \code{tag} columns.
+\item \code{"legacy"}: the old \code{jiebaR} layout with token values and tag names.
+}
+
+When \code{code} contains multiple strings, \code{batch} controls how the per-string
+results are aggregated:
+\itemize{
+\item \code{"list"}: one single-string result per input string.
+\item \code{"data.frame"}: only valid when \code{format = "data.frame"}; combines all
+rows and adds \code{doc_id}.
+\item \code{"flatten"}: only valid when \code{format} is \code{"vector"} or \code{"legacy"};
+concatenates all results into one named character vector.
+}
+
+When \code{batch} is omitted, \code{jiebaRS} returns \code{"vector"} for single-string
+input and \code{"list"} for multi-string input.
+}
+\examples{
+tagger <- worker(type = "tag")
+tagging("这是一个测试", tagger)
+tagging(c("这是一个测试", "再来一次"), tagger)
+tagging(c("这是一个测试", "再来一次"), tagger, format = "data.frame", batch = "data.frame")
 }

@@ -1,34 +1,5 @@
-#' Tag text with a jiebaRS worker
-#'
-#' Tag a single string with a `jieba_worker` created by [worker()].
-#'
-#' @param code A character scalar to tag.
-#' @param jiebar A `jieba_worker` object created with `worker(type = "tag")`.
-#' @param format Output format. `"vector"` returns a named character vector with
-#'   token names and tag values, `"data.frame"` returns `term` and `tag`
-#'   columns, and `"legacy"` returns the old `jiebaR` layout with token values
-#'   and tag names.
-#'
-#' @return Tagging results in the requested format.
-#' @export
-tagging <- function(code, jiebar, format = c("vector", "data.frame", "legacy")) {
-  format <- rlang::arg_match(format)
-
-  if (!inherits(jiebar, "jieba_tagger")) {
-    cli::cli_abort(
-      r"(`jiebar` must be a `jieba_tagger` object created with `worker(type = "tag")`.)"
-    )
-  }
-
-  # TODO: allow character vectors?
-  if (!rlang::is_string(code)) {
-    cli::cli_abort("`code` must be a non-missing character scalar.")
-  }
-
-  code <- enc2utf8(code)
-  code <- symbol_handle(code, jiebar$config$symbol)
-
-  result <- tagging_worker(code, jiebar$ptr)
+.tag_one <- function(text, jiebar) {
+  result <- tagging_worker(text, jiebar$ptr)
   terms <- result$term
   tags <- result$tag
 
@@ -38,6 +9,10 @@ tagging <- function(code, jiebar, format = c("vector", "data.frame", "legacy")) 
     tags <- tags[keep]
   }
 
+  list(term = terms, tag = tags)
+}
+
+.format_one <- function(terms, tags, format) {
   switch(
     format,
     "vector" = stats::setNames(tags, terms),
@@ -49,16 +24,134 @@ tagging <- function(code, jiebar, format = c("vector", "data.frame", "legacy")) 
   )
 }
 
-#' Tag text as a data frame
+#' Tag text with a jiebaRS worker
 #'
-#' Convenience wrapper around [tagging()] that always returns a data frame with
-#' `term` and `tag` columns.
+#' Tag one or more strings with a `jieba_worker` created by [worker()].
 #'
-#' @param x A character scalar to tag.
+#' @details
+#' `format` controls the shape of each single-string tagging result:
+#' - `"vector"`: a named character vector with token names and tag values.
+#' - `"data.frame"`: a data frame with `term` and `tag` columns.
+#' - `"legacy"`: the old `jiebaR` layout with token values and tag names.
+#'
+#' When `code` contains multiple strings, `batch` controls how the per-string
+#' results are aggregated:
+#' - `"list"`: one single-string result per input string.
+#' - `"data.frame"`: only valid when `format = "data.frame"`; combines all
+#'   rows and adds `doc_id`.
+#' - `"flatten"`: only valid when `format` is `"vector"` or `"legacy"`;
+#'   concatenates all results into one named character vector.
+#'
+#' When `batch` is omitted, `jiebaRS` returns `"vector"` for single-string
+#' input and `"list"` for multi-string input.
+#'
+#' @param code A non-empty character vector to tag.
 #' @param jiebar A `jieba_worker` object created with `worker(type = "tag")`.
+#' @param format Output format for a single tagged string. Must be one of
+#'   `"vector"`, `"data.frame"`, or `"legacy"`.
+#' @param batch Aggregation mode for multi-string input. Must be one of
+#'   `"list"`, `"data.frame"`, or `"flatten"`.
 #'
-#' @return A data frame with `term` and `tag` columns.
+#' @return Tagging results in the requested format.
+#' @examples
+#' tagger <- worker(type = "tag")
+#' tagging("这是一个测试", tagger)
+#' tagging(c("这是一个测试", "再来一次"), tagger)
+#' tagging(c("这是一个测试", "再来一次"), tagger, format = "data.frame", batch = "data.frame")
 #' @export
-tagging_df <- function(x, jiebar) {
-  tagging(x, jiebar, format = "data.frame")
+tagging <- function(
+  code,
+  jiebar,
+  format = c("vector", "data.frame", "legacy"),
+  batch = c("list", "data.frame", "flatten")
+) {
+  if (!inherits(jiebar, "jieba_tagger")) {
+    cli::cli_abort(
+      r"(`jiebar` must be a `jieba_tagger` object created with `worker(type = "tag")`.)"
+    )
+  }
+
+  if (!rlang::is_character(code) || anyNA(code) || rlang::is_empty(code)) {
+    cli::cli_abort("`code` must be a non-empty character vector without missing values.")
+  }
+
+  format <- rlang::arg_match(format, c("vector", "data.frame", "legacy"))
+
+  code <- enc2utf8(code)
+  code <- symbol_handle(code, jiebar$config$symbol)
+
+  result <- lapply(code, .tag_one, jiebar = jiebar)
+
+  if (length(result) == 1L) {
+    return(.format_one(result[[1]]$term, result[[1]]$tag, format))
+  }
+
+  batch <- rlang::arg_match(batch)
+
+  if (identical(batch, "data.frame") && !identical(format, "data.frame")) {
+    cli::cli_abort("`batch = 'data.frame'` requires `format = 'data.frame'`.")
+  }
+
+  if (identical(batch, "flatten") && identical(format, "data.frame")) {
+    cli::cli_abort("`batch = 'flatten'` is not supported with `format = 'data.frame'`.")
+  }
+
+  if (identical(batch, "list")) {
+    return(lapply(result, function(x) .format_one(x$term, x$tag, format)))
+  }
+
+  terms_list <- lapply(result, .subset2, "term")
+  tags_list <- lapply(result, .subset2, "tag")
+  all_terms <- unlist(terms_list, use.names = FALSE)
+  all_tags <- unlist(tags_list, use.names = FALSE)
+
+  if (identical(batch, "flatten")) {
+    return(.format_one(all_terms, all_tags, format))
+  }
+
+  data.frame(
+    doc_id = rep.int(seq_along(result), lengths(terms_list)),
+    term = all_terms,
+    tag = all_tags
+  )
+}
+
+#' Tag a batch of strings
+#'
+#' Convenience wrapper around [tagging()] for multi-string input. When `batch`
+#' is not supplied, `tagging_batch()` always returns list output.
+#'
+#' @details
+#' `tagging_batch()` is a convenience wrapper for explicit multi-string input.
+#' The returned object depends on both `format` and `batch`:
+#' - `batch = "list"`: returns one single-string tagging result per input
+#'   string.
+#' - `batch = "data.frame"`: requires `format = "data.frame"`; combines all
+#'   rows and adds `doc_id`.
+#' - `batch = "flatten"`: requires `format = "vector"` or `"legacy"`;
+#'   concatenates the individual results into one named character vector.
+#'
+#' @param texts A non-empty character vector to tag.
+#' @param jiebar A `jieba_worker` object created with `worker(type = "tag")`.
+#' @param format Output format for each single tagged result. Must be one of
+#'   `"vector"`, `"data.frame"`, or `"legacy"`.
+#' @param batch Aggregation mode. Must be one of `"list"`, `"data.frame"`, or
+#'   `"flatten"`.
+#'
+#' @return Tagging results in the requested format.
+#' @examples
+#' tagger <- worker(type = "tag")
+#' texts <- c("这是一个测试", "再来一次")
+#' tagging_batch(texts, tagger)
+#' tagging_batch(texts, tagger, format = "legacy", batch = "flatten")
+#' @export
+tagging_batch <- function(
+  texts,
+  jiebar,
+  format = c("vector", "data.frame", "legacy"),
+  batch = c("list", "data.frame", "flatten")
+) {
+  format <- rlang::arg_match(format, c("vector", "data.frame", "legacy"))
+  batch <- rlang::arg_match(batch, c("list", "data.frame", "flatten"))
+  tagging(texts, jiebar, format = format, batch = batch)
 }
