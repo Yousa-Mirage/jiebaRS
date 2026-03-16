@@ -4,27 +4,36 @@
 \alias{segment_batch}
 \title{Segment a batch of strings}
 \usage{
-segment_batch(texts, jiebar, format = c("list", "data.frame", "flatten"))
+segment_batch(texts, jiebar, batch = c("list", "data.frame", "flatten"))
 }
 \arguments{
 \item{texts}{A character vector of strings to segment.}
 
 \item{jiebar}{A \code{jieba_worker} object.}
 
-\item{format}{Output format. Supports \code{"list"}, \code{"data.frame"}, and
-\code{"flatten"}. The default is \code{"list"}.}
+\item{batch}{Batch aggregation mode. Must be one of \code{"list"},
+\code{"data.frame"}, or \code{"flatten"}. The default is \code{"list"}.}
 }
 \value{
-Segmented tokens in the requested format.
+Segmented tokens in the requested aggregation form.
 }
 \description{
 Convenience wrapper around \code{\link[=segment]{segment()}} for multi-string input. When
-\code{format} is not supplied, \code{segment_batch()} always returns \strong{list} output
-and ignores the worker's \code{bylines} compatibility setting.
+\code{batch} is omitted, \code{segment_batch()} will return \strong{list} output by default.
+}
+\details{
+\code{segment_batch()} is a convenience wrapper around \code{\link[=segment]{segment()}} for explicit
+batch processing. It always treats \code{texts} as multi-string input. The
+returned object depends on \code{batch}:
+\itemize{
+\item \code{"list"}: one character vector per input string.
+\item \code{"data.frame"}: a data frame with \code{doc_id} and \code{word} columns.
+\item \code{"flatten"}: one concatenated character vector.
+}
 }
 \examples{
 seg <- worker()
 texts <- c("南京市长江大桥", "这是一个测试")
 segment_batch(texts, seg)
-segment_batch(texts, seg, format = "flatten")
+segment_batch(texts, seg, batch = "flatten")
 }

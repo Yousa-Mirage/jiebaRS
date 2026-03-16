@@ -32,11 +32,9 @@
 #' @param topn Integer. The number of keywords returned by `keywords`
 #'   workers. Default is `5`.
 #' @param symbol Logical. Whether to keep symbol-like tokens in the sentence. Default is `FALSE`.
-#' @param bylines Logical compatibility argument retained from `jiebaR`. When
-#'   `segment()` or `tagging()` are called without an explicit `format`,
-#'   `bylines = TRUE` maps to list output and `bylines = FALSE` maps to a
-#'   flattened vector. Prefer controlling the output with `format` in those
-#'   functions directly.
+#' @param bylines [Deprecated] compatibility argument retained from `jiebaR`.
+#'   `jiebaRS` no longer uses this value; control batch aggregation directly
+#'   in specific functions.
 #'
 #' @return A `jieba_worker` S3 object.
 #' @export
@@ -86,16 +84,11 @@ worker <- function(
     cli::cli_abort("`symbol` must be `TRUE` or `FALSE`.")
   }
 
-  if (!rlang::is_bool(bylines)) {
-    cli::cli_abort("`bylines` must be `TRUE` or `FALSE`.")
-  }
-
   if (!missing(bylines)) {
     cli::cli_warn(
       paste(
-        "`bylines` is retained only for jiebaR compatibility.",
-        "Prefer controlling output shape with the `format` argument in",
-        "`segment()` and `tagging()`."
+        "`bylines` is deprecated in `jiebaRS` and no longer has any effect.",
+        "Control batch aggregation explicitly in specific functions."
       )
     )
   }

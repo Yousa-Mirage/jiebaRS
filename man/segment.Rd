@@ -4,29 +4,40 @@
 \alias{segment}
 \title{Segment text with a jieba worker}
 \usage{
-segment(code, jiebar, format = c("list", "data.frame", "flatten"))
+segment(code, jiebar, batch = c("list", "data.frame", "flatten"))
 }
 \arguments{
 \item{code}{A character vector to segment.}
 
 \item{jiebar}{A \code{jieba_worker} object.}
 
-\item{format}{Output format. \code{"list"} returns one token vector per input
-string, \code{"data.frame"} returns \code{doc_id} and \code{word} columns, and
-\code{"flatten"} concatenates all token vectors into one character vector. When
-omitted, the worker's \code{bylines} setting is used for compatibility:
-\code{bylines = TRUE} maps to \code{"list"} and \code{bylines = FALSE} maps to
-\code{"flatten"}.}
+\item{batch}{Batch aggregation mode for \strong{multi-string input}. Must be
+one of \code{"list"}, \code{"data.frame"}, or \code{"flatten"}. The default is \code{"list"}.}
 }
 \value{
-Segmented tokens in the requested format.
+Segmented tokens in the requested aggregation form.
 }
 \description{
 Segment one or more strings with a \code{jieba_worker} created by \code{\link[=worker]{worker()}}.
 }
+\details{
+For a single input string, \code{segment()} always returns a character vector of
+segmented tokens.
+
+For multiple input strings, the argument \code{batch} controls how the
+per-string token vectors are aggregated:
+\itemize{
+\item \code{"list"}: one character vector per input string.
+\item \code{"data.frame"}: a data frame with \code{doc_id} and \code{word} columns.
+\item \code{"flatten"}: all token vectors concatenated into one character vector.
+}
+
+When \code{batch} is omitted, \code{jiebaRS} returns list output for multi-string
+input.
+}
 \examples{
 seg <- worker()
 segment("南京市长江大桥", seg)
-segment(c("南京市长江大桥", "这是一个测试"), seg, format = "list")
-segment(c("南京市长江大桥", "这是一个测试"), seg, format = "data.frame")
+segment(c("南京市长江大桥", "这是一个测试"), seg, batch = "list")
+segment(c("南京市长江大桥", "这是一个测试"), seg, batch = "data.frame")
 }

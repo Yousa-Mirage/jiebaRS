@@ -24,11 +24,9 @@ workers. Default is \code{5}.}
 
 \item{symbol}{Logical. Whether to keep symbol-like tokens in the sentence. Default is \code{FALSE}.}
 
-\item{bylines}{Logical compatibility argument retained from \code{jiebaR}. When
-\code{segment()} or \code{tagging()} are called without an explicit \code{format},
-\code{bylines = TRUE} maps to list output and \code{bylines = FALSE} maps to a
-flattened vector. Prefer controlling the output with \code{format} in those
-functions directly.}
+\item{bylines}{\link{Deprecated} compatibility argument retained from \code{jiebaR}.
+\code{jiebaRS} no longer uses this value; control batch aggregation directly
+in specific functions.}
 }
 \value{
 A \code{jieba_worker} S3 object.

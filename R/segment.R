@@ -2,23 +2,32 @@
 #'
 #' Segment one or more strings with a `jieba_worker` created by [worker()].
 #'
+#' @details
+#' For a single input string, `segment()` always returns a character vector of
+#' segmented tokens.
+#'
+#' For multiple input strings, the argument `batch` controls how the
+#' per-string token vectors are aggregated:
+#' - `"list"`: one character vector per input string.
+#' - `"data.frame"`: a data frame with `doc_id` and `word` columns.
+#' - `"flatten"`: all token vectors concatenated into one character vector.
+#'
+#' When `batch` is omitted, `jiebaRS` returns list output for multi-string
+#' input.
+#'
 #' @param code A character vector to segment.
 #' @param jiebar A `jieba_worker` object.
-#' @param format Output format. `"list"` returns one token vector per input
-#'   string, `"data.frame"` returns `doc_id` and `word` columns, and
-#'   `"flatten"` concatenates all token vectors into one character vector. When
-#'   omitted, the worker's `bylines` setting is used for compatibility:
-#'   `bylines = TRUE` maps to `"list"` and `bylines = FALSE` maps to
-#'   `"flatten"`.
+#' @param batch Batch aggregation mode for **multi-string input**. Must be
+#' one of `"list"`, `"data.frame"`, or `"flatten"`. The default is `"list"`.
 #'
-#' @return Segmented tokens in the requested format.
+#' @return Segmented tokens in the requested aggregation form.
 #' @examples
 #' seg <- worker()
 #' segment("南京市长江大桥", seg)
-#' segment(c("南京市长江大桥", "这是一个测试"), seg, format = "list")
-#' segment(c("南京市长江大桥", "这是一个测试"), seg, format = "data.frame")
+#' segment(c("南京市长江大桥", "这是一个测试"), seg, batch = "list")
+#' segment(c("南京市长江大桥", "这是一个测试"), seg, batch = "data.frame")
 #' @export
-segment <- function(code, jiebar, format = c("list", "data.frame", "flatten")) {
+segment <- function(code, jiebar, batch = c("list", "data.frame", "flatten")) {
   if (!inherits(jiebar, "jieba_segmenter")) {
     cli::cli_abort("`jiebar` must be a `jieba_segmenter` object.")
   }
@@ -27,13 +36,7 @@ segment <- function(code, jiebar, format = c("list", "data.frame", "flatten")) {
     cli::cli_abort("`code` must be a non-empty character vector without missing values.")
   }
 
-  format <- if (!missing(format)) {
-    rlang::arg_match(format)
-  } else if (isTRUE(jiebar$config$bylines)) {
-    "list"
-  } else {
-    "flatten"
-  }
+  batch <- if (!missing(batch)) rlang::arg_match(batch) else "list"
 
   code <- enc2utf8(code)
   code <- symbol_handle(code, jiebar$config$symbol)
@@ -46,36 +49,47 @@ segment <- function(code, jiebar, format = c("list", "data.frame", "flatten")) {
   # TODO: implement in Rust
   result <- lapply(code, segment_one)
 
+  if (length(result) == 1L) {
+    return(result[[1]])
+  }
+
   switch(
-    format,
-    list = result,
-    data.frame = data.frame(
+    batch,
+    "list" = result,
+    "data.frame" = data.frame(
       doc_id = rep.int(seq_along(result), lengths(result)),
       word = unlist(result, use.names = FALSE)
     ),
-    flatten = unlist(result, use.names = FALSE)
+    "flatten" = unlist(result, use.names = FALSE)
   )
 }
 
 #' Segment a batch of strings
 #'
 #' Convenience wrapper around [segment()] for multi-string input. When
-#' `format` is not supplied, `segment_batch()` always returns **list** output
-#' and ignores the worker's `bylines` compatibility setting.
+#' `batch` is omitted, `segment_batch()` will return **list** output by default.
+#'
+#' @details
+#' `segment_batch()` is a convenience wrapper around [segment()] for explicit
+#' batch processing. It always treats `texts` as multi-string input. The
+#' returned object depends on `batch`:
+#' - `"list"`: one character vector per input string.
+#' - `"data.frame"`: a data frame with `doc_id` and `word` columns.
+#' - `"flatten"`: one concatenated character vector.
 #'
 #' @param texts A character vector of strings to segment.
 #' @param jiebar A `jieba_worker` object.
-#' @param format Output format. Supports `"list"`, `"data.frame"`, and
-#'   `"flatten"`. The default is `"list"`.
+#' @param batch Batch aggregation mode. Must be one of `"list"`,
+#'   `"data.frame"`, or `"flatten"`. The default is `"list"`.
 #'
-#' @return Segmented tokens in the requested format.
+#' @return Segmented tokens in the requested aggregation form.
 #' @examples
 #' seg <- worker()
 #' texts <- c("南京市长江大桥", "这是一个测试")
 #' segment_batch(texts, seg)
-#' segment_batch(texts, seg, format = "flatten")
+#' segment_batch(texts, seg, batch = "flatten")
 #' @export
-segment_batch <- function(texts, jiebar, format = c("list", "data.frame", "flatten")) {
-  format <- rlang::arg_match(format)
-  segment(texts, jiebar, format = format)
+segment_batch <- function(texts, jiebar, batch = c("list", "data.frame", "flatten")) {
+  batch <- rlang::arg_match(batch)
+  segment(texts, jiebar, batch = batch)
 }

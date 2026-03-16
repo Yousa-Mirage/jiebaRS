@@ -5,6 +5,11 @@ test_that("segment tokenizes a simple sentence", {
     segment("南京市长江大桥", engine1),
     c("南京市", "长江大桥")
   )
+
+  expect_identical(
+    segment("南京市长江大桥", engine1, batch = "list"),
+    c("南京市", "长江大桥")
+  )
 })
 
 test_that("full worker enumerates all possible words", {
@@ -51,34 +56,8 @@ test_that("mix matches jiebaR on representative text", {
   expect_identical(jiebaRS_res, jiebaR_res)
 })
 
-test_that("segment supports vector input with explicit output formats", {
+test_that("segment supports vector input with explicit batch aggregation", {
   engine1 <- worker()
-  input <- c("南京市长江大桥", "这是一个测试")
-
-  expect_identical(
-    segment(input, engine1, format = "list"),
-    list(
-      c("南京市", "长江大桥"),
-      c("这是", "一个", "测试")
-    )
-  )
-
-  expect_identical(
-    segment(input, engine1, format = "flatten"),
-    c("南京市", "长江大桥", "这是", "一个", "测试")
-  )
-
-  expect_identical(
-    segment(input, engine1, format = "data.frame"),
-    data.frame(
-      doc_id = c(1L, 1L, 2L, 2L, 2L),
-      word = c("南京市", "长江大桥", "这是", "一个", "测试")
-    )
-  )
-})
-
-test_that("segment uses bylines only when format is omitted", {
-  engine1 <- suppressWarnings(worker(bylines = TRUE))
   input <- c("南京市长江大桥", "这是一个测试")
 
   expect_identical(
@@ -90,8 +69,46 @@ test_that("segment uses bylines only when format is omitted", {
   )
 
   expect_identical(
-    segment(input, engine1, format = "flatten"),
+    segment(input, engine1, batch = "list"),
+    list(
+      c("南京市", "长江大桥"),
+      c("这是", "一个", "测试")
+    )
+  )
+
+  expect_identical(
+    segment(input, engine1, batch = "flatten"),
     c("南京市", "长江大桥", "这是", "一个", "测试")
+  )
+
+  expect_identical(
+    segment(input, engine1, batch = "data.frame"),
+    data.frame(
+      doc_id = c(1L, 1L, 2L, 2L, 2L),
+      word = c("南京市", "长江大桥", "这是", "一个", "测试")
+    )
+  )
+})
+
+test_that("segment ignores bylines and still defaults to list for vectors", {
+  engine1 <- suppressWarnings(worker(bylines = TRUE))
+  engine2 <- suppressWarnings(worker(bylines = FALSE))
+  input <- c("南京市长江大桥", "这是一个测试")
+
+  expect_identical(
+    segment(input, engine1),
+    list(
+      c("南京市", "长江大桥"),
+      c("这是", "一个", "测试")
+    )
+  )
+
+  expect_identical(
+    segment(input, engine2),
+    list(
+      c("南京市", "长江大桥"),
+      c("这是", "一个", "测试")
+    )
   )
 })
 
@@ -119,12 +136,12 @@ test_that("segment_batch forwards explicit formats", {
   input <- c("南京市长江大桥", "这是一个测试")
 
   expect_identical(
-    segment_batch(input, engine1, format = "flatten"),
+    segment_batch(input, engine1, batch = "flatten"),
     c("南京市", "长江大桥", "这是", "一个", "测试")
   )
 
   expect_identical(
-    segment_batch(input, engine1, format = "data.frame"),
+    segment_batch(input, engine1, batch = "data.frame"),
     data.frame(
       doc_id = c(1L, 1L, 2L, 2L, 2L),
       word = c("南京市", "长江大桥", "这是", "一个", "测试")

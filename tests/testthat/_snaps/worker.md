@@ -18,5 +18,5 @@
 
 # worker warns when bylines is specified for compatibility
 
-    `bylines` is retained only for jiebaR compatibility. Prefer controlling output shape with the `format` argument in `segment()` and `tagging()`.
+    `bylines` is deprecated in `jiebaRS` and no longer has any effect. Control batch aggregation explicitly in specific functions.
 
