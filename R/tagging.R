@@ -1,17 +1,3 @@
-.tag_one <- function(text, jiebar) {
-  result <- tagging_worker(text, jiebar$ptr)
-  terms <- result$term
-  tags <- result$tag
-
-  if (!isTRUE(jiebar$config$symbol)) {
-    keep <- terms != " "
-    terms <- terms[keep]
-    tags <- tags[keep]
-  }
-
-  list(term = terms, tag = tags)
-}
-
 .format_one <- function(terms, tags, format) {
   switch(
     format,
@@ -80,10 +66,16 @@ tagging <- function(
   code <- enc2utf8(code)
   code <- symbol_handle(code, jiebar$config$symbol)
 
-  result <- lapply(code, .tag_one, jiebar = jiebar)
+  is_single <- length(code) == 1L
 
-  if (length(result) == 1L) {
-    return(.format_one(result[[1]]$term, result[[1]]$tag, format))
+  result <- if (is_single) {
+    tagging_worker(code[[1]], jiebar$ptr)
+  } else {
+    tagging_batch_worker(code, jiebar$ptr)
+  }
+
+  if (is_single) {
+    return(.format_one(result$term, result$tag, format))
   }
 
   batch <- rlang::arg_match(batch)

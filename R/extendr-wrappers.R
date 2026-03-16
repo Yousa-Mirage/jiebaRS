@@ -62,6 +62,19 @@ segment_batch_worker <- function(texts, worker) .Call(wrap__segment_batch_worker
 #' @keywords internal
 tagging_worker <- function(text, worker) .Call(wrap__tagging_worker, text, worker)
 
+#' Tag multiple strings with an internal native worker.
+#'
+#' Internal bridge used by `tagging()` to tag many UTF-8 strings.
+#'
+#' @param texts Character vector containing the input strings.
+#' @param worker A native `JiebaWorker` handle created by the internal worker
+#'   constructor.
+#'
+#' @return A list where each element is a named list with `term` and `tag`
+#'   vectors.
+#' @keywords internal
+tagging_batch_worker <- function(texts, worker) .Call(wrap__tagging_batch_worker, texts, worker)
+
 #' Extract keywords with an internal native worker.
 #'
 #' Internal bridge used by [keywords()] to extract keywords from a single UTF-8

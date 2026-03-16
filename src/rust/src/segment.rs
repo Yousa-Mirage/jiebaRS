@@ -9,14 +9,15 @@ fn segment_with_mode<'a>(
     use_hmm: bool,
     text: &'a str,
 ) -> Vec<&'a str> {
-    let tokens = match mode {
+    let mut tokens = match mode {
         SegmentMode::Mix => engine.cut(text, use_hmm),
         SegmentMode::Mp => engine.cut(text, false),
         SegmentMode::Hmm => engine.cut(text, true),
         SegmentMode::Full => engine.cut_all(text),
         SegmentMode::Query => engine.cut_for_search(text, use_hmm),
     };
-    tokens.into_iter().filter(|&s| s != " ").collect()
+    tokens.retain(|&token| token != " ");
+    tokens
 }
 
 impl JiebaWorker {

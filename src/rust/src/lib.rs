@@ -81,6 +81,30 @@ fn tagging_worker(text: &str, worker: &JiebaWorker) -> Result<List> {
     ))
 }
 
+/// Tag multiple strings with an internal native worker.
+///
+/// Internal bridge used by `tagging()` to tag many UTF-8 strings.
+///
+/// @param texts Character vector containing the input strings.
+/// @param worker A native `JiebaWorker` handle created by the internal worker
+///   constructor.
+///
+/// @return A list where each element is a named list with `term` and `tag`
+///   vectors.
+/// @keywords internal
+#[extendr]
+fn tagging_batch_worker(texts: Strings, worker: &JiebaWorker) -> Result<List> {
+    let texts_vec: Vec<&str> = texts.iter().map(|s| s.as_str()).collect();
+    let results = worker.tag_texts(&texts_vec)?;
+    let values = results.into_iter().map(|records| {
+        list!(
+            term = Strings::from_values(records.iter().map(|record| record.word)),
+            tag = Strings::from_values(records.iter().map(|record| record.tag))
+        )
+    });
+    Ok(List::from_values(values))
+}
+
 /// Extract keywords with an internal native worker.
 ///
 /// Internal bridge used by [keywords()] to extract keywords from a single UTF-8
@@ -138,6 +162,7 @@ extendr_module! {
     fn segment_worker;
     fn segment_batch_worker;
     fn tagging_worker;
+    fn tagging_batch_worker;
     fn keywords_worker;
 
     fn add_user_words;
