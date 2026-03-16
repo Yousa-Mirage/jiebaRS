@@ -38,6 +38,18 @@ new_worker <- function(worker_type, use_hmm, top_n) .Call(wrap__new_worker, work
 #' @keywords internal
 segment_worker <- function(text, worker) .Call(wrap__segment_worker, text, worker)
 
+#' Segment multiple strings with an internal native worker.
+#'
+#' Internal bridge used by `segment()` to segment many UTF-8 strings.
+#'
+#' @param texts Character vector containing the input strings.
+#' @param worker A native `JiebaWorker` handle created by the internal worker
+#'   constructor.
+#'
+#' @return A list of character vectors, one per input string.
+#' @keywords internal
+segment_batch_worker <- function(texts, worker) .Call(wrap__segment_batch_worker, texts, worker)
+
 #' Tag text with an internal native worker.
 #'
 #' Internal bridge used by [tagging()] to tag a single UTF-8 string.

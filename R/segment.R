@@ -58,17 +58,11 @@ segment <- function(code, jiebar, mod = NULL, batch = c("list", "data.frame", "f
   code <- enc2utf8(code)
   code <- symbol_handle(code, jiebar$config$symbol)
 
-  segment_one <- function(text) {
-    tokens <- segment_worker(text, jiebar$ptr)
-    tokens[tokens != " "]
+  if (length(code) == 1L) {
+    return(segment_worker(code[[1]], jiebar$ptr))
   }
 
-  # TODO: implement in Rust
-  result <- lapply(code, segment_one)
-
-  if (length(result) == 1L) {
-    return(result[[1]])
-  }
+  result <- segment_batch_worker(code, jiebar$ptr)
 
   switch(
     batch,

@@ -12,6 +12,7 @@ name = 'jieba_rs'
 [dependencies]
 extendr-api = '0.8.1'
 jieba-rs = { version = "0.8.1", features = ["tfidf"] }
+rayon = "1.11"
 
 [lints.rust]
 warnings = "deny"
