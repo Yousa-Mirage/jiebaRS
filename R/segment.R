@@ -15,8 +15,16 @@
 #' When `batch` is omitted, `jiebaRS` returns list output for multi-string
 #' input.
 #'
+#' The `mod` argument from `jiebaR::segment()` is retained only as a deprecated
+#' compatibility placeholder. In `jiebaRS`, segmentation behavior should be
+#' controlled by the worker type itself (for example, `worker(type = "mix")` or
+#' `worker(type = "query")`), not by mutating behavior at call time. When `mod`
+#' is supplied, `jiebaRS` warns and ignores it.
+#'
 #' @param code A character vector to segment.
 #' @param jiebar A `jieba_worker` object.
+#' @param mod [Deprecated] Compatibility argument retained from `jiebaR`. This
+#'   argument no longer has any effect.
 #' @param batch Batch aggregation mode for **multi-string input**. Must be
 #' one of `"list"`, `"data.frame"`, or `"flatten"`. The default is `"list"`.
 #'
@@ -27,13 +35,22 @@
 #' segment(c("南京市长江大桥", "这是一个测试"), seg, batch = "list")
 #' segment(c("南京市长江大桥", "这是一个测试"), seg, batch = "data.frame")
 #' @export
-segment <- function(code, jiebar, batch = c("list", "data.frame", "flatten")) {
+segment <- function(code, jiebar, mod = NULL, batch = c("list", "data.frame", "flatten")) {
   if (!inherits(jiebar, "jieba_segmenter")) {
     cli::cli_abort("`jiebar` must be a `jieba_segmenter` object.")
   }
 
   if (!rlang::is_character(code) || anyNA(code) || rlang::is_empty(code)) {
     cli::cli_abort("`code` must be a non-empty character vector without missing values.")
+  }
+
+  if (!missing(mod)) {
+    cli::cli_warn(
+      paste(
+        "`mod` is deprecated in `jiebaRS` and no longer has any effect.",
+        "Use a worker with the desired type instead."
+      )
+    )
   }
 
   batch <- if (!missing(batch)) rlang::arg_match(batch) else "list"

@@ -4,12 +4,15 @@
 \alias{segment}
 \title{Segment text with a jieba worker}
 \usage{
-segment(code, jiebar, batch = c("list", "data.frame", "flatten"))
+segment(code, jiebar, mod = NULL, batch = c("list", "data.frame", "flatten"))
 }
 \arguments{
 \item{code}{A character vector to segment.}
 
 \item{jiebar}{A \code{jieba_worker} object.}
+
+\item{mod}{\link{Deprecated} Compatibility argument retained from \code{jiebaR}. This
+argument no longer has any effect.}
 
 \item{batch}{Batch aggregation mode for \strong{multi-string input}. Must be
 one of \code{"list"}, \code{"data.frame"}, or \code{"flatten"}. The default is \code{"list"}.}
@@ -34,6 +37,12 @@ per-string token vectors are aggregated:
 
 When \code{batch} is omitted, \code{jiebaRS} returns list output for multi-string
 input.
+
+The \code{mod} argument from \code{jiebaR::segment()} is retained only as a deprecated
+compatibility placeholder. In \code{jiebaRS}, segmentation behavior should be
+controlled by the worker type itself (for example, \code{worker(type = "mix")} or
+\code{worker(type = "query")}), not by mutating behavior at call time. When \code{mod}
+is supplied, \code{jiebaRS} warns and ignores it.
 }
 \examples{
 seg <- worker()

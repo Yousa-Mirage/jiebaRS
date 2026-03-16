@@ -12,6 +12,14 @@ test_that("segment tokenizes a simple sentence", {
   )
 })
 
+test_that("segment warns and ignores deprecated mod", {
+  engine1 <- worker()
+
+  expect_snapshot_warning(
+    segment("南京市长江大桥", engine1, mod = "full")
+  )
+})
+
 test_that("full worker enumerates all possible words", {
   engine1 <- worker(type = "full")
 
