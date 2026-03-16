@@ -24,3 +24,4 @@ expect_used = "deny"
 lto = true
 opt-level = 3
 codegen-units = 1
+strip = true
