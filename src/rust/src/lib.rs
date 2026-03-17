@@ -37,8 +37,29 @@ fn new_worker(worker_type: &str, use_hmm: bool, top_n: u32) -> Result<JiebaWorke
 /// @return A character vector of segmented tokens.
 /// @keywords internal
 #[extendr]
-fn segment_worker(text: &str, worker: &JiebaWorker) -> Result<Vec<String>> {
-    worker.segment_text(text)
+fn segment_worker(text: &str, worker: &JiebaWorker) -> Result<Strings> {
+    let tokens = worker.segment_text(text)?;
+    Ok(Strings::from_values(tokens))
+}
+
+/// Segment multiple strings with an internal native worker.
+///
+/// Internal bridge used by `segment()` to segment many UTF-8 strings.
+///
+/// @param texts Character vector containing the input strings.
+/// @param worker A native `JiebaWorker` handle created by the internal worker
+///   constructor.
+///
+/// @return A list of character vectors, one per input string.
+/// @keywords internal
+#[extendr]
+fn segment_batch_worker(texts: Strings, worker: &JiebaWorker) -> Result<List> {
+    let texts_vec: Vec<&str> = texts.iter().map(|s| s.as_str()).collect();
+    let results = worker
+        .segment_texts(&texts_vec)?
+        .into_iter()
+        .map(Strings::from_values);
+    Ok(List::from_values(results))
 }
 
 /// Tag text with an internal native worker.
@@ -58,6 +79,30 @@ fn tagging_worker(text: &str, worker: &JiebaWorker) -> Result<List> {
         term = Strings::from_values(records.iter().map(|record| record.word)),
         tag = Strings::from_values(records.iter().map(|record| record.tag))
     ))
+}
+
+/// Tag multiple strings with an internal native worker.
+///
+/// Internal bridge used by `tagging()` to tag many UTF-8 strings.
+///
+/// @param texts Character vector containing the input strings.
+/// @param worker A native `JiebaWorker` handle created by the internal worker
+///   constructor.
+///
+/// @return A list where each element is a named list with `term` and `tag`
+///   vectors.
+/// @keywords internal
+#[extendr]
+fn tagging_batch_worker(texts: Strings, worker: &JiebaWorker) -> Result<List> {
+    let texts_vec: Vec<&str> = texts.iter().map(|s| s.as_str()).collect();
+    let results = worker.tag_texts(&texts_vec)?;
+    let values = results.into_iter().map(|records| {
+        list!(
+            term = Strings::from_values(records.iter().map(|record| record.word)),
+            tag = Strings::from_values(records.iter().map(|record| record.tag))
+        )
+    });
+    Ok(List::from_values(values))
 }
 
 /// Extract keywords with an internal native worker.
@@ -115,7 +160,9 @@ extendr_module! {
 
     fn new_worker;
     fn segment_worker;
+    fn segment_batch_worker;
     fn tagging_worker;
+    fn tagging_batch_worker;
     fn keywords_worker;
 
     fn add_user_words;

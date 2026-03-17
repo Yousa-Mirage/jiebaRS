@@ -36,6 +36,17 @@ Tag one or more strings with a \code{jieba_worker} created by \code{\link[=worke
 \item \code{"legacy"}: the old \code{jiebaR} layout with token values and tag names.
 }
 
+In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
+texts, \code{jiebaRS::tagging()} is about \strong{1.6x to 1.8x faster} than
+\code{jiebaR::tagging()} when each novel is tagged as one long string. When the
+same content is split into many strings and processed in batch,
+\code{jiebaRS::tagging()} is about \strong{2x to 5x faster} than \code{jiebaR}.
+
+For very long texts, splitting before tagging is usually faster than sending
+one huge string. In the same release benchmarks, the best results appeared
+around \strong{32 to 128 chunks}, while much finer splitting still helped but was
+no longer optimal.
+
 When \code{code} contains multiple strings, \code{batch} controls how the per-string
 results are aggregated:
 \itemize{

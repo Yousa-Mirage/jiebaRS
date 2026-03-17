@@ -1,31 +1,51 @@
 use extendr_api::prelude::*;
+use rayon::prelude::*;
 
 use crate::worker::{JiebaWorker, SegmentMode, WorkerFamily};
 
+fn segment_with_mode<'a>(
+    engine: &'a jieba_rs::Jieba,
+    mode: SegmentMode,
+    use_hmm: bool,
+    text: &'a str,
+) -> Vec<&'a str> {
+    let mut tokens = match mode {
+        SegmentMode::Mix => engine.cut(text, use_hmm),
+        SegmentMode::Mp => engine.cut(text, false),
+        SegmentMode::Hmm => engine.cut(text, true),
+        SegmentMode::Full => engine.cut_all(text),
+        SegmentMode::Query => engine.cut_for_search(text, use_hmm),
+    };
+    tokens.retain(|&token| token != " ");
+    tokens
+}
+
 impl JiebaWorker {
-    pub fn segment_text(&self, text: &str) -> Result<Vec<String>> {
+    fn get_segment_mode(&self) -> Result<SegmentMode> {
+        match self.family {
+            WorkerFamily::Segment(mode) => Ok(mode),
+            WorkerFamily::Tag => Err(Error::Other(
+                "`segment()` requires a segmentation worker, not a tag worker.".to_string(),
+            )),
+            WorkerFamily::Keywords => Err(Error::Other(
+                "`segment()` requires a segmentation worker, not a keyword worker.".to_string(),
+            )),
+        }
+    }
+
+    pub fn segment_text<'a>(&'a self, text: &'a str) -> Result<Vec<&'a str>> {
         self.validate()?;
+        let mode = self.get_segment_mode()?;
+        Ok(segment_with_mode(&self.engine, mode, self.use_hmm, text))
+    }
 
-        let tokens = match self.family {
-            WorkerFamily::Segment(SegmentMode::Mix) => self.engine.cut(text, self.use_hmm),
-            WorkerFamily::Segment(SegmentMode::Mp) => self.engine.cut(text, false),
-            WorkerFamily::Segment(SegmentMode::Hmm) => self.engine.cut(text, true),
-            WorkerFamily::Segment(SegmentMode::Full) => self.engine.cut_all(text),
-            WorkerFamily::Segment(SegmentMode::Query) => {
-                self.engine.cut_for_search(text, self.use_hmm)
-            }
-            WorkerFamily::Tag => {
-                return Err(Error::Other(
-                    "`segment()` requires a segmentation worker, not a tag worker.".to_string(),
-                ))
-            }
-            WorkerFamily::Keywords => {
-                return Err(Error::Other(
-                    "`segment()` requires a segmentation worker, not a keyword worker.".to_string(),
-                ))
-            }
-        };
+    pub fn segment_texts<'a>(&'a self, texts: &'a [&'a str]) -> Result<Vec<Vec<&'a str>>> {
+        self.validate()?;
+        let mode = self.get_segment_mode()?;
 
-        Ok(tokens.into_iter().map(str::to_string).collect())
+        Ok(texts
+            .par_iter()
+            .map(|&text| segment_with_mode(&self.engine, mode, self.use_hmm, text))
+            .collect())
     }
 }

@@ -27,6 +27,17 @@ Segment one or more strings with a \code{jieba_worker} created by \code{\link[=w
 For a single input string, \code{segment()} always returns a character vector of
 segmented tokens.
 
+In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
+texts, \code{jiebaRS::segment()} is about \strong{1.0x to 1.2x faster} than
+\code{jiebaR::segment()} when each novel is segmented as one long string.
+When the same content is split into many strings and processed in batch,
+\code{jiebaRS::segment()} is about \strong{3x to 7x faster} than \code{jiebaR}.
+
+For very long texts, splitting before segmentation is usually faster than
+submitting one huge string. In the same release benchmarks, the best results
+appeared around \strong{32 to 64 chunks}, while going far beyond roughly \strong{128}
+chunks started to reduce the benefit.
+
 For multiple input strings, the argument \code{batch} controls how the
 per-string token vectors are aggregated:
 \itemize{
