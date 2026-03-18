@@ -98,10 +98,11 @@ keywords_worker <- function(text, worker) .Call(wrap__keywords_worker, text, wor
 #' @param worker A mutable native `JiebaWorker` handle.
 #' @param words Character vector of custom words.
 #' @param tags Character vector of tags aligned with `words`.
+#' @param freq Optional integer vector of frequencies aligned with `words`.
 #'
 #' @return `NULL`, invisibly, after the worker has been updated.
 #' @keywords internal
-add_user_words <- function(worker, words, tags) .Call(wrap__add_user_words, worker, words, tags)
+add_user_words <- function(worker, words, tags, freq) .Call(wrap__add_user_words, worker, words, tags, freq)
 
 #' Convert a decimal simhash value to a 64-bit binary string.
 #'

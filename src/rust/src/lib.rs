@@ -140,12 +140,18 @@ fn keywords_worker(text: &str, worker: &JiebaWorker) -> Result<List> {
 /// @param worker A mutable native `JiebaWorker` handle.
 /// @param words Character vector of custom words.
 /// @param tags Character vector of tags aligned with `words`.
+/// @param freq Optional integer vector of frequencies aligned with `words`.
 ///
 /// @return `NULL`, invisibly, after the worker has been updated.
 /// @keywords internal
 #[extendr]
-fn add_user_words(worker: &mut JiebaWorker, words: Vec<String>, tags: Vec<String>) -> Result<()> {
-    worker.add_user_words(&words, &tags)
+fn add_user_words(
+    worker: &mut JiebaWorker,
+    words: Strings,
+    tags: Strings,
+    freq: Nullable<Integers>,
+) -> Result<()> {
+    worker.add_user_words(&words, &tags, &freq)
 }
 
 /// Convert a decimal simhash value to a 64-bit binary string.

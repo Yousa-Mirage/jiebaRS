@@ -4,7 +4,7 @@
 \alias{add_user_words}
 \title{Add user-defined words with an internal native worker.}
 \usage{
-add_user_words(worker, words, tags)
+add_user_words(worker, words, tags, freq)
 }
 \arguments{
 \item{worker}{A mutable native \code{JiebaWorker} handle.}
@@ -12,6 +12,8 @@ add_user_words(worker, words, tags)
 \item{words}{Character vector of custom words.}
 
 \item{tags}{Character vector of tags aligned with \code{words}.}
+
+\item{freq}{Optional integer vector of frequencies aligned with \code{words}.}
 }
 \value{
 \code{NULL}, invisibly, after the worker has been updated.

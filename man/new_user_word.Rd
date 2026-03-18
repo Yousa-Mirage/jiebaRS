@@ -5,9 +5,9 @@
 \alias{add_word}
 \title{Add user word}
 \usage{
-new_user_word(worker, words, tags = "n")
+new_user_word(worker, words, tags = "n", freq = NULL)
 
-add_word(worker, words, tags = "n")
+add_word(worker, words, tags = "n", freq = NULL)
 }
 \arguments{
 \item{worker}{A \code{jieba_worker} object.}
@@ -15,8 +15,28 @@ add_word(worker, words, tags = "n")
 \item{words}{A single string or a character vector of new words.}
 
 \item{tags}{A single tag or a character vector of tags. Defaults to \code{"n"}
-for each supplied word.}
+for each supplied word. \code{NA} values are allowed and will be interpreted as missing tags.}
+
+\item{freq}{Optional non-negative integer frequency or integer vector of
+frequencies. Defaults to \code{NULL}. \code{NA} values are allowed and will be
+interpreted as missing frequencies.}
 }
 \description{
 Add one or more custom words to a jieba worker.
+}
+\examples{
+cutter <- worker()
+segment("量子机器狗", cutter)
+new_user_word(cutter, "量子机器狗", tags = "n", freq = 1000L)
+segment("量子机器狗", cutter)
+
+cutter2 <- worker()
+add_word(
+  cutter2,
+  c("超导量子比特", "量子机器狗"),
+  tags = c(NA, "n"),
+  freq = c(NA, 1000L)
+)
+segment("超导量子比特", cutter2)
+
 }

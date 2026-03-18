@@ -5,31 +5,58 @@
 #' @param worker A `jieba_worker` object.
 #' @param words A single string or a character vector of new words.
 #' @param tags A single tag or a character vector of tags. Defaults to `"n"`
-#'   for each supplied word.
+#'   for each supplied word. `NA` values are allowed and will be interpreted as missing tags.
+#' @param freq Optional non-negative integer frequency or integer vector of
+#'   frequencies. Defaults to `NULL`. `NA` values are allowed and will be
+#'   interpreted as missing frequencies.
+#' @examples
+#' cutter <- worker()
+#' segment("量子机器狗", cutter)
+#' new_user_word(cutter, "量子机器狗", tags = "n", freq = 1000L)
+#' segment("量子机器狗", cutter)
+#'
+#' cutter2 <- worker()
+#' add_word(
+#'   cutter2,
+#'   c("超导量子比特", "量子机器狗"),
+#'   tags = c(NA, "n"),
+#'   freq = c(NA, 1000L)
+#' )
+#' segment("超导量子比特", cutter2)
 #'
 #' @export
-new_user_word <- function(worker, words, tags = "n") {
-  if (rlang::is_string(tags)) {
-    tags <- rep(tags, length(words))
-  }
-
+new_user_word <- function(worker, words, tags = "n", freq = NULL) {
   if (!inherits(worker, "jieba_worker")) {
     cli::cli_abort("`worker` must be a `jieba_worker` object.")
   }
   if (!rlang::is_character(words) || anyNA(words)) {
     cli::cli_abort("`words` must be a character vector without NAs.")
   }
-  if (!rlang::is_character(tags) || anyNA(tags)) {
-    cli::cli_abort("`tags` must be a character vector without NAs.")
+
+  n_words <- length(words)
+
+  if (!rlang::is_character(tags)) {
+    cli::cli_abort("`tags` must be a character vector.")
   }
-  if (length(words) != length(tags)) {
-    cli::cli_abort("`words` and `tags` must have the same length.")
+  n_tags <- length(tags)
+  if (n_tags != 1L && n_tags != n_words) {
+    cli::cli_abort("`tags` must have length 1 or the same length as `words`.")
+  }
+
+  if (!is.null(freq)) {
+    if (!rlang::is_integerish(freq) || any(freq < 0L, na.rm = TRUE)) {
+      cli::cli_abort("`freq` must be `NULL` or a non-negative integer vector.")
+    }
+    n_freq <- length(freq)
+    if (n_freq != 1L && n_freq != n_words) {
+      cli::cli_abort("`freq` must have length 1 or the same length as `words`.")
+    }
   }
 
   words <- enc2utf8(words)
   tags <- enc2utf8(tags)
 
-  add_user_words(worker$ptr, words, tags)
+  add_user_words(worker$ptr, words, tags, freq)
 }
 
 #' @rdname new_user_word
