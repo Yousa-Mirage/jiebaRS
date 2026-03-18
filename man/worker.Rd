@@ -6,10 +6,10 @@
 \usage{
 worker(
   type = c("mix", "mp", "hmm", "full", "query", "tag", "keywords"),
-  hmm = TRUE,
-  topn = 5L,
   stop_word = NULL,
   stop_word_file = NULL,
+  hmm = TRUE,
+  topn = 5L,
   symbol = FALSE,
   bylines = FALSE
 )
@@ -18,15 +18,15 @@ worker(
 \item{type}{Worker type. Supported values are \code{"mix"}, \code{"mp"}, \code{"hmm"},
 \code{"full"}, \code{"query"}, \code{"tag"}, and \code{"keywords"}. Default is \code{"mix"}.}
 
+\item{stop_word}{Optional character vector of stop words supplied directly.}
+
+\item{stop_word_file}{Optional file path containing one stop word per line.}
+
 \item{hmm}{Logical scalar. Whether to enable HMM fallback for
 unknown terms. Default is \code{TRUE}.}
 
 \item{topn}{Integer. The number of keywords returned by \code{keywords}
 workers. Default is \code{5}.}
-
-\item{stop_word}{Optional character vector of stop words supplied directly.}
-
-\item{stop_word_file}{Optional file path containing one stop word per line.}
 
 \item{symbol}{Logical. Whether to keep symbol-like tokens in the sentence. Default is \code{FALSE}.}
 

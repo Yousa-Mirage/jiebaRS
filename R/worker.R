@@ -35,12 +35,12 @@
 #'
 #' @param type Worker type. Supported values are `"mix"`, `"mp"`, `"hmm"`,
 #'   `"full"`, `"query"`, `"tag"`, and `"keywords"`. Default is `"mix"`.
+#' @param stop_word Optional character vector of stop words supplied directly.
+#' @param stop_word_file Optional file path containing one stop word per line.
 #' @param hmm Logical scalar. Whether to enable HMM fallback for
 #'   unknown terms. Default is `TRUE`.
 #' @param topn Integer. The number of keywords returned by `keywords`
 #'   workers. Default is `5`.
-#' @param stop_word Optional character vector of stop words supplied directly.
-#' @param stop_word_file Optional file path containing one stop word per line.
 #' @param symbol Logical. Whether to keep symbol-like tokens in the sentence. Default is `FALSE`.
 #' @param bylines [Deprecated] compatibility argument retained from `jiebaR`.
 #'   `jiebaRS` no longer uses this value; control batch aggregation directly
@@ -50,10 +50,10 @@
 #' @export
 worker <- function(
   type = c("mix", "mp", "hmm", "full", "query", "tag", "keywords"),
-  hmm = TRUE,
-  topn = 5L,
   stop_word = NULL,
   stop_word_file = NULL,
+  hmm = TRUE,
+  topn = 5L,
   symbol = FALSE,
   bylines = FALSE
 ) {
