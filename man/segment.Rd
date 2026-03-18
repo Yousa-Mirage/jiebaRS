@@ -28,7 +28,7 @@ For a single input string, \code{segment()} always returns a character vector of
 segmented tokens.
 
 In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
-texts, \code{jiebaRS::segment()} is about \strong{1.0x to 1.2x faster} than
+texts, \code{jiebaRS::segment()} is about \strong{1.1x to 1.2x faster} than
 \code{jiebaR::segment()} when each novel is segmented as one long string.
 When the same content is split into many strings and processed in batch,
 \code{jiebaRS::segment()} is about \strong{3x to 7x faster} than \code{jiebaR}.

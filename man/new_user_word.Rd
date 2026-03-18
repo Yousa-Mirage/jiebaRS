@@ -2,9 +2,12 @@
 % Please edit documentation in R/user-dict.R
 \name{new_user_word}
 \alias{new_user_word}
+\alias{add_word}
 \title{Add user word}
 \usage{
 new_user_word(worker, words, tags = "n")
+
+add_word(worker, words, tags = "n")
 }
 \arguments{
 \item{worker}{A \code{jieba_worker} object.}

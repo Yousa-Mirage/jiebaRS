@@ -18,6 +18,16 @@ test_that("new_user_word accepts multiple words", {
   expect_identical(segment("量子机器狗", engine1), "量子机器狗")
 })
 
+test_that("add_word is an alias of new_user_word", {
+  expect_identical(add_word, new_user_word)
+
+  engine1 <- worker()
+
+  expect_identical(segment("量子机器狗", engine1), c("量子", "机器", "狗"))
+  expect_no_error(add_word(engine1, "量子机器狗", "n"))
+  expect_identical(segment("量子机器狗", engine1), "量子机器狗")
+})
+
 test_that("new_user_word snapshots invalid inputs", {
   engine1 <- worker()
 

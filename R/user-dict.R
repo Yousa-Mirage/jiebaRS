@@ -31,3 +31,7 @@ new_user_word <- function(worker, words, tags = "n") {
 
   add_user_words(worker$ptr, words, tags)
 }
+
+#' @rdname new_user_word
+#' @export
+add_word <- new_user_word
