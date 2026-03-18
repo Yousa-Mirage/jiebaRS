@@ -8,6 +8,8 @@ worker(
   type = c("mix", "mp", "hmm", "full", "query", "tag", "keywords"),
   hmm = TRUE,
   topn = 5L,
+  stop_word = NULL,
+  stop_word_file = NULL,
   symbol = FALSE,
   bylines = FALSE
 )
@@ -21,6 +23,10 @@ mixed-mode segmentation. Default is \code{TRUE}.}
 
 \item{topn}{Integer. The number of keywords returned by \code{keywords}
 workers. Default is \code{5}.}
+
+\item{stop_word}{Optional character vector of stop words supplied directly.}
+
+\item{stop_word_file}{Optional file path containing one stop word per line.}
 
 \item{symbol}{Logical. Whether to keep symbol-like tokens in the sentence. Default is \code{FALSE}.}
 
@@ -50,6 +56,9 @@ session when either type is requested.
 
 \code{tag} workers use \code{jieba-rs} tagging on top of the default mixed
 segmentation path, which is the closest public behavior to \code{jiebaR}.
+
+\code{stop_word} and \code{stop_word_file} can be both supplied at once and then
+be merged together. Then they will be normalized.
 
 The \code{hmm} flag currently affects \code{mix} and \code{query} workers. \code{mp}, \code{hmm}, and
 \code{full} workers ignore \code{hmm}. \code{tag} workers use it for the underlying mixed

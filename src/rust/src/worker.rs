@@ -1,3 +1,5 @@
+use ahash::AHashSet;
+
 use extendr_api::prelude::*;
 use jieba_rs::{Jieba, TfIdf};
 
@@ -42,15 +44,22 @@ pub struct JiebaWorker {
     pub family: WorkerFamily,
     pub use_hmm: bool,
     pub top_n: usize,
+    pub stop_words: AHashSet<String>,
     pub keyword_extractor: Option<TfIdf>,
     version: i32,
 }
 
 impl JiebaWorker {
-    pub fn new(worker_type: &str, use_hmm: bool, top_n: u32) -> Result<Self> {
+    pub fn new(
+        worker_type: &str,
+        use_hmm: bool,
+        top_n: u32,
+        stop_words: Vec<String>,
+    ) -> Result<Self> {
         let family = WorkerFamily::from_type(worker_type)?;
         let top_n = usize::try_from(top_n)
             .map_err(|_| Error::Other("`top_n` must be a non-negative integer.".to_string()))?;
+        let stop_words = stop_words.into_iter().collect();
 
         // TODO: The keyword worker still lacks several jiebaR-era knobs.
         // - Thread `use_hmm` into the TF-IDF extractor config instead of only
@@ -68,6 +77,7 @@ impl JiebaWorker {
             family,
             use_hmm,
             top_n,
+            stop_words,
             keyword_extractor,
             version: WORKER_ABI_VERSION,
         })
@@ -81,5 +91,9 @@ impl JiebaWorker {
         }
 
         Ok(())
+    }
+
+    pub fn keep_token(&self, token: &str) -> bool {
+        token != " " && !self.stop_words.contains(token)
     }
 }

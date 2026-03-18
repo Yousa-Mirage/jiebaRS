@@ -4,9 +4,14 @@ use rayon::prelude::*;
 
 use crate::worker::{JiebaWorker, WorkerFamily};
 
-fn tag_with_engine<'a>(engine: &'a jieba_rs::Jieba, use_hmm: bool, text: &'a str) -> Vec<Tag<'a>> {
-    let mut tags = engine.tag(text, use_hmm);
-    tags.retain(|record| record.word != " ");
+fn tag_with_engine<'a>(worker: &'a JiebaWorker, text: &'a str) -> Vec<Tag<'a>> {
+    let use_hmm = worker.use_hmm;
+    let mut tags: Vec<Tag<'_>> = worker.engine.tag(text, use_hmm);
+    if worker.stop_words.is_empty() {
+        tags.retain(|record| record.word != " ");
+    } else {
+        tags.retain(|record| worker.keep_token(record.word));
+    }
     tags
 }
 
@@ -26,7 +31,7 @@ impl JiebaWorker {
         self.validate()?;
         self.ensure_tag_worker()?;
 
-        Ok(tag_with_engine(&self.engine, self.use_hmm, text))
+        Ok(tag_with_engine(self, text))
     }
 
     pub fn tag_texts<'a>(&'a self, texts: &'a [&'a str]) -> Result<Vec<Vec<Tag<'a>>>> {
@@ -35,7 +40,7 @@ impl JiebaWorker {
 
         Ok(texts
             .par_iter()
-            .map(|&text| tag_with_engine(&self.engine, self.use_hmm, text))
+            .map(|&text| tag_with_engine(self, text))
             .collect())
     }
 }

@@ -3,12 +3,10 @@ use rayon::prelude::*;
 
 use crate::worker::{JiebaWorker, SegmentMode, WorkerFamily};
 
-fn segment_with_mode<'a>(
-    engine: &'a jieba_rs::Jieba,
-    mode: SegmentMode,
-    use_hmm: bool,
-    text: &'a str,
-) -> Vec<&'a str> {
+fn segment_with_mode<'a>(worker: &JiebaWorker, mode: SegmentMode, text: &'a str) -> Vec<&'a str> {
+    let engine = &worker.engine;
+    let use_hmm = worker.use_hmm;
+
     let mut tokens = match mode {
         SegmentMode::Mix => engine.cut(text, use_hmm),
         SegmentMode::Mp => engine.cut(text, false),
@@ -16,7 +14,11 @@ fn segment_with_mode<'a>(
         SegmentMode::Full => engine.cut_all(text),
         SegmentMode::Query => engine.cut_for_search(text, use_hmm),
     };
-    tokens.retain(|&token| token != " ");
+    if worker.stop_words.is_empty() {
+        tokens.retain(|&token| token != " ");
+    } else {
+        tokens.retain(|&token| worker.keep_token(token));
+    }
     tokens
 }
 
@@ -36,16 +38,17 @@ impl JiebaWorker {
     pub fn segment_text<'a>(&'a self, text: &'a str) -> Result<Vec<&'a str>> {
         self.validate()?;
         let mode = self.get_segment_mode()?;
-        Ok(segment_with_mode(&self.engine, mode, self.use_hmm, text))
+        let tokens = segment_with_mode(self, mode, text);
+        Ok(tokens)
     }
 
     pub fn segment_texts<'a>(&'a self, texts: &'a [&'a str]) -> Result<Vec<Vec<&'a str>>> {
         self.validate()?;
         let mode = self.get_segment_mode()?;
-
-        Ok(texts
+        let tokens = texts
             .par_iter()
-            .map(|&text| segment_with_mode(&self.engine, mode, self.use_hmm, text))
-            .collect())
+            .map(|&text| segment_with_mode(self, mode, text))
+            .collect::<Vec<_>>();
+        Ok(tokens)
     }
 }

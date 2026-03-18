@@ -18,12 +18,19 @@ use worker::JiebaWorker;
 ///   enabled for segmentation.
 /// @param top_n Integer scalar giving the number of keywords retained by
 ///   keyword workers.
+/// @param stop_words Character vector of normalized UTF-8 stop words passed to
+///   the native worker.
 ///
 /// @return A native `JiebaWorker` handle.
 /// @keywords internal
 #[extendr]
-fn new_worker(worker_type: &str, use_hmm: bool, top_n: u32) -> Result<JiebaWorker> {
-    JiebaWorker::new(worker_type, use_hmm, top_n)
+fn new_worker(
+    worker_type: &str,
+    use_hmm: bool,
+    top_n: u32,
+    stop_words: Vec<String>,
+) -> Result<JiebaWorker> {
+    JiebaWorker::new(worker_type, use_hmm, top_n, stop_words)
 }
 
 /// Segment text with an internal native worker.

@@ -4,7 +4,7 @@
 \alias{new_worker}
 \title{Create an internal native jieba worker.}
 \usage{
-new_worker(worker_type, use_hmm, top_n)
+new_worker(worker_type, use_hmm, top_n, stop_words)
 }
 \arguments{
 \item{worker_type}{Character scalar naming the worker type. Currently
@@ -16,6 +16,9 @@ enabled for segmentation.}
 
 \item{top_n}{Integer scalar giving the number of keywords retained by
 keyword workers.}
+
+\item{stop_words}{Character vector of normalized UTF-8 stop words passed to
+the native worker.}
 }
 \value{
 A native \code{JiebaWorker} handle.

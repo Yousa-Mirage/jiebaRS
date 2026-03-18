@@ -19,6 +19,9 @@
 #' `tag` workers use `jieba-rs` tagging on top of the default mixed
 #' segmentation path, which is the closest public behavior to `jiebaR`.
 #'
+#' `stop_word` and `stop_word_file` can be both supplied at once and then
+#' be merged together. Then they will be normalized.
+#'
 #' The `hmm` flag currently affects `mix` and `query` workers. `mp`, `hmm`, and
 #' `full` workers ignore `hmm`. `tag` workers use it for the underlying mixed
 #' segmentation step, and `keywords` workers currently keep the value only for
@@ -31,6 +34,8 @@
 #'   mixed-mode segmentation. Default is `TRUE`.
 #' @param topn Integer. The number of keywords returned by `keywords`
 #'   workers. Default is `5`.
+#' @param stop_word Optional character vector of stop words supplied directly.
+#' @param stop_word_file Optional file path containing one stop word per line.
 #' @param symbol Logical. Whether to keep symbol-like tokens in the sentence. Default is `FALSE`.
 #' @param bylines [Deprecated] compatibility argument retained from `jiebaR`.
 #'   `jiebaRS` no longer uses this value; control batch aggregation directly
@@ -42,10 +47,13 @@ worker <- function(
   type = c("mix", "mp", "hmm", "full", "query", "tag", "keywords"),
   hmm = TRUE,
   topn = 5L,
+  stop_word = NULL,
+  stop_word_file = NULL,
   symbol = FALSE,
   bylines = FALSE
 ) {
   type <- rlang::arg_match(type)
+  stop_words <- normalize_stop_words(stop_word, stop_word_file)
 
   if (identical(type, "mp")) {
     cli::cli_warn(
@@ -97,10 +105,8 @@ worker <- function(
   # compatibility knobs.
   # - `idf` path is not configurable yet; the Rust backend always uses
   #   `TfIdf::default()`.
-  # - `stop_word` path is not configurable yet; `symbol` preprocessing is the
-  #   only R-side filtering currently exposed.
-  # - `hmm` is accepted for API compatibility, but the keyword extractor does
-  #   not consume it yet on the Rust side.
+  # - `hmm` is accepted for API compatibility, but the keyword extractor
+  #   does not consume it yet on the Rust side.
 
   classes <- c(
     switch(
@@ -114,11 +120,12 @@ worker <- function(
 
   structure(
     list(
-      ptr = new_worker(type, hmm, topn),
+      ptr = new_worker(type, hmm, topn, stop_words),
       type = type,
       config = list(
         hmm = hmm,
         topn = topn,
+        stop_word = stop_words,
         symbol = symbol,
         bylines = bylines
       )
