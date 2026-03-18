@@ -58,6 +58,13 @@ test_that("worker snapshots invalid type input", {
   )
 })
 
+test_that("worker explains hmm path incompatibility", {
+  expect_snapshot(
+    worker(hmm = "path/to/hmm_model.utf8"),
+    error = TRUE
+  )
+})
+
 test_that("worker warns once for approximate mp and hmm mappings", {
   withr::local_options(rlib_warning_verbosity = "verbose")
 

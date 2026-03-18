@@ -18,8 +18,8 @@ worker(
 \item{type}{Worker type. Supported values are \code{"mix"}, \code{"mp"}, \code{"hmm"},
 \code{"full"}, \code{"query"}, \code{"tag"}, and \code{"keywords"}. Default is \code{"mix"}.}
 
-\item{hmm}{Whether to enable HMM fallback when the selected worker type uses
-mixed-mode segmentation. Default is \code{TRUE}.}
+\item{hmm}{Logical scalar. Whether to enable HMM fallback for
+unknown terms. Default is \code{TRUE}.}
 
 \item{topn}{Integer. The number of keywords returned by \code{keywords}
 workers. Default is \code{5}.}
@@ -60,9 +60,14 @@ segmentation path, which is the closest public behavior to \code{jiebaR}.
 \code{stop_word} and \code{stop_word_file} can be both supplied at once and then
 be merged together. Then they will be normalized.
 
-The \code{hmm} flag currently affects \code{mix} and \code{query} workers. \code{mp}, \code{hmm}, and
-\code{full} workers ignore \code{hmm}. \code{tag} workers use it for the underlying mixed
-segmentation step, and \code{keywords} workers currently keep the value only for
-API compatibility while the Rust keyword backend still uses its default HMM
-behavior.
+In \code{jiebaRS}, \code{hmm} is a logical scalar, not a model-path argument. It
+controls whether the underlying \code{jieba-rs} segmentation/tagging pipeline may
+fall back to HMM for unknown terms. The flag affects \code{mix} and \code{query}
+workers directly, \code{tag} workers through the underlying mixed tagging path,
+and \code{keywords} workers through TF-IDF keyword extraction. \code{mp}, \code{hmm}, and
+\code{full} workers ignore the flag because their \code{jieba-rs} backends do not use
+this runtime switch.
+
+This differs from \code{jiebaR}, where \code{hmm} is a file path to the HMM model
+(defaulting to \code{HMMPATH}) rather than a \code{TRUE}/\code{FALSE} option.
 }

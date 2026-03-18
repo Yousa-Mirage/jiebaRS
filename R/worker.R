@@ -22,16 +22,21 @@
 #' `stop_word` and `stop_word_file` can be both supplied at once and then
 #' be merged together. Then they will be normalized.
 #'
-#' The `hmm` flag currently affects `mix` and `query` workers. `mp`, `hmm`, and
-#' `full` workers ignore `hmm`. `tag` workers use it for the underlying mixed
-#' segmentation step, and `keywords` workers currently keep the value only for
-#' API compatibility while the Rust keyword backend still uses its default HMM
-#' behavior.
+#' In `jiebaRS`, `hmm` is a logical scalar, not a model-path argument. It
+#' controls whether the underlying `jieba-rs` segmentation/tagging pipeline may
+#' fall back to HMM for unknown terms. The flag affects `mix` and `query`
+#' workers directly, `tag` workers through the underlying mixed tagging path,
+#' and `keywords` workers through TF-IDF keyword extraction. `mp`, `hmm`, and
+#' `full` workers ignore the flag because their `jieba-rs` backends do not use
+#' this runtime switch.
+#'
+#' This differs from `jiebaR`, where `hmm` is a file path to the HMM model
+#' (defaulting to `HMMPATH`) rather than a `TRUE`/`FALSE` option.
 #'
 #' @param type Worker type. Supported values are `"mix"`, `"mp"`, `"hmm"`,
 #'   `"full"`, `"query"`, `"tag"`, and `"keywords"`. Default is `"mix"`.
-#' @param hmm Whether to enable HMM fallback when the selected worker type uses
-#'   mixed-mode segmentation. Default is `TRUE`.
+#' @param hmm Logical scalar. Whether to enable HMM fallback for
+#'   unknown terms. Default is `TRUE`.
 #' @param topn Integer. The number of keywords returned by `keywords`
 #'   workers. Default is `5`.
 #' @param stop_word Optional character vector of stop words supplied directly.
@@ -80,7 +85,12 @@ worker <- function(
   }
 
   if (!rlang::is_bool(hmm)) {
-    cli::cli_abort("`hmm` must be `TRUE` or `FALSE`.")
+    cli::cli_abort(
+      paste(
+        "`hmm` must be `TRUE` or `FALSE`.",
+        "Unlike `jiebaR`, `jiebaRS` does not accept an HMM model path here."
+      )
+    )
   }
 
   if (!rlang::is_integerish(topn, n = 1) || topn < 0) {
@@ -105,8 +115,6 @@ worker <- function(
   # compatibility knobs.
   # - `idf` path is not configurable yet; the Rust backend always uses
   #   `TfIdf::default()`.
-  # - `hmm` is accepted for API compatibility, but the keyword extractor
-  #   does not consume it yet on the Rust side.
 
   classes <- c(
     switch(

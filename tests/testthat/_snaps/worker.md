@@ -6,6 +6,14 @@
       Error in `worker()`:
       ! `type` must be one of "mix", "mp", "hmm", "full", "query", "tag", or "keywords", not "nope".
 
+# worker explains hmm path incompatibility
+
+    Code
+      worker(hmm = "path/to/hmm_model.utf8")
+    Condition
+      Error in `worker()`:
+      ! `hmm` must be `TRUE` or `FALSE`. Unlike `jiebaR`, `jiebaRS` does not accept an HMM model path here.
+
 # worker warns once for approximate mp and hmm mappings
 
     `worker(type = 'mp')` is currently mapped to `jieba-rs` `cut(..., false)` because `jieba-rs` does not expose a dedicated `mp` segmenter. Results may differ from `jiebaR`.

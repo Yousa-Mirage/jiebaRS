@@ -1,7 +1,7 @@
 use ahash::AHashSet;
 
 use extendr_api::prelude::*;
-use jieba_rs::{Jieba, TfIdf};
+use jieba_rs::{Jieba, KeywordExtractConfig, TfIdf};
 
 pub const WORKER_ABI_VERSION: i32 = 1;
 
@@ -57,19 +57,32 @@ impl JiebaWorker {
         stop_words: Vec<String>,
     ) -> Result<Self> {
         let family = WorkerFamily::from_type(worker_type)?;
-        let top_n = usize::try_from(top_n)
-            .map_err(|_| Error::Other("`top_n` must be a non-negative integer.".to_string()))?;
-        let stop_words = stop_words.into_iter().collect();
+        let top_n = top_n as usize;
+        let stop_words: AHashSet<String> = stop_words
+            .into_iter()
+            .map(|word| word.to_lowercase())
+            .collect();
+        let keyword_stop_words = stop_words.iter().cloned().collect();
 
         // TODO: The keyword worker still lacks several jiebaR-era knobs.
-        // - Thread `use_hmm` into the TF-IDF extractor config instead of only
-        //   storing it on the worker.
-        // - Load custom IDF and stop-word dictionaries from R-provided paths.
+        // - Load custom IDF dictionaries from R-provided paths.
         // - Split keyword-specific config into a dedicated struct once more
         //   keyword options are supported.
         let keyword_extractor = match family {
             WorkerFamily::Segment(_) | WorkerFamily::Tag => None,
-            WorkerFamily::Keywords => Some(TfIdf::default()),
+            WorkerFamily::Keywords => {
+                let config = KeywordExtractConfig::builder()
+                    .set_stop_words(keyword_stop_words)
+                    .use_hmm(use_hmm)
+                    .build()
+                    .map_err(|err| {
+                        Error::Other(format!("Failed to configure keyword extraction: {err}"))
+                    })?;
+
+                let mut extractor = TfIdf::default();
+                *extractor.config_mut() = config;
+                Some(extractor)
+            }
         };
 
         Ok(Self {
