@@ -51,6 +51,8 @@ new_user_word <- function(worker, words, tags = "n", freq = NULL) {
     if (n_freq != 1L && n_freq != n_words) {
       cli::cli_abort("`freq` must have length 1 or the same length as `words`.")
     }
+
+    freq <- as.integer(freq)
   }
 
   words <- enc2utf8(words)
