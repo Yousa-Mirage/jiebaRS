@@ -5,6 +5,7 @@ mod user_dict;
 mod worker;
 
 use extendr_api::prelude::*;
+use extendr_api::Result;
 use worker::JiebaWorker;
 
 /// Create an internal native jieba worker.
@@ -61,7 +62,7 @@ fn segment_worker(text: &str, worker: &JiebaWorker) -> Result<Strings> {
 /// @keywords internal
 #[extendr]
 fn segment_batch_worker(texts: Strings, worker: &JiebaWorker) -> Result<List> {
-    let texts_vec: Vec<&str> = texts.iter().map(|s| s.as_str()).collect();
+    let texts_vec: Vec<&str> = texts.iter().map(|s| s.as_ref()).collect();
     let results = worker
         .segment_texts(&texts_vec)?
         .into_iter()
@@ -101,7 +102,7 @@ fn tagging_worker(text: &str, worker: &JiebaWorker) -> Result<List> {
 /// @keywords internal
 #[extendr]
 fn tagging_batch_worker(texts: Strings, worker: &JiebaWorker) -> Result<List> {
-    let texts_vec: Vec<&str> = texts.iter().map(|s| s.as_str()).collect();
+    let texts_vec: Vec<&str> = texts.iter().map(|s| s.as_ref()).collect();
     let results = worker.tag_texts(&texts_vec)?;
     let values = results.into_iter().map(|records| {
         list!(

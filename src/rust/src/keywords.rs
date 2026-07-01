@@ -1,4 +1,4 @@
-use extendr_api::prelude::*;
+use extendr_api::{Error, Result};
 use jieba_rs::{Keyword, KeywordExtract};
 
 use crate::worker::JiebaWorker;

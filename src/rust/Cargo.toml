@@ -10,10 +10,10 @@ crate-type = ['staticlib']
 name = 'jieba_rs'
 
 [dependencies]
-ahash = "0.8.12"
-extendr-api = '0.8.1'
-jieba-rs = { version = "0.8.1", features = ["tfidf"] }
-rayon = "1.11"
+ahash = "0.8"
+extendr-api = '0.9'
+jieba-rs = { version = "0.10", features = ["tfidf", "textrank"] }
+rayon = "1.12"
 
 [lints.rust]
 warnings = "deny"

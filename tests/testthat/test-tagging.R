@@ -3,20 +3,20 @@ test_that("tagging supports vector, data frame and legacy formats", {
 
   expect_identical(
     tagging("这是一个测试", engine1),
-    stats::setNames(c("x", "m", "vn"), c("这是", "一个", "测试"))
+    stats::setNames(c("v", "m", "vn"), c("这是", "一个", "测试"))
   )
 
   expect_identical(
     tagging("这是一个测试", engine1, format = "data.frame"),
     data.frame(
       term = c("这是", "一个", "测试"),
-      tag = c("x", "m", "vn")
+      tag = c("v", "m", "vn")
     )
   )
 
   expect_identical(
     tagging("这是一个测试", engine1, format = "legacy"),
-    stats::setNames(c("这是", "一个", "测试"), c("x", "m", "vn"))
+    stats::setNames(c("这是", "一个", "测试"), c("v", "m", "vn"))
   )
 })
 
@@ -42,19 +42,19 @@ test_that("tagging supports vector input with batch aggregation", {
   expect_identical(
     tagging(input, engine1),
     list(
-      stats::setNames(c("x", "m", "vn"), c("这是", "一个", "测试")),
+      stats::setNames(c("v", "m", "vn"), c("这是", "一个", "测试")),
       stats::setNames(c("d", "v", "m"), c("再", "来", "一次"))
     )
   )
 
   expect_identical(
     tagging(input, engine1, batch = "flatten"),
-    stats::setNames(c("x", "m", "vn", "d", "v", "m"), c("这是", "一个", "测试", "再", "来", "一次"))
+    stats::setNames(c("v", "m", "vn", "d", "v", "m"), c("这是", "一个", "测试", "再", "来", "一次"))
   )
 
   expect_identical(
     tagging(input, engine1, format = "legacy", batch = "flatten"),
-    stats::setNames(c("这是", "一个", "测试", "再", "来", "一次"), c("x", "m", "vn", "d", "v", "m"))
+    stats::setNames(c("这是", "一个", "测试", "再", "来", "一次"), c("v", "m", "vn", "d", "v", "m"))
   )
 
   expect_identical(
@@ -62,7 +62,7 @@ test_that("tagging supports vector input with batch aggregation", {
     data.frame(
       doc_id = c(1L, 1L, 1L, 2L, 2L, 2L),
       term = c("这是", "一个", "测试", "再", "来", "一次"),
-      tag = c("x", "m", "vn", "d", "v", "m")
+      tag = c("v", "m", "vn", "d", "v", "m")
     )
   )
 })
@@ -73,7 +73,7 @@ test_that("tagging ignores bylines and still defaults to list for vectors", {
   input <- c("这是一个测试", "再来一次")
 
   expected <- list(
-    stats::setNames(c("x", "m", "vn"), c("这是", "一个", "测试")),
+    stats::setNames(c("v", "m", "vn"), c("这是", "一个", "测试")),
     stats::setNames(c("d", "v", "m"), c("再", "来", "一次"))
   )
 
@@ -95,10 +95,12 @@ test_that("tagging matches jiebaR on representative single-string inputs", {
   jiebaR_worker <- jiebaR::worker(type = "tag")
 
   for (text in texts) {
-    expect_identical(
-      tagging(text, jiebaRS_worker, format = "legacy"),
-      jiebaR::tagging(text, jiebaR_worker)
-    )
+    jiebaRS_res <- tagging(text, jiebaRS_worker, format = "legacy")
+    jiebaR_res <- jiebaR::tagging(text, jiebaR_worker)
+
+    # jieba-rs 0.10 updates some POS tags compared with jiebaR, but the
+    # token sequence should remain compatible on these representative inputs.
+    expect_identical(unname(jiebaRS_res), unname(jiebaR_res))
   }
 })
 
@@ -137,7 +139,7 @@ test_that("tagging_batch defaults to list output and ignores bylines", {
   expect_identical(
     tagging_batch(input, tagger),
     list(
-      stats::setNames(c("x", "m", "vn"), c("这是", "一个", "测试")),
+      stats::setNames(c("v", "m", "vn"), c("这是", "一个", "测试")),
       stats::setNames(c("d", "v", "m"), c("再", "来", "一次"))
     )
   )
@@ -149,12 +151,12 @@ test_that("tagging_batch forwards explicit formats", {
 
   expect_identical(
     tagging_batch(input, tagger, batch = "flatten"),
-    stats::setNames(c("x", "m", "vn", "d", "v", "m"), c("这是", "一个", "测试", "再", "来", "一次"))
+    stats::setNames(c("v", "m", "vn", "d", "v", "m"), c("这是", "一个", "测试", "再", "来", "一次"))
   )
 
   expect_identical(
     tagging_batch(input, tagger, format = "legacy", batch = "flatten"),
-    stats::setNames(c("这是", "一个", "测试", "再", "来", "一次"), c("x", "m", "vn", "d", "v", "m"))
+    stats::setNames(c("这是", "一个", "测试", "再", "来", "一次"), c("v", "m", "vn", "d", "v", "m"))
   )
 
   expect_identical(
@@ -162,7 +164,7 @@ test_that("tagging_batch forwards explicit formats", {
     data.frame(
       doc_id = c(1L, 1L, 1L, 2L, 2L, 2L),
       term = c("这是", "一个", "测试", "再", "来", "一次"),
-      tag = c("x", "m", "vn", "d", "v", "m")
+      tag = c("v", "m", "vn", "d", "v", "m")
     )
   )
 })

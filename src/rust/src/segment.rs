@@ -1,4 +1,4 @@
-use extendr_api::prelude::*;
+use extendr_api::{Error, Result};
 use rayon::prelude::*;
 
 use crate::worker::{JiebaWorker, SegmentMode, WorkerFamily};
@@ -15,11 +15,11 @@ fn segment_with_mode<'a>(worker: &JiebaWorker, mode: SegmentMode, text: &'a str)
         SegmentMode::Query => engine.cut_for_search(text, use_hmm),
     };
     if worker.stop_words.is_empty() {
-        tokens.retain(|&token| token != " ");
+        tokens.retain(|token| token.word != " ");
     } else {
-        tokens.retain(|&token| worker.keep_token(token));
+        tokens.retain(|token| worker.keep_token(token.word));
     }
-    tokens
+    tokens.into_iter().map(|token| token.word).collect()
 }
 
 impl JiebaWorker {

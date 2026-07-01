@@ -1,6 +1,7 @@
 use ahash::AHashSet;
 
 use extendr_api::prelude::*;
+use extendr_api::{Error, Result};
 use jieba_rs::{Jieba, KeywordExtractConfig, TfIdf};
 
 pub const WORKER_ABI_VERSION: i32 = 1;
@@ -74,10 +75,7 @@ impl JiebaWorker {
                 let config = KeywordExtractConfig::builder()
                     .set_stop_words(keyword_stop_words)
                     .use_hmm(use_hmm)
-                    .build()
-                    .map_err(|err| {
-                        Error::Other(format!("Failed to configure keyword extraction: {err}"))
-                    })?;
+                    .build();
 
                 let mut extractor = TfIdf::default();
                 *extractor.config_mut() = config;
