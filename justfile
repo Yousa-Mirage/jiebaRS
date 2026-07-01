@@ -17,7 +17,7 @@ clean:
     cargo clean --manifest-path src/rust/Cargo.toml
 
 document:
-    Rscript -e "rextendr::document()"
+    Rscript -e "devtools::document()"
 
 test:
     TESTTHAT_CPUS=8 Rscript -e "devtools::test(reporter = 'summary')"
@@ -26,6 +26,3 @@ test:
 site:
     Rscript tools/build-site.R
     @xdg-open docs/index.html || true
-
-update-wordlist:
-    Rscript -e "spelling::update_wordlist(confirm = FALSE)"
