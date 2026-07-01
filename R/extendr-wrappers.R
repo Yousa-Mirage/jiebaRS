@@ -19,6 +19,8 @@ NULL
 #'   `"tag"`, and `"keywords"`.
 #' @param use_hmm Logical scalar indicating whether HMM fallback should be
 #'   enabled for segmentation.
+#' @param hmm_model Character scalar containing a custom HMM model path, or an
+#'   empty string to use the embedded model.
 #' @param top_n Integer scalar giving the number of keywords retained by
 #'   keyword workers.
 #' @param stop_words Character vector of normalized UTF-8 stop words passed to
@@ -26,7 +28,7 @@ NULL
 #'
 #' @return A native `JiebaWorker` handle.
 #' @keywords internal
-new_worker <- function(worker_type, use_hmm, top_n, stop_words) .Call(wrap__new_worker, worker_type, use_hmm, top_n, stop_words)
+new_worker <- function(worker_type, use_hmm, hmm_model, top_n, stop_words) .Call(wrap__new_worker, worker_type, use_hmm, hmm_model, top_n, stop_words)
 
 #' Segment text with an internal native worker.
 #'

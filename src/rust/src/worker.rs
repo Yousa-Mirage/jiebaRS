@@ -1,8 +1,11 @@
+use std::fs::File;
+use std::io::BufReader;
+
 use ahash::AHashSet;
 
 use extendr_api::prelude::*;
 use extendr_api::{Error, Result};
-use jieba_rs::{Jieba, KeywordExtractConfig, TfIdf};
+use jieba_rs::{HmmModel, Jieba, KeywordExtractConfig, TfIdf};
 
 pub const WORKER_ABI_VERSION: i32 = 1;
 
@@ -54,6 +57,7 @@ impl JiebaWorker {
     pub fn new(
         worker_type: &str,
         use_hmm: bool,
+        hmm_model: &str,
         top_n: u32,
         stop_words: Vec<String>,
     ) -> Result<Self> {
@@ -83,8 +87,24 @@ impl JiebaWorker {
             }
         };
 
+        let mut engine = Jieba::new();
+        if !hmm_model.is_empty() {
+            let file = File::open(hmm_model).map_err(|err| {
+                Error::Other(format!(
+                    "Failed to open custom HMM model `{hmm_model}`: {err}"
+                ))
+            })?;
+            let mut reader = BufReader::new(file);
+            let model = HmmModel::load(&mut reader).map_err(|err| {
+                Error::Other(format!(
+                    "Failed to load custom HMM model `{hmm_model}`: {err}"
+                ))
+            })?;
+            engine.set_hmm_model(model);
+        }
+
         Ok(Self {
-            engine: Jieba::new(),
+            engine,
             family,
             use_hmm,
             top_n,

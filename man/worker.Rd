@@ -22,8 +22,10 @@ worker(
 
 \item{stop_word_file}{Optional file path containing one stop word per line.}
 
-\item{hmm}{Logical scalar. Whether to enable HMM fallback for
-unknown terms. Default is \code{TRUE}.}
+\item{hmm}{Logical scalar or character scalar. If logical, controls whether
+to enable HMM fallback for unknown terms. If character, must be a path to a
+custom HMM model file compatible with \code{jieba-rs}'s \code{hmm.model} format, and
+HMM fallback is enabled with that model. Default is \code{TRUE}.}
 
 \item{topn}{Integer. The number of keywords returned by \code{keywords}
 workers. Default is \code{5}.}
@@ -60,14 +62,13 @@ segmentation path, which is the closest public behavior to \code{jiebaR}.
 \code{stop_word} and \code{stop_word_file} can be both supplied at once and then
 be merged together. Then they will be normalized.
 
-In \code{jiebaRS}, \code{hmm} is a logical scalar, not a model-path argument. It
-controls whether the underlying \code{jieba-rs} segmentation/tagging pipeline may
-fall back to HMM for unknown terms. The flag affects \code{mix} and \code{query}
+In \code{jiebaRS}, \code{hmm} accepts either a logical scalar or a file path. A
+logical value controls whether the underlying \code{jieba-rs}
+segmentation/tagging pipeline may fall back to HMM for unknown terms. A
+character scalar is interpreted as a path to a custom HMM model file and
+enables HMM fallback with that model. The flag affects \code{mix} and \code{query}
 workers directly, \code{tag} workers through the underlying mixed tagging path,
 and \code{keywords} workers through TF-IDF keyword extraction. \code{mp}, \code{hmm}, and
-\code{full} workers ignore the flag because their \code{jieba-rs} backends do not use
-this runtime switch.
-
-This differs from \code{jiebaR}, where \code{hmm} is a file path to the HMM model
-(defaulting to \code{HMMPATH}) rather than a \code{TRUE}/\code{FALSE} option.
+\code{full} workers ignore the runtime switch because their \code{jieba-rs} backends
+do not use this runtime switch.
 }

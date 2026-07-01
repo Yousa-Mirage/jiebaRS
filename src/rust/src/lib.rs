@@ -17,6 +17,8 @@ use worker::JiebaWorker;
 ///   `"tag"`, and `"keywords"`.
 /// @param use_hmm Logical scalar indicating whether HMM fallback should be
 ///   enabled for segmentation.
+/// @param hmm_model Character scalar containing a custom HMM model path, or an
+///   empty string to use the embedded model.
 /// @param top_n Integer scalar giving the number of keywords retained by
 ///   keyword workers.
 /// @param stop_words Character vector of normalized UTF-8 stop words passed to
@@ -28,10 +30,11 @@ use worker::JiebaWorker;
 fn new_worker(
     worker_type: &str,
     use_hmm: bool,
+    hmm_model: &str,
     top_n: u32,
     stop_words: Vec<String>,
 ) -> Result<JiebaWorker> {
-    JiebaWorker::new(worker_type, use_hmm, top_n, stop_words)
+    JiebaWorker::new(worker_type, use_hmm, hmm_model, top_n, stop_words)
 }
 
 /// Segment text with an internal native worker.

@@ -4,7 +4,7 @@
 \alias{new_worker}
 \title{Create an internal native jieba worker.}
 \usage{
-new_worker(worker_type, use_hmm, top_n, stop_words)
+new_worker(worker_type, use_hmm, hmm_model, top_n, stop_words)
 }
 \arguments{
 \item{worker_type}{Character scalar naming the worker type. Currently
@@ -13,6 +13,9 @@ supports \code{"mix"}, \code{"mp"}, \code{"hmm"}, \code{"full"}, \code{"query"},
 
 \item{use_hmm}{Logical scalar indicating whether HMM fallback should be
 enabled for segmentation.}
+
+\item{hmm_model}{Character scalar containing a custom HMM model path, or an
+empty string to use the embedded model.}
 
 \item{top_n}{Integer scalar giving the number of keywords retained by
 keyword workers.}

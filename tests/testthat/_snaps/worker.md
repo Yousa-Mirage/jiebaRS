@@ -6,13 +6,13 @@
       Error in `worker()`:
       ! `type` must be one of "mix", "mp", "hmm", "full", "query", "tag", or "keywords", not "nope".
 
-# worker explains hmm path incompatibility
+# worker validates custom HMM model paths
 
     Code
       worker(hmm = "path/to/hmm_model.utf8")
     Condition
       Error in `worker()`:
-      ! `hmm` must be `TRUE` or `FALSE`. Unlike `jiebaR`, `jiebaRS` does not accept an HMM model path here.
+      ! `hmm` must point to an existing custom HMM model file.
 
 # worker warns once for approximate mp and hmm mappings
 

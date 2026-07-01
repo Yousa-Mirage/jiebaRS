@@ -22,23 +22,24 @@
 #' `stop_word` and `stop_word_file` can be both supplied at once and then
 #' be merged together. Then they will be normalized.
 #'
-#' In `jiebaRS`, `hmm` is a logical scalar, not a model-path argument. It
-#' controls whether the underlying `jieba-rs` segmentation/tagging pipeline may
-#' fall back to HMM for unknown terms. The flag affects `mix` and `query`
+#' In `jiebaRS`, `hmm` accepts either a logical scalar or a file path. A
+#' logical value controls whether the underlying `jieba-rs`
+#' segmentation/tagging pipeline may fall back to HMM for unknown terms. A
+#' character scalar is interpreted as a path to a custom HMM model file and
+#' enables HMM fallback with that model. The flag affects `mix` and `query`
 #' workers directly, `tag` workers through the underlying mixed tagging path,
 #' and `keywords` workers through TF-IDF keyword extraction. `mp`, `hmm`, and
-#' `full` workers ignore the flag because their `jieba-rs` backends do not use
-#' this runtime switch.
-#'
-#' This differs from `jiebaR`, where `hmm` is a file path to the HMM model
-#' (defaulting to `HMMPATH`) rather than a `TRUE`/`FALSE` option.
+#' `full` workers ignore the runtime switch because their `jieba-rs` backends
+#' do not use this runtime switch.
 #'
 #' @param type Worker type. Supported values are `"mix"`, `"mp"`, `"hmm"`,
 #'   `"full"`, `"query"`, `"tag"`, and `"keywords"`. Default is `"mix"`.
 #' @param stop_word Optional character vector of stop words supplied directly.
 #' @param stop_word_file Optional file path containing one stop word per line.
-#' @param hmm Logical scalar. Whether to enable HMM fallback for
-#'   unknown terms. Default is `TRUE`.
+#' @param hmm Logical scalar or character scalar. If logical, controls whether
+#'   to enable HMM fallback for unknown terms. If character, must be a path to a
+#'   custom HMM model file compatible with `jieba-rs`'s `hmm.model` format, and
+#'   HMM fallback is enabled with that model. Default is `TRUE`.
 #' @param topn Integer. The number of keywords returned by `keywords`
 #'   workers. Default is `5`.
 #' @param symbol Logical. Whether to keep symbol-like tokens in the sentence. Default is `FALSE`.
@@ -59,6 +60,7 @@ worker <- function(
 ) {
   type <- rlang::arg_match(type)
   stop_words <- normalize_stop_words(stop_word, stop_word_file)
+  hmm_model <- ""
 
   if (identical(type, "mp")) {
     cli::cli_warn(
@@ -84,13 +86,14 @@ worker <- function(
     )
   }
 
-  if (!rlang::is_bool(hmm)) {
-    cli::cli_abort(
-      paste(
-        "`hmm` must be `TRUE` or `FALSE`.",
-        "Unlike `jiebaR`, `jiebaRS` does not accept an HMM model path here."
-      )
-    )
+  if (rlang::is_string(hmm)) {
+    if (!file.exists(hmm)) {
+      cli::cli_abort("`hmm` must point to an existing custom HMM model file.")
+    }
+    hmm_model <- enc2utf8(hmm)
+    hmm <- TRUE
+  } else if (!rlang::is_bool(hmm)) {
+    cli::cli_abort("`hmm` must be `TRUE`, `FALSE`, or a custom HMM model file path.")
   }
 
   if (!rlang::is_integerish(topn, n = 1) || topn < 0) {
@@ -128,10 +131,11 @@ worker <- function(
 
   structure(
     list(
-      ptr = new_worker(type, hmm, topn, stop_words),
+      ptr = new_worker(type, hmm, hmm_model, topn, stop_words),
       type = type,
       config = list(
         hmm = hmm,
+        hmm_model = if (nzchar(hmm_model)) hmm_model else NULL,
         topn = topn,
         stop_word = stop_words,
         symbol = symbol,

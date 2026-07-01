@@ -58,7 +58,31 @@ test_that("worker snapshots invalid type input", {
   )
 })
 
-test_that("worker explains hmm path incompatibility", {
+test_that("worker accepts a custom HMM model path", {
+  hmm_file <- withr::local_tempfile()
+  writeLines(
+    c(
+      "0 0 0 0",
+      "0 0 0 0",
+      "0 0 0 0",
+      "0 0 0 0",
+      "0 0 0 0",
+      "你:0",
+      "好:0",
+      "世:0",
+      "界:0"
+    ),
+    hmm_file,
+    useBytes = TRUE
+  )
+
+  engine1 <- worker(hmm = hmm_file)
+
+  expect_identical(engine1$config$hmm, TRUE)
+  expect_identical(engine1$config$hmm_model, enc2utf8(hmm_file))
+})
+
+test_that("worker validates custom HMM model paths", {
   expect_snapshot(
     worker(hmm = "path/to/hmm_model.utf8"),
     error = TRUE
