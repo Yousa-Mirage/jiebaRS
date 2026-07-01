@@ -47,6 +47,7 @@ test_that("keyword worker returns a S3 object", {
   expect_identical(engine1$type, "keywords")
   expect_identical(engine1$config$hmm, TRUE)
   expect_identical(engine1$config$topn, 3L)
+  expect_identical(engine1$config$idf, NULL)
   expect_identical(engine1$config$symbol, FALSE)
   expect_identical(engine1$config$bylines, FALSE)
 })

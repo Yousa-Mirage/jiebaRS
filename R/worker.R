@@ -43,6 +43,10 @@
 #'   HMM fallback is enabled with that model. Default is `TRUE`.
 #' @param topn Integer. The number of terms returned by `keywords` and
 #'   `textrank` workers. Default is `5`.
+#' @param idf Optional character scalar. A path to a custom IDF dictionary
+#'   file for `keywords` workers. Each line should be `word idf_value`. When
+#'   `NULL`, the embedded default IDF dictionary is used. Ignored by non-keyword
+#'   workers. Default is `NULL`.
 #' @param symbol Logical. Whether to keep symbol-like tokens in the sentence. Default is `FALSE`.
 #' @param bylines [Deprecated] compatibility argument retained from `jiebaR`.
 #'   `jiebaRS` no longer uses this value; control batch aggregation directly
@@ -56,9 +60,15 @@ worker <- function(
   stop_word_file = NULL,
   hmm = TRUE,
   topn = 5L,
+  idf = NULL,
   symbol = FALSE,
   bylines = FALSE
 ) {
+  # TODO: Support loading custom main dictionary (`dict`) and user
+  # dictionary (`user`) file paths at worker creation time. `jieba-rs`
+  # exposes `Jieba::with_dict()` and `Jieba::load_dict()` for this, but
+  # the R-level `worker()` signature does not yet accept these paths.
+
   type <- rlang::arg_match(type)
   stop_words <- normalize_stop_words(stop_word, stop_word_file)
   hmm_model <- ""
@@ -102,6 +112,17 @@ worker <- function(
   }
   topn <- as.integer(topn)
 
+  idf_path <- ""
+  if (!is.null(idf)) {
+    if (!rlang::is_string(idf)) {
+      cli::cli_abort("`idf` must be `NULL` or a path to an IDF dictionary file.")
+    }
+    if (!file.exists(idf)) {
+      cli::cli_abort("`idf` must point to an existing IDF dictionary file.")
+    }
+    idf_path <- enc2utf8(idf)
+  }
+
   if (!rlang::is_bool(symbol)) {
     cli::cli_abort("`symbol` must be `TRUE` or `FALSE`.")
   }
@@ -114,11 +135,6 @@ worker <- function(
       )
     )
   }
-
-  # TODO: Extend the `keywords` worker config to cover the remaining jiebaR
-  # compatibility knobs.
-  # - `idf` path is not configurable yet; the Rust backend always uses
-  #   `TfIdf::default()`.
 
   classes <- c(
     switch(
@@ -133,12 +149,13 @@ worker <- function(
 
   structure(
     list(
-      ptr = new_worker(type, hmm, hmm_model, topn, stop_words),
+      ptr = new_worker(type, hmm, hmm_model, idf_path, topn, stop_words),
       type = type,
       config = list(
         hmm = hmm,
         hmm_model = if (nzchar(hmm_model)) hmm_model else NULL,
         topn = topn,
+        idf = if (nzchar(idf_path)) idf_path else NULL,
         stop_word = stop_words,
         symbol = symbol,
         bylines = bylines

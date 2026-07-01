@@ -15,12 +15,14 @@ NULL
 #' Internal bridge used by [worker()] to allocate a native `JiebaWorker`.
 #'
 #' @param worker_type Character scalar naming the worker type. Currently
-#'   supports `"mix"`, `"mp"`, `"hmm"`, `"full"`, `"query"`, and
-#'   `"tag"`, and `"keywords"`.
+#'   supports `"mix"`, `"mp"`, `"hmm"`, `"full"`, `"query"`, `"tag"`,
+#'   `"keywords"`, and `"textrank"`.
 #' @param use_hmm Logical scalar indicating whether HMM fallback should be
 #'   enabled for segmentation.
 #' @param hmm_model Character scalar containing a custom HMM model path, or an
 #'   empty string to use the embedded model.
+#' @param idf_path Character scalar containing a custom IDF dictionary path, or
+#'   an empty string to use the embedded dictionary.
 #' @param top_n Integer scalar giving the number of keywords retained by
 #'   keyword workers.
 #' @param stop_words Character vector of normalized UTF-8 stop words passed to
@@ -28,7 +30,7 @@ NULL
 #'
 #' @return A native `JiebaWorker` handle.
 #' @keywords internal
-new_worker <- function(worker_type, use_hmm, hmm_model, top_n, stop_words) .Call(wrap__new_worker, worker_type, use_hmm, hmm_model, top_n, stop_words)
+new_worker <- function(worker_type, use_hmm, hmm_model, idf_path, top_n, stop_words) .Call(wrap__new_worker, worker_type, use_hmm, hmm_model, idf_path, top_n, stop_words)
 
 #' Segment text with an internal native worker.
 #'

@@ -38,6 +38,42 @@ test_that("keyword worker can return the legacy format", {
   expect_true(all(nzchar(names(result))))
 })
 
+test_that("keyword worker loads a custom IDF dictionary", {
+  idf_file <- withr::local_tempfile()
+  writeLines(
+    c("北京烤鸭 99.0", "纽约 7.0", "天气 6.0"),
+    idf_file,
+    useBytes = TRUE
+  )
+
+  keys_default <- worker(type = "keywords", topn = 3)
+  keys_custom <- worker(type = "keywords", topn = 3, idf = idf_file)
+
+  # The custom IDF changes the weights.
+  default_result <- keywords(keyword_text, keys_default)
+  custom_result <- keywords(keyword_text, keys_custom)
+  expect_false(identical(default_result, custom_result))
+
+  # The custom IDF boosts "北京烤鸭" to a much higher weight.
+  expect_true(custom_result[["北京烤鸭"]] > default_result[["北京烤鸭"]])
+
+  # The config records the IDF path.
+  expect_identical(keys_custom$config$idf, idf_file)
+  expect_null(keys_default$config$idf)
+})
+
+test_that("keyword worker snapshots invalid IDF input", {
+  expect_snapshot(
+    worker(type = "keywords", idf = 5),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    worker(type = "keywords", idf = "/nonexistent/idf.txt"),
+    error = TRUE
+  )
+})
+
 test_that("keywords requires optional arguments to be named", {
   keys_worker <- worker(type = "keywords", topn = 3)
 

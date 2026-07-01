@@ -61,6 +61,7 @@ impl JiebaWorker {
         worker_type: &str,
         use_hmm: bool,
         hmm_model: &str,
+        idf_path: &str,
         top_n: u32,
         stop_words: Vec<String>,
     ) -> Result<Self> {
@@ -73,10 +74,8 @@ impl JiebaWorker {
         let keyword_stop_words = stop_words.iter().cloned().collect();
         let textrank_stop_words = stop_words.iter().cloned().collect();
 
-        // TODO: The keyword worker still lacks several jiebaR-era knobs.
-        // - Load custom IDF dictionaries from R-provided paths.
-        // - Split keyword-specific config into a dedicated struct once more
-        //   keyword options are supported.
+        // TODO: Split keyword-specific config into a dedicated struct once more
+        // keyword options are supported.
         let keyword_extractor = match family {
             WorkerFamily::Keywords => {
                 let config = KeywordExtractConfig::builder()
@@ -84,8 +83,19 @@ impl JiebaWorker {
                     .use_hmm(use_hmm)
                     .build();
 
-                let mut extractor = TfIdf::default();
-                *extractor.config_mut() = config;
+                let extractor = if idf_path.is_empty() {
+                    let mut e = TfIdf::default();
+                    *e.config_mut() = config;
+                    e
+                } else {
+                    let file = File::open(idf_path).map_err(|err| {
+                        Error::Other(format!(
+                            "Failed to open custom IDF dictionary `{idf_path}`: {err}"
+                        ))
+                    })?;
+                    let mut reader = BufReader::new(file);
+                    TfIdf::new(Some(&mut reader), config)
+                };
                 Some(extractor)
             }
             WorkerFamily::Segment(_) | WorkerFamily::Tag | WorkerFamily::TextRank => None,

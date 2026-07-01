@@ -10,6 +10,7 @@ worker(
   stop_word_file = NULL,
   hmm = TRUE,
   topn = 5L,
+  idf = NULL,
   symbol = FALSE,
   bylines = FALSE
 )
@@ -30,6 +31,11 @@ HMM fallback is enabled with that model. Default is \code{TRUE}.}
 
 \item{topn}{Integer. The number of terms returned by \code{keywords} and
 \code{textrank} workers. Default is \code{5}.}
+
+\item{idf}{Optional character scalar. A path to a custom IDF dictionary
+file for \code{keywords} workers. Each line should be \verb{word idf_value}. When
+\code{NULL}, the embedded default IDF dictionary is used. Ignored by non-keyword
+workers. Default is \code{NULL}.}
 
 \item{symbol}{Logical. Whether to keep symbol-like tokens in the sentence. Default is \code{FALSE}.}
 

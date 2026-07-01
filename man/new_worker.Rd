@@ -4,18 +4,21 @@
 \alias{new_worker}
 \title{Create an internal native jieba worker.}
 \usage{
-new_worker(worker_type, use_hmm, hmm_model, top_n, stop_words)
+new_worker(worker_type, use_hmm, hmm_model, idf_path, top_n, stop_words)
 }
 \arguments{
 \item{worker_type}{Character scalar naming the worker type. Currently
-supports \code{"mix"}, \code{"mp"}, \code{"hmm"}, \code{"full"}, \code{"query"}, and
-\code{"tag"}, and \code{"keywords"}.}
+supports \code{"mix"}, \code{"mp"}, \code{"hmm"}, \code{"full"}, \code{"query"}, \code{"tag"},
+\code{"keywords"}, and \code{"textrank"}.}
 
 \item{use_hmm}{Logical scalar indicating whether HMM fallback should be
 enabled for segmentation.}
 
 \item{hmm_model}{Character scalar containing a custom HMM model path, or an
 empty string to use the embedded model.}
+
+\item{idf_path}{Character scalar containing a custom IDF dictionary path, or
+an empty string to use the embedded dictionary.}
 
 \item{top_n}{Integer scalar giving the number of keywords retained by
 keyword workers.}

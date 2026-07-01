@@ -1,3 +1,19 @@
+# keyword worker snapshots invalid IDF input
+
+    Code
+      worker(type = "keywords", idf = 5)
+    Condition
+      Error in `worker()`:
+      ! `idf` must be `NULL` or a path to an IDF dictionary file.
+
+---
+
+    Code
+      worker(type = "keywords", idf = "/nonexistent/idf.txt")
+    Condition
+      Error in `worker()`:
+      ! `idf` must point to an existing IDF dictionary file.
+
 # keywords requires optional arguments to be named
 
     Code

@@ -18,9 +18,8 @@
 keywords <- function(code, jiebar, ..., format = c("numeric", "data.frame", "legacy")) {
   rlang::check_dots_empty()
 
-  # TODO: Fill in the remaining jiebaR keyword API surface.
-  # - Implement `vector_keywords()` for pre-tokenized input.
-  # - Add the `<=` / `[` sugar methods once the core API stabilizes.
+  # TODO: Implement `vector_keywords()` to accept a pre-tokenized
+  # character vector, skipping segmentation.
   format <- rlang::arg_match(format)
 
   if (!inherits(jiebar, "jieba_keywords")) {
