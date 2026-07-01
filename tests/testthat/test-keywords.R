@@ -38,6 +38,15 @@ test_that("keyword worker can return the legacy format", {
   expect_true(all(nzchar(names(result))))
 })
 
+test_that("keywords requires optional arguments to be named", {
+  keys_worker <- worker(type = "keywords", topn = 3)
+
+  expect_snapshot(
+    keywords(keyword_text, keys_worker, "legacy"),
+    error = TRUE
+  )
+})
+
 test_that("keywords snapshots invalid format input", {
   keys_worker <- worker(type = "keywords", topn = 3)
 

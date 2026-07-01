@@ -4,12 +4,15 @@
 \alias{keywords}
 \title{Extract keywords from text}
 \usage{
-keywords(code, jiebar, format = c("numeric", "data.frame", "legacy"))
+keywords(code, jiebar, ..., format = c("numeric", "data.frame", "legacy"))
 }
 \arguments{
 \item{code}{A character to analyze.}
 
 \item{jiebar}{A \code{jieba_worker} object created with \code{worker(type = "keywords")}.}
+
+\item{...}{Must be empty. This enforces that optional arguments such as
+\code{format} are supplied with explicit names.}
 
 \item{format}{Output format. \code{"numeric"} returns a named numeric vector,
 \code{"data.frame"} returns a data frame with \code{term} and \code{weight} columns, and

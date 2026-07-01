@@ -9,6 +9,13 @@ test_that("count_ngrams counts a single n", {
   )
 })
 
+test_that("count_ngrams requires optional arguments to be named", {
+  expect_snapshot(
+    count_ngrams(c("我", "爱", "R", "语言"), 2),
+    error = TRUE
+  )
+})
+
 test_that("count_ngrams counts multiple n values", {
   expect_identical(
     count_ngrams(c("sd", "sd", "sd", "rd"), n = 2:3, sep = ""),

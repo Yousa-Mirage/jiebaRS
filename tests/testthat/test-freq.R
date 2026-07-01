@@ -28,6 +28,13 @@ test_that("freq keeps stable order for ties when sorting", {
   expect_identical(freq(input, sort = TRUE), res)
 })
 
+test_that("freq requires optional arguments to be named", {
+  expect_snapshot(
+    freq(c("a", "b"), TRUE),
+    error = TRUE
+  )
+})
+
 test_that("freq requires a character vector", {
   expect_snapshot(
     freq(1:5),

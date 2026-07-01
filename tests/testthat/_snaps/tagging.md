@@ -1,3 +1,25 @@
+# tagging requires optional arguments to be named
+
+    Code
+      tagging(input, tagger, "legacy")
+    Condition
+      Error in `tagging()`:
+      ! `...` must be empty.
+      x Problematic argument:
+      * ..1 = "legacy"
+      i Did you forget to name an argument?
+
+---
+
+    Code
+      tagging_batch(input, tagger, "legacy")
+    Condition
+      Error in `tagging_batch()`:
+      ! `...` must be empty.
+      x Problematic argument:
+      * ..1 = "legacy"
+      i Did you forget to name an argument?
+
 # tagging rejects incompatible multi-string combinations
 
     Code

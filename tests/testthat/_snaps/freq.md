@@ -1,3 +1,14 @@
+# freq requires optional arguments to be named
+
+    Code
+      freq(c("a", "b"), TRUE)
+    Condition
+      Error in `freq()`:
+      ! `...` must be empty.
+      x Problematic argument:
+      * ..1 = TRUE
+      i Did you forget to name an argument?
+
 # freq requires a character vector
 
     Code

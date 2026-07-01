@@ -5,6 +5,8 @@
 #' This function returns the frequency of words.
 #'
 #' @param x A character vector of words.
+#' @param ... Must be empty. This enforces that optional arguments such as
+#'   `sort` are supplied with explicit names.
 #' @param sort Whether to sort the result by descending frequency. The default
 #'   `FALSE` keeps the first-appearance order.
 #'
@@ -13,7 +15,9 @@
 #' freq(c("b", "a", "b", "c", "a"))
 #' freq(c("b", "a", "b", "c", "a"), sort = TRUE)
 #' @export
-freq <- function(x, sort = FALSE) {
+freq <- function(x, ..., sort = FALSE) {
+  rlang::check_dots_empty()
+
   if (!rlang::is_character(x)) {
     cli::cli_abort("`x` must be a character vector.")
   }

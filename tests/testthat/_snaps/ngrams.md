@@ -1,3 +1,14 @@
+# count_ngrams requires optional arguments to be named
+
+    Code
+      count_ngrams(c("我", "爱", "R", "语言"), 2)
+    Condition
+      Error in `count_ngrams()`:
+      ! `...` must be empty.
+      x Problematic argument:
+      * ..1 = 2
+      i Did you forget to name an argument?
+
 # count_ngrams snapshots invalid inputs
 
     Code

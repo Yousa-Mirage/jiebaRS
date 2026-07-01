@@ -6,6 +6,7 @@
 \usage{
 count_ngrams(
   x,
+  ...,
   n = 2,
   sep = " ",
   sort = TRUE,
@@ -14,6 +15,9 @@ count_ngrams(
 }
 \arguments{
 \item{x}{A character vector of tokens or a list of character vectors.}
+
+\item{...}{Must be empty. This enforces that optional arguments such as \code{n},
+\code{sep}, \code{sort}, and \code{format} are supplied with explicit names.}
 
 \item{n}{A positive integer or integer vector giving the n-gram sizes to
 count. The default is \code{2}. If \code{n} is a integer vector of length > 1,

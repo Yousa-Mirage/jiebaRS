@@ -7,6 +7,7 @@
 tagging_batch(
   texts,
   jiebar,
+  ...,
   format = c("vector", "data.frame", "legacy"),
   batch = c("list", "data.frame", "flatten")
 )
@@ -15,6 +16,9 @@ tagging_batch(
 \item{texts}{A non-empty character vector to tag.}
 
 \item{jiebar}{A \code{jieba_worker} object created with \code{worker(type = "tag")}.}
+
+\item{...}{Must be empty. This enforces that optional arguments such as
+\code{format} and \code{batch} are supplied with explicit names.}
 
 \item{format}{Output format for each single tagged result. Must be one of
 \code{"vector"}, \code{"data.frame"}, or \code{"legacy"}.}

@@ -4,12 +4,15 @@
 \alias{segment_batch}
 \title{Segment a batch of strings}
 \usage{
-segment_batch(texts, jiebar, batch = c("list", "data.frame", "flatten"))
+segment_batch(texts, jiebar, ..., batch = c("list", "data.frame", "flatten"))
 }
 \arguments{
 \item{texts}{A character vector of strings to segment.}
 
 \item{jiebar}{A \code{jieba_worker} object.}
+
+\item{...}{Must be empty. This enforces that optional arguments such as
+\code{batch} are supplied with explicit names.}
 
 \item{batch}{Batch aggregation mode. Must be one of \code{"list"},
 \code{"data.frame"}, or \code{"flatten"}. The default is \code{"list"}.}

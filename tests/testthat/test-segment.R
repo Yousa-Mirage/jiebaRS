@@ -20,6 +20,22 @@ test_that("segment warns and ignores deprecated mod", {
   )
 })
 
+
+test_that("segment requires optional arguments to be named", {
+  engine1 <- worker()
+  input <- c("南京市长江大桥", "这是一个测试")
+
+  expect_snapshot(
+    segment(input, engine1, "flatten"),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    segment_batch(input, engine1, "flatten"),
+    error = TRUE
+  )
+})
+
 test_that("full worker enumerates all possible words", {
   engine1 <- worker(type = "full")
 

@@ -7,6 +7,7 @@
 tagging(
   code,
   jiebar,
+  ...,
   format = c("vector", "data.frame", "legacy"),
   batch = c("list", "data.frame", "flatten")
 )
@@ -15,6 +16,9 @@ tagging(
 \item{code}{A non-empty character vector to tag.}
 
 \item{jiebar}{A \code{jieba_worker} object created with \code{worker(type = "tag")}.}
+
+\item{...}{Must be empty. This enforces that optional arguments such as
+\code{format} and \code{batch} are supplied with explicit names.}
 
 \item{format}{Output format for a single tagged string. Must be one of
 \code{"vector"}, \code{"data.frame"}, or \code{"legacy"}.}

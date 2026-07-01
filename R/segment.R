@@ -34,6 +34,8 @@
 #'
 #' @param code A character vector to segment.
 #' @param jiebar A `jieba_worker` object.
+#' @param ... Must be empty. This enforces that optional arguments such as
+#'   `mod` and `batch` are supplied with explicit names.
 #' @param mod [Deprecated] Compatibility argument retained from `jiebaR`. This
 #'   argument no longer has any effect.
 #' @param batch Batch aggregation mode for **multi-string input**. Must be
@@ -46,7 +48,9 @@
 #' segment(c("南京市长江大桥", "这是一个测试"), seg, batch = "list")
 #' segment(c("南京市长江大桥", "这是一个测试"), seg, batch = "data.frame")
 #' @export
-segment <- function(code, jiebar, mod = NULL, batch = c("list", "data.frame", "flatten")) {
+segment <- function(code, jiebar, ..., mod = NULL, batch = c("list", "data.frame", "flatten")) {
+  rlang::check_dots_empty()
+
   if (!inherits(jiebar, "jieba_segmenter")) {
     cli::cli_abort("`jiebar` must be a `jieba_segmenter` object.")
   }
@@ -107,6 +111,8 @@ segment <- function(code, jiebar, mod = NULL, batch = c("list", "data.frame", "f
 #'
 #' @param texts A character vector of strings to segment.
 #' @param jiebar A `jieba_worker` object.
+#' @param ... Must be empty. This enforces that optional arguments such as
+#'   `batch` are supplied with explicit names.
 #' @param batch Batch aggregation mode. Must be one of `"list"`,
 #'   `"data.frame"`, or `"flatten"`. The default is `"list"`.
 #'
@@ -117,7 +123,9 @@ segment <- function(code, jiebar, mod = NULL, batch = c("list", "data.frame", "f
 #' segment_batch(texts, seg)
 #' segment_batch(texts, seg, batch = "flatten")
 #' @export
-segment_batch <- function(texts, jiebar, batch = c("list", "data.frame", "flatten")) {
+segment_batch <- function(texts, jiebar, ..., batch = c("list", "data.frame", "flatten")) {
+  rlang::check_dots_empty()
+
   batch <- rlang::arg_match(batch)
   segment(texts, jiebar, batch = batch)
 }

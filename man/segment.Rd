@@ -4,12 +4,21 @@
 \alias{segment}
 \title{Segment text with a jieba worker}
 \usage{
-segment(code, jiebar, mod = NULL, batch = c("list", "data.frame", "flatten"))
+segment(
+  code,
+  jiebar,
+  ...,
+  mod = NULL,
+  batch = c("list", "data.frame", "flatten")
+)
 }
 \arguments{
 \item{code}{A character vector to segment.}
 
 \item{jiebar}{A \code{jieba_worker} object.}
+
+\item{...}{Must be empty. This enforces that optional arguments such as
+\code{mod} and \code{batch} are supplied with explicit names.}
 
 \item{mod}{\link{Deprecated} Compatibility argument retained from \code{jiebaR}. This
 argument no longer has any effect.}

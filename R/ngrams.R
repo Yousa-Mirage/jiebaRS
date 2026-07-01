@@ -106,6 +106,8 @@
 #' **2.0x** faster than `jiebaR::get_tuple()`.
 #'
 #' @param x A character vector of tokens or a list of character vectors.
+#' @param ... Must be empty. This enforces that optional arguments such as `n`,
+#'   `sep`, `sort`, and `format` are supplied with explicit names.
 #' @param n A positive integer or integer vector giving the n-gram sizes to
 #'   count. The default is `2`. If `n` is a integer vector of length > 1,
 #'   n-grams of all specified sizes will be counted.
@@ -128,11 +130,14 @@
 #' @export
 count_ngrams <- function(
   x,
+  ...,
   n = 2,
   sep = " ",
   sort = TRUE,
   format = c("data.frame", "vector")
 ) {
+  rlang::check_dots_empty()
+
   if (!rlang::is_bool(sort)) {
     cli::cli_abort("`sort` must be a single `TRUE` or `FALSE` value.")
   }

@@ -4,10 +4,13 @@
 \alias{freq}
 \title{The frequency of words}
 \usage{
-freq(x, sort = FALSE)
+freq(x, ..., sort = FALSE)
 }
 \arguments{
 \item{x}{A character vector of words.}
+
+\item{...}{Must be empty. This enforces that optional arguments such as
+\code{sort} are supplied with explicit names.}
 
 \item{sort}{Whether to sort the result by descending frequency. The default
 \code{FALSE} keeps the first-appearance order.}

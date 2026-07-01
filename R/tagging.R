@@ -44,6 +44,8 @@
 #'
 #' @param code A non-empty character vector to tag.
 #' @param jiebar A `jieba_worker` object created with `worker(type = "tag")`.
+#' @param ... Must be empty. This enforces that optional arguments such as
+#'   `format` and `batch` are supplied with explicit names.
 #' @param format Output format for a single tagged string. Must be one of
 #'   `"vector"`, `"data.frame"`, or `"legacy"`.
 #' @param batch Aggregation mode for multi-string input. Must be one of
@@ -59,9 +61,12 @@
 tagging <- function(
   code,
   jiebar,
+  ...,
   format = c("vector", "data.frame", "legacy"),
   batch = c("list", "data.frame", "flatten")
 ) {
+  rlang::check_dots_empty()
+
   if (!inherits(jiebar, "jieba_tagger")) {
     cli::cli_abort(
       r"(`jiebar` must be a `jieba_tagger` object created with `worker(type = "tag")`.)"
@@ -142,6 +147,8 @@ tagging <- function(
 #'
 #' @param texts A non-empty character vector to tag.
 #' @param jiebar A `jieba_worker` object created with `worker(type = "tag")`.
+#' @param ... Must be empty. This enforces that optional arguments such as
+#'   `format` and `batch` are supplied with explicit names.
 #' @param format Output format for each single tagged result. Must be one of
 #'   `"vector"`, `"data.frame"`, or `"legacy"`.
 #' @param batch Aggregation mode. Must be one of `"list"`, `"data.frame"`, or
@@ -157,9 +164,12 @@ tagging <- function(
 tagging_batch <- function(
   texts,
   jiebar,
+  ...,
   format = c("vector", "data.frame", "legacy"),
   batch = c("list", "data.frame", "flatten")
 ) {
+  rlang::check_dots_empty()
+
   format <- rlang::arg_match(format, c("vector", "data.frame", "legacy"))
   batch <- rlang::arg_match(batch, c("list", "data.frame", "flatten"))
   tagging(texts, jiebar, format = format, batch = batch)

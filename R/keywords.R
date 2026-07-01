@@ -5,6 +5,8 @@
 #'
 #' @param code A character to analyze.
 #' @param jiebar A `jieba_worker` object created with `worker(type = "keywords")`.
+#' @param ... Must be empty. This enforces that optional arguments such as
+#'   `format` are supplied with explicit names.
 #' @param format Output format. `"numeric"` returns a named numeric vector,
 #'   `"data.frame"` returns a data frame with `term` and `weight` columns, and
 #'   `"legacy"` returns the old `jiebaR` style character vector with weights in
@@ -12,7 +14,9 @@
 #'
 #' @return Keyword results in the requested format.
 #' @export
-keywords <- function(code, jiebar, format = c("numeric", "data.frame", "legacy")) {
+keywords <- function(code, jiebar, ..., format = c("numeric", "data.frame", "legacy")) {
+  rlang::check_dots_empty()
+
   # TODO: Fill in the remaining jiebaR keyword API surface.
   # - Implement `vector_keywords()` for pre-tokenized input.
   # - Add the `<=` / `[` sugar methods once the core API stabilizes.

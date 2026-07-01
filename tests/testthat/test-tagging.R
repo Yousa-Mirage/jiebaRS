@@ -20,6 +20,21 @@ test_that("tagging supports vector, data frame and legacy formats", {
   )
 })
 
+test_that("tagging requires optional arguments to be named", {
+  tagger <- worker(type = "tag")
+  input <- c("这是一个测试", "再来一次")
+
+  expect_snapshot(
+    tagging(input, tagger, "legacy"),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    tagging_batch(input, tagger, "legacy"),
+    error = TRUE
+  )
+})
+
 test_that("tagging supports vector input with batch aggregation", {
   engine1 <- worker(type = "tag")
   input <- c("这是一个测试", "再来一次")

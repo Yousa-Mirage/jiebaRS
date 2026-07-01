@@ -1,3 +1,14 @@
+# keywords requires optional arguments to be named
+
+    Code
+      keywords(keyword_text, keys_worker, "legacy")
+    Condition
+      Error in `keywords()`:
+      ! `...` must be empty.
+      x Problematic argument:
+      * ..1 = "legacy"
+      i Did you forget to name an argument?
+
 # keywords snapshots invalid format input
 
     Code
