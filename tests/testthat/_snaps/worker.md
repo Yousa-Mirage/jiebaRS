@@ -4,7 +4,7 @@
       worker(type = "nope")
     Condition
       Error in `worker()`:
-      ! `type` must be one of "mix", "mp", "hmm", "full", "query", "tag", or "keywords", not "nope".
+      ! `type` must be one of "mix", "mp", "hmm", "full", "query", "tag", "keywords", or "textrank", not "nope".
 
 # worker validates custom HMM model paths
 

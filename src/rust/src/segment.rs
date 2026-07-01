@@ -32,6 +32,9 @@ impl JiebaWorker {
             WorkerFamily::Keywords => Err(Error::Other(
                 "`segment()` requires a segmentation worker, not a keyword worker.".to_string(),
             )),
+            WorkerFamily::TextRank => Err(Error::Other(
+                "`segment()` requires a segmentation worker, not a TextRank worker.".to_string(),
+            )),
         }
     }
 

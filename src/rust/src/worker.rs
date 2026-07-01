@@ -5,7 +5,7 @@ use ahash::AHashSet;
 
 use extendr_api::prelude::*;
 use extendr_api::{Error, Result};
-use jieba_rs::{HmmModel, Jieba, KeywordExtractConfig, TfIdf};
+use jieba_rs::{HmmModel, Jieba, KeywordExtractConfig, TextRank, TfIdf};
 
 pub const WORKER_ABI_VERSION: i32 = 1;
 
@@ -14,6 +14,7 @@ pub enum WorkerFamily {
     Segment(SegmentMode),
     Tag,
     Keywords,
+    TextRank,
 }
 
 #[derive(Clone, Copy)]
@@ -35,8 +36,9 @@ impl WorkerFamily {
             "query" => Ok(Self::Segment(SegmentMode::Query)),
             "tag" => Ok(Self::Tag),
             "keywords" => Ok(Self::Keywords),
+            "textrank" => Ok(Self::TextRank),
             _ => Err(Error::Other(format!(
-                "Unsupported worker type `{worker_type}`. Supported types are `mix`, `mp`, `hmm`, `full`, `query`, `tag`, and `keywords`."
+                "Unsupported worker type `{worker_type}`. Supported types are `mix`, `mp`, `hmm`, `full`, `query`, `tag`, `keywords`, and `textrank`."
             ))),
         }
     }
@@ -50,6 +52,7 @@ pub struct JiebaWorker {
     pub top_n: usize,
     pub stop_words: AHashSet<String>,
     pub keyword_extractor: Option<TfIdf>,
+    pub textrank_extractor: Option<TextRank>,
     version: i32,
 }
 
@@ -68,13 +71,13 @@ impl JiebaWorker {
             .map(|word| word.to_lowercase())
             .collect();
         let keyword_stop_words = stop_words.iter().cloned().collect();
+        let textrank_stop_words = stop_words.iter().cloned().collect();
 
         // TODO: The keyword worker still lacks several jiebaR-era knobs.
         // - Load custom IDF dictionaries from R-provided paths.
         // - Split keyword-specific config into a dedicated struct once more
         //   keyword options are supported.
         let keyword_extractor = match family {
-            WorkerFamily::Segment(_) | WorkerFamily::Tag => None,
             WorkerFamily::Keywords => {
                 let config = KeywordExtractConfig::builder()
                     .set_stop_words(keyword_stop_words)
@@ -85,6 +88,18 @@ impl JiebaWorker {
                 *extractor.config_mut() = config;
                 Some(extractor)
             }
+            WorkerFamily::Segment(_) | WorkerFamily::Tag | WorkerFamily::TextRank => None,
+        };
+
+        let textrank_extractor = match family {
+            WorkerFamily::TextRank => {
+                let config = KeywordExtractConfig::builder()
+                    .set_stop_words(textrank_stop_words)
+                    .use_hmm(use_hmm)
+                    .build();
+                Some(TextRank::new(5, config))
+            }
+            WorkerFamily::Segment(_) | WorkerFamily::Tag | WorkerFamily::Keywords => None,
         };
 
         let mut engine = Jieba::new();
@@ -110,6 +125,7 @@ impl JiebaWorker {
             top_n,
             stop_words,
             keyword_extractor,
+            textrank_extractor,
             version: WORKER_ABI_VERSION,
         })
     }

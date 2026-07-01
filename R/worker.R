@@ -33,15 +33,16 @@
 #' do not use this runtime switch.
 #'
 #' @param type Worker type. Supported values are `"mix"`, `"mp"`, `"hmm"`,
-#'   `"full"`, `"query"`, `"tag"`, and `"keywords"`. Default is `"mix"`.
+#'   `"full"`, `"query"`, `"tag"`, `"keywords"`, and `"textrank"`.
+#'   Default is `"mix"`.
 #' @param stop_word Optional character vector of stop words supplied directly.
 #' @param stop_word_file Optional file path containing one stop word per line.
 #' @param hmm Logical scalar or character scalar. If logical, controls whether
 #'   to enable HMM fallback for unknown terms. If character, must be a path to a
 #'   custom HMM model file compatible with `jieba-rs`'s `hmm.model` format, and
 #'   HMM fallback is enabled with that model. Default is `TRUE`.
-#' @param topn Integer. The number of keywords returned by `keywords`
-#'   workers. Default is `5`.
+#' @param topn Integer. The number of terms returned by `keywords` and
+#'   `textrank` workers. Default is `5`.
 #' @param symbol Logical. Whether to keep symbol-like tokens in the sentence. Default is `FALSE`.
 #' @param bylines [Deprecated] compatibility argument retained from `jiebaR`.
 #'   `jiebaRS` no longer uses this value; control batch aggregation directly
@@ -50,7 +51,7 @@
 #' @return A `jieba_worker` S3 object.
 #' @export
 worker <- function(
-  type = c("mix", "mp", "hmm", "full", "query", "tag", "keywords"),
+  type = c("mix", "mp", "hmm", "full", "query", "tag", "keywords", "textrank"),
   stop_word = NULL,
   stop_word_file = NULL,
   hmm = TRUE,
@@ -123,6 +124,7 @@ worker <- function(
     switch(
       type,
       keywords = "jieba_keywords",
+      textrank = "jieba_textrank",
       tag = "jieba_tagger",
       "jieba_segmenter"
     ),

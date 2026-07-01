@@ -9,7 +9,7 @@ print.jieba_worker <- function(x, ...) {
   }
 
   topn <- x$config$topn
-  if (!is.null(topn) && identical(x$type, "keywords")) {
+  if (!is.null(topn) && x$type %in% c("keywords", "textrank")) {
     cat("  topn: ", topn, "\n", sep = "")
   }
 

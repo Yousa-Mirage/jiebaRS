@@ -1,7 +1,8 @@
 #' Extract keywords from text
 #'
 #' Extract TF-IDF keywords from a single in-memory string with a keyword worker
-#' created by [worker()].
+#' created by [worker()]. This is separate from [textrank()], which uses
+#' TextRank weighting.
 #'
 #' @param code A character to analyze.
 #' @param jiebar A `jieba_worker` object created with `worker(type = "keywords")`.

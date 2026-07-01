@@ -5,7 +5,7 @@
 \title{Initialize a jiebaRS worker}
 \usage{
 worker(
-  type = c("mix", "mp", "hmm", "full", "query", "tag", "keywords"),
+  type = c("mix", "mp", "hmm", "full", "query", "tag", "keywords", "textrank"),
   stop_word = NULL,
   stop_word_file = NULL,
   hmm = TRUE,
@@ -16,7 +16,8 @@ worker(
 }
 \arguments{
 \item{type}{Worker type. Supported values are \code{"mix"}, \code{"mp"}, \code{"hmm"},
-\code{"full"}, \code{"query"}, \code{"tag"}, and \code{"keywords"}. Default is \code{"mix"}.}
+\code{"full"}, \code{"query"}, \code{"tag"}, \code{"keywords"}, and \code{"textrank"}.
+Default is \code{"mix"}.}
 
 \item{stop_word}{Optional character vector of stop words supplied directly.}
 
@@ -27,8 +28,8 @@ to enable HMM fallback for unknown terms. If character, must be a path to a
 custom HMM model file compatible with \code{jieba-rs}'s \code{hmm.model} format, and
 HMM fallback is enabled with that model. Default is \code{TRUE}.}
 
-\item{topn}{Integer. The number of keywords returned by \code{keywords}
-workers. Default is \code{5}.}
+\item{topn}{Integer. The number of terms returned by \code{keywords} and
+\code{textrank} workers. Default is \code{5}.}
 
 \item{symbol}{Logical. Whether to keep symbol-like tokens in the sentence. Default is \code{FALSE}.}
 

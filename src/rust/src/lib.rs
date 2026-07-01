@@ -118,8 +118,8 @@ fn tagging_batch_worker(texts: Strings, worker: &JiebaWorker) -> Result<List> {
 
 /// Extract keywords with an internal native worker.
 ///
-/// Internal bridge used by [keywords()] to extract keywords from a single UTF-8
-/// string.
+/// Internal bridge used by [keywords()] to extract TF-IDF keywords from a
+/// single UTF-8 string.
 ///
 /// @param text Character scalar containing the input text.
 /// @param worker A native `JiebaWorker` handle created by the internal worker
@@ -130,6 +130,26 @@ fn tagging_batch_worker(texts: Strings, worker: &JiebaWorker) -> Result<List> {
 #[extendr]
 fn keywords_worker(text: &str, worker: &JiebaWorker) -> Result<List> {
     let records = worker.extract_keywords(text)?;
+    Ok(list!(
+        keyword = Strings::from_values(records.iter().map(|record| &record.keyword)),
+        weight = Doubles::from_values(records.iter().map(|record| record.weight))
+    ))
+}
+
+/// Extract TextRank keywords with an internal native worker.
+///
+/// Internal bridge used by [textrank()] to extract TextRank keywords from a
+/// single UTF-8 string.
+///
+/// @param text Character scalar containing the input text.
+/// @param worker A native `JiebaWorker` handle created by the internal worker
+///   constructor.
+///
+/// @return A named list with `keyword` and `weight` vectors.
+/// @keywords internal
+#[extendr]
+fn textrank_worker(text: &str, worker: &JiebaWorker) -> Result<List> {
+    let records = worker.extract_textrank(text)?;
     Ok(list!(
         keyword = Strings::from_values(records.iter().map(|record| &record.keyword)),
         weight = Doubles::from_values(records.iter().map(|record| record.weight))
@@ -181,6 +201,7 @@ extendr_module! {
     fn tagging_worker;
     fn tagging_batch_worker;
     fn keywords_worker;
+    fn textrank_worker;
 
     fn add_user_words;
     fn tobin_rs;

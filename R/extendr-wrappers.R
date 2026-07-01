@@ -81,8 +81,8 @@ tagging_batch_worker <- function(texts, worker) .Call(wrap__tagging_batch_worker
 
 #' Extract keywords with an internal native worker.
 #'
-#' Internal bridge used by [keywords()] to extract keywords from a single UTF-8
-#' string.
+#' Internal bridge used by [keywords()] to extract TF-IDF keywords from a
+#' single UTF-8 string.
 #'
 #' @param text Character scalar containing the input text.
 #' @param worker A native `JiebaWorker` handle created by the internal worker
@@ -91,6 +91,19 @@ tagging_batch_worker <- function(texts, worker) .Call(wrap__tagging_batch_worker
 #' @return A named list with `keyword` and `weight` vectors.
 #' @keywords internal
 keywords_worker <- function(text, worker) .Call(wrap__keywords_worker, text, worker)
+
+#' Extract TextRank keywords with an internal native worker.
+#'
+#' Internal bridge used by [textrank()] to extract TextRank keywords from a
+#' single UTF-8 string.
+#'
+#' @param text Character scalar containing the input text.
+#' @param worker A native `JiebaWorker` handle created by the internal worker
+#'   constructor.
+#'
+#' @return A named list with `keyword` and `weight` vectors.
+#' @keywords internal
+textrank_worker <- function(text, worker) .Call(wrap__textrank_worker, text, worker)
 
 #' Add user-defined words with an internal native worker.
 #'

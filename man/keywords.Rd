@@ -24,5 +24,6 @@ Keyword results in the requested format.
 }
 \description{
 Extract TF-IDF keywords from a single in-memory string with a keyword worker
-created by \code{\link[=worker]{worker()}}.
+created by \code{\link[=worker]{worker()}}. This is separate from \code{\link[=textrank]{textrank()}}, which uses
+TextRank weighting.
 }
