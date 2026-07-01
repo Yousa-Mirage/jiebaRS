@@ -7,9 +7,6 @@ impl JiebaWorker {
     pub fn extract_keywords(&self, text: &str) -> Result<Vec<Keyword>> {
         self.validate()?;
 
-        // TODO: Match the remaining jiebaR keyword behavior.
-        // - Expose configurable allowed POS filtering if we decide to support
-        //   richer keyword controls than jiebaR offered.
         let Some(extractor) = &self.keyword_extractor else {
             return Err(Error::Other(
                 "This worker is not configured for TF-IDF keyword extraction.".to_string(),

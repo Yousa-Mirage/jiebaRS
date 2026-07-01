@@ -18,8 +18,6 @@
 keywords <- function(code, jiebar, ..., format = c("numeric", "data.frame", "legacy")) {
   rlang::check_dots_empty()
 
-  # TODO: Implement `vector_keywords()` to accept a pre-tokenized
-  # character vector, skipping segmentation.
   format <- rlang::arg_match(format)
 
   if (!inherits(jiebar, "jieba_keywords")) {

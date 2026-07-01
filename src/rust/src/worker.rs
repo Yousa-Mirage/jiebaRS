@@ -74,8 +74,6 @@ impl JiebaWorker {
         let keyword_stop_words = stop_words.iter().cloned().collect();
         let textrank_stop_words = stop_words.iter().cloned().collect();
 
-        // TODO: Split keyword-specific config into a dedicated struct once more
-        // keyword options are supported.
         let keyword_extractor = match family {
             WorkerFamily::Keywords => {
                 let config = KeywordExtractConfig::builder()

@@ -12,9 +12,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-# jiebaRS
+# TODOs
 
-`jiebaRS` aims to be a drop-in replacement for `jiebaR` for common user
-workflows. `jiebaRS` 提供了对 `jiebaR`
-功能和接口的兼容，但采用了更现代的内部实现，并使用了基于 `jieba-rs` 的 Rust
-后端。平均来说，分词效率比 `jiebaR` 提高了 xx% 。
+- [x] 自定义 IDF
+- [ ] vector\_\* 系列
+- [x] get_idf()
+- [ ] dict / user 路径
