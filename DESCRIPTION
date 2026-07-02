@@ -20,7 +20,9 @@ Imports:
     cli,
     rlang
 Suggests: 
-    spelling,
+    knitr,
+    pkgdown,
+    rmarkdown,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 Config/testthat/edition: 3
