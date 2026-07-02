@@ -3,7 +3,7 @@
 
 # jiebaRS
 
-<div data-align="center">
+<div align="center">
 
 <!-- badges: start -->
 

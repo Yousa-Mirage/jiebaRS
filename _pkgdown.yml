@@ -21,9 +21,15 @@ home:
 
 navbar:
   structure:
-    left: [reference, news]
+    left: [guide_zh, guide_en, reference, news]
     right: [search, github]
   components:
+    guide_zh:
+      text: 使用指南
+      href: ./
+    guide_en:
+      text: User Guide
+      href: README_en.html
     github:
       icon: fab fa-github
       href: https://github.com/Yousa-Mirage/jiebaRS

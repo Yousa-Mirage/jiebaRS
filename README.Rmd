@@ -2,6 +2,7 @@
 output:
   github_document:
     html_preview: false
+    md_extensions: -native_divs
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
