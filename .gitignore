@@ -14,6 +14,7 @@
 
 # Output files from R CMD build
 /*.tar.gz
+jiebaRS.Rcheck
 
 # Output files from R CMD check
 /*.tar.gz
@@ -23,6 +24,7 @@
 .Rproj.user/
 
 # vendored crates (created at build time on Windows / offline)
+src/vendor/
 src/rust/vendor/
 src/rust/vendor*.tar.xz
 src/rust/vendor-config.toml

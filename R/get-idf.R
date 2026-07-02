@@ -24,6 +24,7 @@
 #'
 #' @examples
 #' get_idf(list(c("abc", "def"),c("abc", " ")))
+#' @importFrom utils write.table
 #' @export
 get_idf <- function(x, stop_word = NULL, stop_word_file = NULL, path = NULL) {
   if (!rlang::is_list(x)) {
