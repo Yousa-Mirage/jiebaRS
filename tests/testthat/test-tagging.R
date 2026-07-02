@@ -58,7 +58,7 @@ test_that("tagging supports vector input with batch aggregation", {
   )
 
   expect_identical(
-    tagging(input, engine1, format = "data.frame", batch = "data.frame"),
+    tagging(input, engine1, format = "data.frame", batch = "flatten"),
     data.frame(
       doc_id = c(1L, 1L, 1L, 2L, 2L, 2L),
       term = c("这是", "一个", "测试", "再", "来", "一次"),
@@ -104,20 +104,12 @@ test_that("tagging matches jiebaR on representative single-string inputs", {
   }
 })
 
-test_that("tagging rejects incompatible multi-string combinations", {
+test_that("tagging rejects an invalid batch value", {
   tagger <- worker(type = "tag")
   input <- c("这是一个测试", "再来一次")
 
   expect_snapshot(
-    tagging(input, tagger, format = "vector", batch = "data.frame"),
-    error = TRUE
-  )
-  expect_snapshot(
-    tagging(input, tagger, format = "legacy", batch = "data.frame"),
-    error = TRUE
-  )
-  expect_snapshot(
-    tagging(input, tagger, format = "data.frame", batch = "flatten"),
+    tagging(input, tagger, batch = "data.frame"),
     error = TRUE
   )
 })
@@ -160,7 +152,7 @@ test_that("tagging_batch forwards explicit formats", {
   )
 
   expect_identical(
-    tagging_batch(input, tagger, format = "data.frame", batch = "data.frame"),
+    tagging_batch(input, tagger, format = "data.frame", batch = "flatten"),
     data.frame(
       doc_id = c(1L, 1L, 1L, 2L, 2L, 2L),
       term = c("这是", "一个", "测试", "再", "来", "一次"),

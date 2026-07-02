@@ -9,7 +9,7 @@ tagging_batch(
   jiebar,
   ...,
   format = c("vector", "data.frame", "legacy"),
-  batch = c("list", "data.frame", "flatten")
+  batch = c("list", "flatten")
 )
 }
 \arguments{
@@ -23,8 +23,7 @@ tagging_batch(
 \item{format}{Output format for each single tagged result. Must be one of
 \code{"vector"}, \code{"data.frame"}, or \code{"legacy"}.}
 
-\item{batch}{Aggregation mode. Must be one of \code{"list"}, \code{"data.frame"}, or
-\code{"flatten"}.}
+\item{batch}{Aggregation mode. Must be one of \code{"list"} or \code{"flatten"}.}
 }
 \value{
 Tagging results in the requested format.
@@ -39,10 +38,10 @@ The returned object depends on both \code{format} and \code{batch}:
 \itemize{
 \item \code{batch = "list"}: returns one single-string tagging result per input
 string.
-\item \code{batch = "data.frame"}: requires \code{format = "data.frame"}; combines all
-rows and adds \code{doc_id}.
-\item \code{batch = "flatten"}: requires \code{format = "vector"} or \code{"legacy"};
-concatenates the individual results into one named character vector.
+\item \code{batch = "flatten"}: concatenates all results into one. The shape is
+decided by \code{format}: \code{"vector"}/\code{"legacy"} produce a named character
+vector, while \code{"data.frame"} produces a combined data frame with a
+\code{doc_id} column.
 }
 
 In the current release benchmarks on the bundled 《围城》 and 《红楼梦》

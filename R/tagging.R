@@ -34,10 +34,9 @@
 #' When `code` contains multiple strings, `batch` controls how the per-string
 #' results are aggregated:
 #' - `"list"`: one single-string result per input string.
-#' - `"data.frame"`: only valid when `format = "data.frame"`; combines all
-#'   rows and adds `doc_id`.
-#' - `"flatten"`: only valid when `format` is `"vector"` or `"legacy"`;
-#'   concatenates all results into one named character vector.
+#' - `"flatten"`: concatenate all results into one. The shape is decided by
+#'   `format`: `"vector"`/`"legacy"` produce a named character vector, while
+#'   `"data.frame"` produces a combined data frame with a `doc_id` column.
 #'
 #' When `batch` is omitted, `jiebaRS` returns `"vector"` for single-string
 #' input and `"list"` for multi-string input.
@@ -49,21 +48,21 @@
 #' @param format Output format for a single tagged string. Must be one of
 #'   `"vector"`, `"data.frame"`, or `"legacy"`.
 #' @param batch Aggregation mode for multi-string input. Must be one of
-#'   `"list"`, `"data.frame"`, or `"flatten"`.
+#'   `"list"` or `"flatten"`.
 #'
 #' @return Tagging results in the requested format.
 #' @examples
 #' tagger <- worker(type = "tag")
 #' tagging("这是一个测试", tagger)
 #' tagging(c("这是一个测试", "再来一次"), tagger)
-#' tagging(c("这是一个测试", "再来一次"), tagger, format = "data.frame", batch = "data.frame")
+#' tagging(c("这是一个测试", "再来一次"), tagger, format = "data.frame", batch = "flatten")
 #' @export
 tagging <- function(
   code,
   jiebar,
   ...,
   format = c("vector", "data.frame", "legacy"),
-  batch = c("list", "data.frame", "flatten")
+  batch = c("list", "flatten")
 ) {
   rlang::check_dots_empty()
 
@@ -96,14 +95,6 @@ tagging <- function(
 
   batch <- rlang::arg_match(batch)
 
-  if (identical(batch, "data.frame") && !identical(format, "data.frame")) {
-    cli::cli_abort("`batch = 'data.frame'` requires `format = 'data.frame'`.")
-  }
-
-  if (identical(batch, "flatten") && identical(format, "data.frame")) {
-    cli::cli_abort("`batch = 'flatten'` is not supported with `format = 'data.frame'`.")
-  }
-
   if (identical(batch, "list")) {
     return(lapply(result, function(x) .format_one(x$term, x$tag, format)))
   }
@@ -113,15 +104,15 @@ tagging <- function(
   all_terms <- unlist(terms_list, use.names = FALSE)
   all_tags <- unlist(tags_list, use.names = FALSE)
 
-  if (identical(batch, "flatten")) {
-    return(.format_one(all_terms, all_tags, format))
+  if (identical(format, "data.frame")) {
+    return(data.frame(
+      doc_id = rep.int(seq_along(result), lengths(terms_list)),
+      term = all_terms,
+      tag = all_tags
+    ))
   }
 
-  data.frame(
-    doc_id = rep.int(seq_along(result), lengths(terms_list)),
-    term = all_terms,
-    tag = all_tags
-  )
+  .format_one(all_terms, all_tags, format)
 }
 
 #' Tag a batch of strings
@@ -134,10 +125,10 @@ tagging <- function(
 #' The returned object depends on both `format` and `batch`:
 #' - `batch = "list"`: returns one single-string tagging result per input
 #'   string.
-#' - `batch = "data.frame"`: requires `format = "data.frame"`; combines all
-#'   rows and adds `doc_id`.
-#' - `batch = "flatten"`: requires `format = "vector"` or `"legacy"`;
-#'   concatenates the individual results into one named character vector.
+#' - `batch = "flatten"`: concatenates all results into one. The shape is
+#'   decided by `format`: `"vector"`/`"legacy"` produce a named character
+#'   vector, while `"data.frame"` produces a combined data frame with a
+#'   `doc_id` column.
 #'
 #' In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
 #' texts, batch tagging is about **2x to 5x faster** than the comparable
@@ -151,8 +142,7 @@ tagging <- function(
 #'   `format` and `batch` are supplied with explicit names.
 #' @param format Output format for each single tagged result. Must be one of
 #'   `"vector"`, `"data.frame"`, or `"legacy"`.
-#' @param batch Aggregation mode. Must be one of `"list"`, `"data.frame"`, or
-#'   `"flatten"`.
+#' @param batch Aggregation mode. Must be one of `"list"` or `"flatten"`.
 #'
 #' @return Tagging results in the requested format.
 #' @examples
@@ -166,11 +156,11 @@ tagging_batch <- function(
   jiebar,
   ...,
   format = c("vector", "data.frame", "legacy"),
-  batch = c("list", "data.frame", "flatten")
+  batch = c("list", "flatten")
 ) {
   rlang::check_dots_empty()
 
   format <- rlang::arg_match(format, c("vector", "data.frame", "legacy"))
-  batch <- rlang::arg_match(batch, c("list", "data.frame", "flatten"))
+  batch <- rlang::arg_match(batch, c("list", "flatten"))
   tagging(texts, jiebar, format = format, batch = batch)
 }

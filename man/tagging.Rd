@@ -9,7 +9,7 @@ tagging(
   jiebar,
   ...,
   format = c("vector", "data.frame", "legacy"),
-  batch = c("list", "data.frame", "flatten")
+  batch = c("list", "flatten")
 )
 }
 \arguments{
@@ -24,7 +24,7 @@ tagging(
 \code{"vector"}, \code{"data.frame"}, or \code{"legacy"}.}
 
 \item{batch}{Aggregation mode for multi-string input. Must be one of
-\code{"list"}, \code{"data.frame"}, or \code{"flatten"}.}
+\code{"list"} or \code{"flatten"}.}
 }
 \value{
 Tagging results in the requested format.
@@ -55,10 +55,9 @@ When \code{code} contains multiple strings, \code{batch} controls how the per-st
 results are aggregated:
 \itemize{
 \item \code{"list"}: one single-string result per input string.
-\item \code{"data.frame"}: only valid when \code{format = "data.frame"}; combines all
-rows and adds \code{doc_id}.
-\item \code{"flatten"}: only valid when \code{format} is \code{"vector"} or \code{"legacy"};
-concatenates all results into one named character vector.
+\item \code{"flatten"}: concatenate all results into one. The shape is decided by
+\code{format}: \code{"vector"}/\code{"legacy"} produce a named character vector, while
+\code{"data.frame"} produces a combined data frame with a \code{doc_id} column.
 }
 
 When \code{batch} is omitted, \code{jiebaRS} returns \code{"vector"} for single-string
@@ -68,5 +67,5 @@ input and \code{"list"} for multi-string input.
 tagger <- worker(type = "tag")
 tagging("这是一个测试", tagger)
 tagging(c("这是一个测试", "再来一次"), tagger)
-tagging(c("这是一个测试", "再来一次"), tagger, format = "data.frame", batch = "data.frame")
+tagging(c("这是一个测试", "再来一次"), tagger, format = "data.frame", batch = "flatten")
 }

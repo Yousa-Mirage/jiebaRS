@@ -4,7 +4,7 @@
 \alias{keywords}
 \title{Extract keywords from text}
 \usage{
-keywords(code, jiebar, ..., format = c("numeric", "data.frame", "legacy"))
+keywords(code, jiebar, ..., format = c("vector", "data.frame", "legacy"))
 }
 \arguments{
 \item{code}{A character to analyze.}
@@ -14,10 +14,10 @@ keywords(code, jiebar, ..., format = c("numeric", "data.frame", "legacy"))
 \item{...}{Must be empty. This enforces that optional arguments such as
 \code{format} are supplied with explicit names.}
 
-\item{format}{Output format. \code{"numeric"} returns a named numeric vector,
+\item{format}{Output format. \code{"vector"} returns a named numeric vector,
 \code{"data.frame"} returns a data frame with \code{term} and \code{weight} columns, and
 \code{"legacy"} returns the old \code{jiebaR} style character vector with weights in
-\code{names()}. Default is \code{"numeric"}.}
+\code{names()}. Default is \code{"vector"}.}
 }
 \value{
 Keyword results in the requested format.

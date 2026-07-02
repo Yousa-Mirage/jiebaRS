@@ -20,29 +20,13 @@
       * ..1 = "legacy"
       i Did you forget to name an argument?
 
-# tagging rejects incompatible multi-string combinations
+# tagging rejects an invalid batch value
 
     Code
-      tagging(input, tagger, format = "vector", batch = "data.frame")
+      tagging(input, tagger, batch = "data.frame")
     Condition
       Error in `tagging()`:
-      ! `batch = 'data.frame'` requires `format = 'data.frame'`.
-
----
-
-    Code
-      tagging(input, tagger, format = "legacy", batch = "data.frame")
-    Condition
-      Error in `tagging()`:
-      ! `batch = 'data.frame'` requires `format = 'data.frame'`.
-
----
-
-    Code
-      tagging(input, tagger, format = "data.frame", batch = "flatten")
-    Condition
-      Error in `tagging()`:
-      ! `batch = 'flatten'` is not supported with `format = 'data.frame'`.
+      ! `batch` must be one of "list" or "flatten", not "data.frame".
 
 # tagging snapshots invalid inputs
 
@@ -74,5 +58,5 @@
       tagging_batch("测试", tagger, batch = "bad")
     Condition
       Error in `tagging_batch()`:
-      ! `batch` must be one of "list", "data.frame", or "flatten", not "bad".
+      ! `batch` must be one of "list" or "flatten", not "bad".
 
