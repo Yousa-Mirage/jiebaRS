@@ -30,13 +30,3 @@
       Error in `filter_segment()`:
       ! `keep_na` must be a single `TRUE` or `FALSE` value.
 
----
-
-    Code
-      filter_segment(c("a", "b"), "a", unit = 10)
-    Condition
-      Warning:
-      The `unit` argument is unused and will be ignored.
-    Output
-      [1] "b"
-

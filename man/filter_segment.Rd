@@ -4,7 +4,7 @@
 \alias{filter_segment}
 \title{Filter segmentation results}
 \usage{
-filter_segment(input, filter_words, keep_na = TRUE, unit = 50)
+filter_segment(input, filter_words, keep_na = TRUE)
 }
 \arguments{
 \item{input}{A character vector or a list of character vectors.}
@@ -13,9 +13,6 @@ filter_segment(input, filter_words, keep_na = TRUE, unit = 50)
 
 \item{keep_na}{Whether to keep \code{NA} values in the returned result. The
 default \code{TRUE} matches \code{jiebaR::filter_segment()}.}
-
-\item{unit}{\link{Deprecated} Unused compatibility argument retained with
-\code{jiebaR::filter_segment()}.}
 }
 \value{
 An object with the same shape as \code{input}, with matching words

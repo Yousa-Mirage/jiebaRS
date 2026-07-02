@@ -14,8 +14,6 @@
 #' @param filter_words A character vector of words to remove.
 #' @param keep_na Whether to keep `NA` values in the returned result. The
 #'   default `TRUE` matches `jiebaR::filter_segment()`.
-#' @param unit [Deprecated] Unused compatibility argument retained with
-#'   `jiebaR::filter_segment()`.
 #'
 #' @return An object with the same shape as `input`, with matching words
 #'   removed.
@@ -24,15 +22,12 @@
 #' filter_segment(c("a", NA, "b", "a"), c("b"), keep_na = FALSE)
 #' filter_segment(list(c("我", "是", "测试"), c("测试", "文本", "我")), "我")
 #' @export
-filter_segment <- function(input, filter_words, keep_na = TRUE, unit = 50) {
+filter_segment <- function(input, filter_words, keep_na = TRUE) {
   if (!rlang::is_character(filter_words)) {
     cli::cli_abort("`filter_words` must be a character vector.")
   }
   if (!rlang::is_bool(keep_na)) {
     cli::cli_abort("`keep_na` must be a single `TRUE` or `FALSE` value.")
-  }
-  if (!missing(unit)) {
-    cli::cli_warn("The `unit` argument is unused and will be ignored.")
   }
 
   filter_words <- enc2utf8(filter_words)

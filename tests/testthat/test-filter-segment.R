@@ -63,9 +63,6 @@ test_that("filter_segment snapshots invalid inputs", {
     filter_segment(c("a", NA), "a", keep_na = NA),
     error = TRUE
   )
-  expect_snapshot(
-    filter_segment(c("a", "b"), "a", unit = 10)
-  )
 })
 
 test_that("filter_segment matches jiebaR on supported inputs", {
@@ -74,39 +71,32 @@ test_that("filter_segment matches jiebaR on supported inputs", {
   cases <- list(
     list(
       input = c("我", "是", "测试", "文本", "我"),
-      filter_words = c("我", "你"),
-      unit = 50
+      filter_words = c("我", "你")
     ),
     list(
       input = list(
         c("我", "是", "测试", "文本"),
         c("测试", "文本", "我", "你")
       ),
-      filter_words = c("我", "你"),
-      unit = 50
+      filter_words = c("我", "你")
     ),
     list(
       input = c("a", NA, "b", "a"),
-      filter_words = c(NA, "b"),
-      unit = 50
+      filter_words = c(NA, "b")
     ),
     list(
       input = c("abc", "def", " ", "."),
-      filter_words = c("abc"),
-      unit = 50
+      filter_words = c("abc")
     ),
     list(
       input = c("a", "b", "c"),
-      filter_words = c("a", "b", "c"),
-      unit = 1
+      filter_words = c("a", "b", "c")
     )
   )
 
   for (case in cases) {
-    new_res <- suppressWarnings(
-      filter_segment(input = case$input, filter_words = case$filter_words, unit = case$unit)
-    )
-    old_res <- jiebaR::filter_segment(input = case$input, filter_words = case$filter_words, unit = case$unit)
+    new_res <- filter_segment(input = case$input, filter_words = case$filter_words)
+    old_res <- jiebaR::filter_segment(input = case$input, filter_words = case$filter_words)
 
     expect_identical(new_res, old_res)
   }
