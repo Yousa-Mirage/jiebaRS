@@ -11,6 +11,8 @@ worker(
   hmm = TRUE,
   topn = 5L,
   idf = NULL,
+  dict = NULL,
+  user = NULL,
   symbol = FALSE,
   bylines = FALSE
 )
@@ -36,6 +38,16 @@ HMM fallback is enabled with that model. Default is \code{TRUE}.}
 file for \code{keywords} workers. Each line should be \verb{word idf_value}. When
 \code{NULL}, the embedded default IDF dictionary is used. Ignored by non-keyword
 workers. Default is \code{NULL}.}
+
+\item{dict}{Optional character scalar. A path to a custom main dictionary
+file that \emph{replaces} the embedded dictionary. Each line should be
+\code{word [freq] [tag]} (whitespace-separated; \code{freq} defaults to \code{0}, \code{tag}
+defaults to empty). When \code{NULL}, the embedded dictionary is used. Default
+is \code{NULL}.}
+
+\item{user}{Optional character scalar. A path to a user dictionary file
+whose entries are \emph{appended} to the main dictionary. Same line format as
+\code{dict}: \code{word [freq] [tag]}. Default is \code{NULL}.}
 
 \item{symbol}{Logical. Whether to keep symbol-like tokens in the sentence. Default is \code{FALSE}.}
 
@@ -78,4 +90,12 @@ workers directly, \code{tag} workers through the underlying mixed tagging path,
 and \code{keywords} workers through TF-IDF keyword extraction. \code{mp}, \code{hmm}, and
 \code{full} workers ignore the runtime switch because their \code{jieba-rs} backends
 do not use this runtime switch.
+
+\code{dict} and \code{user} load dictionary files at worker creation time. \code{dict}
+\emph{replaces} the embedded main dictionary entirely; \code{user} \emph{appends} entries
+to whatever main dictionary is in place (default or custom \code{dict}). Both
+files use the same line format: \code{word [freq] [tag]}, whitespace-separated,
+one entry per line. \code{freq} is an integer word frequency (default \code{0} if
+omitted); \code{tag} is a part-of-speech tag string (default empty if omitted).
+For \code{user} files, a word with no \code{freq} is assigned frequency \code{0}.
 }

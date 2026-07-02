@@ -21,6 +21,11 @@ use worker::JiebaWorker;
 ///   empty string to use the embedded model.
 /// @param idf_path Character scalar containing a custom IDF dictionary path, or
 ///   an empty string to use the embedded dictionary.
+/// @param dict_path Character scalar containing a custom main dictionary path,
+///   or an empty string to use the embedded dictionary. When provided, the
+///   custom file *replaces* the embedded main dictionary entirely.
+/// @param user_path Character scalar containing a user dictionary path, or an
+///   empty string to skip. User entries are *appended* to the main dictionary.
 /// @param top_n Integer scalar giving the number of keywords retained by
 ///   keyword workers.
 /// @param stop_words Character vector of normalized UTF-8 stop words passed to
@@ -29,15 +34,27 @@ use worker::JiebaWorker;
 /// @return A native `JiebaWorker` handle.
 /// @keywords internal
 #[extendr]
+#[allow(clippy::too_many_arguments)]
 fn new_worker(
     worker_type: &str,
     use_hmm: bool,
     hmm_model: &str,
     idf_path: &str,
+    dict_path: &str,
+    user_path: &str,
     top_n: u32,
     stop_words: Vec<String>,
 ) -> Result<JiebaWorker> {
-    JiebaWorker::new(worker_type, use_hmm, hmm_model, idf_path, top_n, stop_words)
+    JiebaWorker::new(
+        worker_type,
+        use_hmm,
+        hmm_model,
+        idf_path,
+        dict_path,
+        user_path,
+        top_n,
+        stop_words,
+    )
 }
 
 /// Segment text with an internal native worker.

@@ -4,7 +4,16 @@
 \alias{new_worker}
 \title{Create an internal native jieba worker.}
 \usage{
-new_worker(worker_type, use_hmm, hmm_model, idf_path, top_n, stop_words)
+new_worker(
+  worker_type,
+  use_hmm,
+  hmm_model,
+  idf_path,
+  dict_path,
+  user_path,
+  top_n,
+  stop_words
+)
 }
 \arguments{
 \item{worker_type}{Character scalar naming the worker type. Currently
@@ -19,6 +28,13 @@ empty string to use the embedded model.}
 
 \item{idf_path}{Character scalar containing a custom IDF dictionary path, or
 an empty string to use the embedded dictionary.}
+
+\item{dict_path}{Character scalar containing a custom main dictionary path,
+or an empty string to use the embedded dictionary. When provided, the
+custom file \emph{replaces} the embedded main dictionary entirely.}
+
+\item{user_path}{Character scalar containing a user dictionary path, or an
+empty string to skip. User entries are \emph{appended} to the main dictionary.}
 
 \item{top_n}{Integer scalar giving the number of keywords retained by
 keyword workers.}

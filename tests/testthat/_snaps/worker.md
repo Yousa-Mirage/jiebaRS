@@ -1,3 +1,35 @@
+# worker snapshots invalid dict and user inputs
+
+    Code
+      worker(dict = 5)
+    Condition
+      Error in `worker()`:
+      ! `dict` must be `NULL` or a path to a main dictionary file.
+
+---
+
+    Code
+      worker(dict = "/nonexistent/dict.txt")
+    Condition
+      Error in `worker()`:
+      ! `dict` must point to an existing main dictionary file.
+
+---
+
+    Code
+      worker(user = 5)
+    Condition
+      Error in `worker()`:
+      ! `user` must be `NULL` or a path to a user dictionary file.
+
+---
+
+    Code
+      worker(user = "/nonexistent/user.txt")
+    Condition
+      Error in `worker()`:
+      ! `user` must point to an existing user dictionary file.
+
 # worker snapshots invalid type input
 
     Code

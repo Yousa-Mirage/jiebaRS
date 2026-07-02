@@ -65,6 +65,85 @@ test_that("TextRank worker returns a S3 object", {
   expect_identical(engine1$config$bylines, FALSE)
 })
 
+
+test_that("user dictionary appends to the default dictionary", {
+  user_file <- withr::local_tempfile()
+  writeLines(c("量子机器狗 1000 n", "超导量子比特 1000"), user_file, useBytes = TRUE)
+
+  default_engine <- worker()
+  user_engine <- worker(user = user_file)
+
+  # New user word is recognized as a single token.
+  expect_identical(segment("量子机器狗", default_engine), c("量子", "机器", "狗"))
+  expect_identical(segment("量子机器狗", user_engine), "量子机器狗")
+
+  expect_identical(segment("超导量子比特", default_engine), c("超导", "量子", "比特"))
+  expect_identical(segment("超导量子比特", user_engine), "超导量子比特")
+
+  # Default dictionary words still work.
+  expect_identical(segment("我们爱北京", default_engine), c("我们", "爱", "北京"))
+
+  # Config records the path.
+  expect_identical(user_engine$config$user, user_file)
+  expect_null(worker()$config$user)
+})
+
+test_that("dict dictionary replaces the default dictionary", {
+  dict_file <- withr::local_tempfile()
+  writeLines(c("我们 1000 r", "北京 1000 ns", "量子机器狗 1000 n"), dict_file, useBytes = TRUE)
+
+  default_engine <- worker()
+  dict_engine <- worker(dict = dict_file)
+
+  # Custom dict words are recognized.
+  expect_identical(segment("我们北京大学", default_engine), c("我们", "北京大学"))
+  expect_identical(segment("我们北京大学", dict_engine), c("我们", "北京", "大学"))
+
+  # Words NOT in the custom dict are cut to single characters.
+  expect_identical(segment("你好", dict_engine), c("你", "好"))
+
+  expect_identical(dict_engine$config$dict, dict_file)
+  expect_null(worker()$config$dict)
+})
+
+test_that("dict and user can be combined", {
+  dict_file <- withr::local_tempfile()
+  writeLines(c("我们 1000 r"), dict_file, useBytes = TRUE)
+  user_file <- withr::local_tempfile()
+  writeLines(c("量子机器狗 1000 n"), user_file, useBytes = TRUE)
+
+  engine <- worker(dict = dict_file, user = user_file)
+
+  # dict word works.
+  expect_identical(segment("我们", engine), "我们")
+  # user word works.
+  expect_identical(segment("量子机器狗", engine), "量子机器狗")
+  # word not in either -> chars.
+  expect_identical(segment("你好", engine), c("你", "好"))
+})
+
+test_that("worker snapshots invalid dict and user inputs", {
+  expect_snapshot(
+    worker(dict = 5),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    worker(dict = "/nonexistent/dict.txt"),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    worker(user = 5),
+    error = TRUE
+  )
+
+  expect_snapshot(
+    worker(user = "/nonexistent/user.txt"),
+    error = TRUE
+  )
+})
+
 test_that("worker snapshots invalid type input", {
   expect_snapshot(
     worker(type = "nope"),

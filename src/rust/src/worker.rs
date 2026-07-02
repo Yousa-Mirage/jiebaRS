@@ -57,11 +57,14 @@ pub struct JiebaWorker {
 }
 
 impl JiebaWorker {
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         worker_type: &str,
         use_hmm: bool,
         hmm_model: &str,
         idf_path: &str,
+        dict_path: &str,
+        user_path: &str,
         top_n: u32,
         stop_words: Vec<String>,
     ) -> Result<Self> {
@@ -110,7 +113,40 @@ impl JiebaWorker {
             WorkerFamily::Segment(_) | WorkerFamily::Tag | WorkerFamily::Keywords => None,
         };
 
-        let mut engine = Jieba::new();
+        let mut engine = if dict_path.is_empty() {
+            // Default: use the embedded dictionary.
+            Jieba::new()
+        } else {
+            // `dict` replaces the main dictionary entirely.
+            let file = File::open(dict_path).map_err(|err| {
+                Error::Other(format!(
+                    "Failed to open custom main dictionary `{dict_path}`: {err}"
+                ))
+            })?;
+            let mut reader = BufReader::new(file);
+            Jieba::with_dict(&mut reader).map_err(|err| {
+                Error::Other(format!(
+                    "Failed to load custom main dictionary `{dict_path}`: {err}"
+                ))
+            })?
+        };
+
+        // `user` appends to whatever dictionary is in place (default or
+        // custom `dict`).
+        if !user_path.is_empty() {
+            let file = File::open(user_path).map_err(|err| {
+                Error::Other(format!(
+                    "Failed to open user dictionary `{user_path}`: {err}"
+                ))
+            })?;
+            let mut reader = BufReader::new(file);
+            engine.load_dict(&mut reader).map_err(|err| {
+                Error::Other(format!(
+                    "Failed to load user dictionary `{user_path}`: {err}"
+                ))
+            })?;
+        }
+
         if !hmm_model.is_empty() {
             let file = File::open(hmm_model).map_err(|err| {
                 Error::Other(format!(
