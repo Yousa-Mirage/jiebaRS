@@ -10,3 +10,4 @@
 ^LICENSE\.md$
 ^tools/bench($|/)
 ^examples$
+^docs$

@@ -6,3 +6,4 @@ src/Makevars.win
 .zed/
 
 src/rust/vendor*
+docs/

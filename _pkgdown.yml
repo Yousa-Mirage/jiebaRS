@@ -1,0 +1,65 @@
+url: https://yousa-mirage.github.io/jiebaRS/
+
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#40A2B4"
+    line-height-base: 1.7
+
+toc:
+  depth: 3
+
+authors:
+  Hao Cheng:
+    href: https://github.com/Yousa-Mirage
+    html: Yousa Mirage
+
+home:
+  title: Chinese text segmentation, keyword extraction, and POS tagging for R
+  sidebar:
+    structure: [links, license, community, citation, authors, toc, dev]
+
+navbar:
+  structure:
+    left: [reference, news]
+    right: [search, github]
+  components:
+    github:
+      icon: fab fa-github
+      href: https://github.com/Yousa-Mirage/jiebaRS
+      aria-label: GitHub
+
+reference:
+  - title: Workers
+    desc: Create and configure jiebaRS workers.
+    contents:
+      - worker
+  - title: Segmentation
+    desc: Segment Chinese text into tokens.
+    contents:
+      - segment
+      - segment_batch
+  - title: Speech Tagging
+    desc: Tag tokens with part-of-speech tags.
+    contents:
+      - tagging
+      - tagging_batch
+  - title: Keyword Extraction
+    desc: Extract keywords via TF-IDF and TextRank.
+    contents:
+      - keywords
+      - keywords_df
+      - textrank
+      - textrank_df
+  - title: Word Frequency and N-grams
+    desc: Count word frequencies and n-grams from segmented tokens.
+    contents:
+      - freq
+      - count_ngrams
+      - get_tuple
+  - title: Utilities
+    desc: Filter tokens and manage user dictionaries.
+    contents:
+      - filter_segment
+      - new_user_word
+      - get_idf
