@@ -20,7 +20,11 @@
 #' @examples
 #' filter_segment(c("abc", "def", " ", "."), c("abc"))
 #' filter_segment(c("a", NA, "b", "a"), c("b"), keep_na = FALSE)
-#' filter_segment(list(c("\u6211", "\u662f", "\u6d4b\u8bd5"), c("\u6d4b\u8bd5", "\u6587\u672c", "\u6211")), "\u6211")
+#' input <- list(
+#'   c("\u6211", "\u662f", "\u6d4b\u8bd5"),
+#'   c("\u6d4b\u8bd5", "\u6587\u672c", "\u6211")
+#' )
+#' filter_segment(input, "\u6211")
 #' @export
 filter_segment <- function(input, filter_words, keep_na = TRUE) {
   if (!rlang::is_character(filter_words)) {

@@ -27,7 +27,10 @@
 ^justfile$
 ^README\.Rmd$
 ^README_zh\.Rmd$
+^README_en\.Rmd$
+^README_en\.md$
 ^LICENSE\.md$
+^pkgdown$
 
 # reference dumps from jiebaR / jieba-rs (not part of the package)
 ^jiebaR\.xml$

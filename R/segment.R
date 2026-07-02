@@ -42,9 +42,11 @@
 #' @return Segmented tokens in the requested aggregation form.
 #' @examples
 #' seg <- worker()
-#' segment("\u5357\u4eac\u5e02\u957f\u6c5f\u5927\u6865", seg)
-#' segment(c("\u5357\u4eac\u5e02\u957f\u6c5f\u5927\u6865", "\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5"), seg, batch = "list")
-#' segment(c("\u5357\u4eac\u5e02\u957f\u6c5f\u5927\u6865", "\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5"), seg, batch = "data.frame")
+#' text1 <- "\u5357\u4eac\u5e02\u957f\u6c5f\u5927\u6865"
+#' text2 <- "\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5"
+#' segment(text1, seg)
+#' segment(c(text1, text2), seg, batch = "list")
+#' segment(c(text1, text2), seg, batch = "data.frame")
 #' @export
 segment <- function(code, jiebar, ..., mod = NULL, batch = c("list", "data.frame", "flatten")) {
   rlang::check_dots_empty()

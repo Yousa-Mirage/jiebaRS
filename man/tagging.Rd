@@ -65,7 +65,9 @@ input and \code{"list"} for multi-string input.
 }
 \examples{
 tagger <- worker(type = "tag")
-tagging("\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5", tagger)
-tagging(c("\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5", "\u518d\u6765\u4e00\u6b21"), tagger)
-tagging(c("\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5", "\u518d\u6765\u4e00\u6b21"), tagger, format = "data.frame", batch = "flatten")
+text1 <- "\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5"
+text2 <- "\u518d\u6765\u4e00\u6b21"
+tagging(text1, tagger)
+tagging(c(text1, text2), tagger)
+tagging(c(text1, text2), tagger, format = "data.frame", batch = "flatten")
 }

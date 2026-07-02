@@ -33,10 +33,10 @@ ago, which has long been the go-to tool for Chinese text segmentation in
 R. However, [qinwf](https://github.com/qinwf) has stopped maintaining
 [jiebaR](https://github.com/qinwf/jiebaR), and
 [jiebaR](https://github.com/qinwf/jiebaR) has been removed from
-[CRAN](https://cran.r-project.org/web/packages/jiebaR/index.html),
-making it unavailable for direct installation. This has caused
-inconvenience and confusion in R teaching and research. Therefore, based
-on the well-featured, performant, and actively maintained Rust
+[CRAN](https://CRAN.R-project.org/package=jiebaR), making it unavailable
+for direct installation. This has caused inconvenience and confusion in
+R teaching and research. Therefore, based on the well-featured,
+performant, and actively maintained Rust
 [jieba-rs](https://github.com/messense/jieba-rs) crate, I developed
 **jiebaRS** to provide R users with a modern and easy-to-use Chinese
 text segmentation tool, maintaining much compatibility with the original

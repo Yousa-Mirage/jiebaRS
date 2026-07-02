@@ -43,7 +43,7 @@ knitr::opts_chunk$set(
 语言中文分词的首选工具。然而，[qinwf](https://github.com/qinwf) 已停止维护
 [jiebaR](https://github.com/qinwf/jiebaR)，并且
 [jiebaR](https://github.com/qinwf/jiebaR) 已被
-[CRAN](https://cran.r-project.org/web/packages/jiebaR/index.html) 移除，
+[CRAN](https://CRAN.R-project.org/package=jiebaR) 移除，
 无法直接安装。这给 R
 语言的教学与研究带来了不便和困扰。因此，基于功能完善、性能出色、 持续维护的 Rust
 [jieba-rs](https://github.com/messense/jieba-rs) crate， 我开发了
