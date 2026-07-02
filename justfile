@@ -29,5 +29,6 @@ pkg-check:
 
 site:
     Rscript -e "devtools::build_readme()"
+    Rscript -e "devtools::build_rmd('README_en.Rmd')"
     Rscript -e "pkgdown::build_site()"
     @xdg-open docs/index.html || true

@@ -1,0 +1,290 @@
+---
+output:
+  github_document:
+    html_preview: false
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r}
+#| label: setup
+#| include: false
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-"
+)
+```
+
+# jiebaRS
+
+<div align="center">
+
+<!-- badges: start -->
+[![GitHub Stars](https://img.shields.io/github/stars/Yousa-Mirage/jiebaRS?style=social)](https://github.com/Yousa-Mirage/jiebaRS/stargazers)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Docs dev Version](https://img.shields.io/badge/docs-dev-blue.svg)](https://yousa-mirage.github.io/jiebaRS/)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Yousa-Mirage/jiebaRS)
+<!-- badges: end -->
+
+[简体中文](README.md) | [English](README_en.md)
+
+</div>
+
+**jiebaRS** is a Rust-backed replacement of
+[jiebaR](https://github.com/qinwf/jiebaR) for Chinese text segmentation,
+part-of-speech tagging, and keyword extraction. It uses
+[jieba-rs](https://github.com/messense/jieba-rs) as the segmentation engine,
+bringing modern performance and maintainability.
+
+[qinwf](https://github.com/qinwf) created
+[jiebaR](https://github.com/qinwf/jiebaR) based on cppjieba many years ago,
+which has long been the go-to tool for Chinese text segmentation in R. However,
+[qinwf](https://github.com/qinwf) has stopped maintaining
+[jiebaR](https://github.com/qinwf/jiebaR), and
+[jiebaR](https://github.com/qinwf/jiebaR) has been removed from
+[CRAN](https://cran.r-project.org/web/packages/jiebaR/index.html), making it
+unavailable for direct installation. This has caused inconvenience and confusion
+in R teaching and research. Therefore, based on the well-featured, performant,
+and actively maintained Rust [jieba-rs](https://github.com/messense/jieba-rs)
+crate, I developed **jiebaRS** to provide R users with a modern and easy-to-use
+Chinese text segmentation tool, maintaining much compatibility with the original
+[jiebaR](https://github.com/qinwf/jiebaR) API.
+
+## Installation
+
+### From CRAN
+
+You can install the released version of jiebaRS from CRAN:
+
+```r
+install.packages("jiebaRS")
+```
+
+### From R-universe / R-multiverse
+
+A prebuilt binary is hosted on R-universe and R-multiverse:
+
+```r
+install.packages("jiebaRS", repos = "https://yousa-mirage.r-universe.dev")
+```
+
+```r
+install.packages("jiebaRS", repos = "https://community.r-multiverse.org")
+```
+
+### From Source Code
+
+Install from source with [pak](https://pak.r-lib.org/) or
+[remotes](https://remotes.r-lib.org/):
+
+```r
+pak::pak("Yousa-Mirage/jiebaRS")
+# or
+remotes::install_github("Yousa-Mirage/jiebaRS")
+```
+
+> **Note:** Building from source requires Rust tool chain to compile the Rust
+> backend.
+
+## Usage
+
+```{r}
+#| label: library
+
+library(jiebaRS)
+```
+
+### Segmentation
+
+Create a worker and segment a text:
+
+```{r}
+#| label: segment-basic
+
+cutter <- worker()
+segment("南京市长江大桥", cutter)
+```
+
+Batch segmentation supports multiple strings with `batch` aggregation. It will
+automatically segment parallelly if more than one strings are provided, making
+it much faster than jiebaR.
+
+```{r}
+#| label: segment-batch
+
+texts <- c("南京市长江大桥。", "这是一个测试，小明很聪明。")
+
+# list: one character vector per input string
+segment_batch(texts, cutter, batch = "list")
+
+# flatten: all tokens concatenated into one vector
+segment_batch(texts, cutter, batch = "flatten")
+
+# data.frame: doc_id + word columns
+segment_batch(texts, cutter, batch = "data.frame")
+```
+
+If you want to segment a very long text parallelly, you can split it into 32\~64
+chunks and then use `segment_batch()`.
+
+### Speech Tagging
+
+You can tag segmented words with part-of-speech (POS) tags using the `tagging()`
+function:
+
+```{r}
+#| label: tagging
+
+tagger <- worker(type = "tag")
+
+# Default: named vector (terms as names, tags as values)
+tagging("这是一个测试，小明很聪明。", tagger)
+
+# data.frame: term + tag columns
+tagging("这是一个测试，小明很聪明。", tagger, format = "data.frame")
+
+# legacy: jiebaR-style (terms as values, tags as names)
+tagging("这是一个测试，小明很聪明。", tagger, format = "legacy")
+```
+
+### Keyword Extraction
+
+You can extract keywords using TF-IDF with the `keywords()` function:
+
+```{r}
+#| label: keywords
+
+keys <- worker(type = "keywords", topn = 3)
+
+text <- "今天纽约的天气真好啊，京华大酒店的张尧经理吃了一只北京烤鸭。后天纽约的天气不好，昨天纽约的天气也不好，北京烤鸭真好吃。"
+
+# Named numeric vector (keyword -> weight)
+keywords(text, keys)
+
+# Data frame with term + weight columns
+keywords_df(text, keys)
+```
+
+You can also use the TextRank algorithm with the `textrank()` function. This is
+available in [Python's jieba](https://github.com/fxsjy/jieba) but not in jiebaR.
+
+```{r}
+#| label: textrank
+#| 
+ranker <- worker(type = "textrank", topn = 3)
+
+textrank(text, ranker)
+
+textrank_df(text, ranker)
+```
+
+### Custom Dictionaries
+
+Load a custom **main dictionary** (`dict` --- replaces the embedded dictionary)
+or a **user dictionary** (`user` --- appends to the main dictionary). Both files
+use the line format: `word [freq] [tag]`.
+
+```{r}
+#| label: custom-dict
+
+# User dictionary: add new words to the default dictionary
+user_file <- withr::local_tempfile()
+writeLines(c("量子机器狗 1000 n", "超导量子比特 1000"), user_file, useBytes = TRUE)
+
+cutter2 <- worker(user = user_file)
+segment("量子机器狗和超导量子比特", cutter2)
+```
+
+Add words dynamically with `new_user_word()` (alias: `add_word()`):
+
+```{r}
+#| label: new-user-word
+
+cutter3 <- worker()
+segment("量子机器狗和超导量子比特", cutter3)
+
+new_user_word(cutter3, "量子机器狗", "n")
+add_word(cutter3, "超导量子比特", "n")  # alias
+segment("量子机器狗和超导量子比特", cutter3)
+```
+
+### Stop Words
+
+Supply stop words as a character vector via the `stop_word` parameter or a file
+path via the `stop_word_file` parameter. Stop words are filtered from
+segmentation and keyword extraction results.
+
+```{r}
+#| label: stop-words
+
+cutter4 <- worker(stop_word = c("这是", "一个"))
+segment("这是一个测试", cutter4)
+```
+
+### Custom IDF + `get_idf()`
+
+Compute an IDF dictionary from your own corpus of segmented documents, then use
+it for TF-IDF keyword extraction:
+
+```{r}
+#| label: custom-idf
+
+docs <- list(
+  c("北京", "烤鸭", "纽约"),
+  c("北京", "天气"),
+  c("纽约", "天气")
+)
+
+idf_file <- withr::local_tempfile()
+get_idf(docs, path = idf_file)
+
+keys_custom <- worker(type = "keywords", topn = 3, idf = idf_file)
+keywords(text, keys_custom)
+```
+
+### Word Frequency & N-grams
+
+Two small but useful functions are provided for word frequency and n-gram
+counts:
+
+```{r}
+#| label: freq-ngrams
+
+tokens <- segment("南京市长江大桥南京市", worker())
+
+# Word frequency
+freq(tokens)
+
+# Sorted by descending frequency
+freq(tokens, sort = TRUE)
+
+# N-gram counts (default: bigrams)
+count_ngrams(tokens, n = 2)
+
+# Multiple n sizes, as a named vector
+count_ngrams(tokens, n = 1:2, format = "vector")
+```
+
+## Compare with jiebaR
+
+结果和性能比较
+
+## Acknowledgments
+
+jiebaRS builds on the work of open-source projects:
+
+- **[jieba-rs](https://github.com/messense/jieba-rs)**: messense and
+  contributors for the Rust port of the Jieba engine.
+- **[jiebaR](https://github.com/qinwf/jiebaR)**: qinwf for the original R
+  package that jiebaRS replaces.
+- **[extendr](https://github.com/extendr/extendr)**: the extendr team for making
+  Rust--R interoperability practical.
+- The broader **Rust** and **R** communities.
+
+Without these projects, jiebaRS would not exist.
+
+## License
+
+jiebaRS is licensed under the [MIT License](LICENSE.md).

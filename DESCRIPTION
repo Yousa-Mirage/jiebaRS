@@ -1,12 +1,17 @@
 Package: jiebaRS
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Chinese text segmentation, POS tagging, and keyword extraction for R
+Version: 0.1.0
 Authors@R: 
     c(person(given = "Hao",
              family = "Cheng",
              role = c("aut", "cre", "cph"),
              email = "Yousa-Mirage@foxmail.com"))
-Description: What the package does (one paragraph).
+Description: Provides fast Chinese text segmentation, keyword extraction
+    via 'TF-IDF' and 'TextRank', and part-of-speech tagging, powered by a
+    'Rust' backend ('jieba-rs'). Supports custom dictionaries, user words,
+    stop words, IDF files, and HMM models, with parallel batch processing
+    of multiple strings. Serves as a modern, maintained replacement for
+    the 'jiebaR' package.
 License: MIT + file LICENSE
 URL: https://yousa-mirage.github.io/jiebaRS/, https://github.com/Yousa-Mirage/jiebaRS
 BugReports: https://github.com/Yousa-Mirage/jiebaRS/issues

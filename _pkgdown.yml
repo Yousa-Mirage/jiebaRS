@@ -15,7 +15,7 @@ authors:
     html: Yousa Mirage
 
 home:
-  title: Chinese text segmentation, keyword extraction, and POS tagging for R
+  title: Chinese text segmentation, POS tagging, and keyword extraction for R
   sidebar:
     structure: [links, license, community, citation, authors, toc, dev]
 

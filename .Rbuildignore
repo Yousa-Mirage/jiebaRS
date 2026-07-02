@@ -26,6 +26,7 @@
 ^[.]?air[.]toml$
 ^justfile$
 ^README\.Rmd$
+^README_zh\.Rmd$
 ^LICENSE\.md$
 
 # reference dumps from jiebaR / jieba-rs (not part of the package)

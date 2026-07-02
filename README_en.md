@@ -21,37 +21,40 @@ DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Yousa-Mirage/jie
 
 </div>
 
-**jiebaRS** 是 [jiebaR](https://github.com/qinwf/jiebaR) 的 Rust
-后端替代实现， 用于中文分词、词性标注和关键词提取。它使用
-[jieba-rs](https://github.com/messense/jieba-rs) 作为分词引擎，
-带来了现代化的性能与可维护性。
+**jiebaRS** is a Rust-backed replacement of
+[jiebaR](https://github.com/qinwf/jiebaR) for Chinese text segmentation,
+part-of-speech tagging, and keyword extraction. It uses
+[jieba-rs](https://github.com/messense/jieba-rs) as the segmentation
+engine, bringing modern performance and maintainability.
 
-多年前，[qinwf](https://github.com/qinwf) 基于 cppjieba 创建了
-[jiebaR](https://github.com/qinwf/jiebaR)，长期以来一直是 R
-语言中文分词的首选工具。然而，[qinwf](https://github.com/qinwf)
-已停止维护 [jiebaR](https://github.com/qinwf/jiebaR)，并且
-[jiebaR](https://github.com/qinwf/jiebaR) 已被
-[CRAN](https://cran.r-project.org/web/packages/jiebaR/index.html) 移除，
-无法直接安装。这给 R
-语言的教学与研究带来了不便和困扰。因此，基于功能完善、性能出色、
-持续维护的 Rust [jieba-rs](https://github.com/messense/jieba-rs) crate，
-我开发了 **jiebaRS**，为 R 用户提供一个现代化、易用的中文分词工具，
-并尽可能保持与原 [jiebaR](https://github.com/qinwf/jiebaR) API
-的兼容性。
+[qinwf](https://github.com/qinwf) created
+[jiebaR](https://github.com/qinwf/jiebaR) based on cppjieba many years
+ago, which has long been the go-to tool for Chinese text segmentation in
+R. However, [qinwf](https://github.com/qinwf) has stopped maintaining
+[jiebaR](https://github.com/qinwf/jiebaR), and
+[jiebaR](https://github.com/qinwf/jiebaR) has been removed from
+[CRAN](https://cran.r-project.org/web/packages/jiebaR/index.html),
+making it unavailable for direct installation. This has caused
+inconvenience and confusion in R teaching and research. Therefore, based
+on the well-featured, performant, and actively maintained Rust
+[jieba-rs](https://github.com/messense/jieba-rs) crate, I developed
+**jiebaRS** to provide R users with a modern and easy-to-use Chinese
+text segmentation tool, maintaining much compatibility with the original
+[jiebaR](https://github.com/qinwf/jiebaR) API.
 
-## 安装
+## Installation
 
-### 从 CRAN 安装
+### From CRAN
 
-你可以从 CRAN 安装 jiebaRS 的发布版本：
+You can install the released version of jiebaRS from CRAN:
 
 ``` r
 install.packages("jiebaRS")
 ```
 
-### R-universe / R-multiverse
+### From R-universe / R-multiverse
 
-R-universe 和 R-multiverse 上提供了预编译的二进制包：
+A prebuilt binary is hosted on R-universe and R-multiverse:
 
 ``` r
 install.packages("jiebaRS", repos = "https://yousa-mirage.r-universe.dev")
@@ -61,28 +64,29 @@ install.packages("jiebaRS", repos = "https://yousa-mirage.r-universe.dev")
 install.packages("jiebaRS", repos = "https://community.r-multiverse.org")
 ```
 
-### 从源码安装
+### From Source Code
 
-使用 [pak](https://pak.r-lib.org/) 或
-[remotes](https://remotes.r-lib.org/) 从源码安装：
+Install from source with [pak](https://pak.r-lib.org/) or
+[remotes](https://remotes.r-lib.org/):
 
 ``` r
 pak::pak("Yousa-Mirage/jiebaRS")
-# 或
+# or
 remotes::install_github("Yousa-Mirage/jiebaRS")
 ```
 
-> **注意：** 从源码构建需要 Rust 工具链来编译 Rust 后端。
+> **Note:** Building from source requires Rust tool chain to compile the
+> Rust backend.
 
-## 用法
+## Usage
 
 ``` r
 library(jiebaRS)
 ```
 
-### 分词
+### Segmentation
 
-创建一个 worker 并对文本进行分词：
+Create a worker and segment a text:
 
 ``` r
 cutter <- worker()
@@ -90,14 +94,14 @@ segment("南京市长江大桥", cutter)
 #> [1] "南京市"   "长江大桥"
 ```
 
-批量分词支持多个字符串，通过 `batch`
-参数控制聚合方式。当输入多于一个字符串时， 会自动并行分词，速度远超
-jiebaR。
+Batch segmentation supports multiple strings with `batch` aggregation.
+It will automatically segment parallelly if more than one strings are
+provided, making it much faster than jiebaR.
 
 ``` r
 texts <- c("南京市长江大桥。", "这是一个测试，小明很聪明。")
 
-# list：每个输入字符串对应一个字符向量
+# list: one character vector per input string
 segment_batch(texts, cutter, batch = "list")
 #> [[1]]
 #> [1] "南京市"   "长江大桥"
@@ -105,12 +109,12 @@ segment_batch(texts, cutter, batch = "list")
 #> [[2]]
 #> [1] "这是" "一个" "测试" "小明" "很"   "聪明"
 
-# flatten：所有词元拼接为一个向量
+# flatten: all tokens concatenated into one vector
 segment_batch(texts, cutter, batch = "flatten")
 #> [1] "南京市"   "长江大桥" "这是"     "一个"     "测试"     "小明"     "很"      
 #> [8] "聪明"
 
-# data.frame：doc_id + word 两列
+# data.frame: doc_id + word columns
 segment_batch(texts, cutter, batch = "data.frame")
 #>   doc_id     word
 #> 1      1   南京市
@@ -123,22 +127,23 @@ segment_batch(texts, cutter, batch = "data.frame")
 #> 8      2     聪明
 ```
 
-如果你想对一段很长的文本进行并行分词，可以先将其拆分为 32~64 个片段，
-再使用 `segment_batch()`。
+If you want to segment a very long text parallelly, you can split it
+into 32~64 chunks and then use `segment_batch()`.
 
-### 词性标注
+### Speech Tagging
 
-使用 `tagging()` 函数为分词结果标注词性（POS）标签：
+You can tag segmented words with part-of-speech (POS) tags using the
+`tagging()` function:
 
 ``` r
 tagger <- worker(type = "tag")
 
-# 默认：命名向量（词为名称，标签为值）
+# Default: named vector (terms as names, tags as values)
 tagging("这是一个测试，小明很聪明。", tagger)
 #> 这是 一个 测试 小明   很 聪明 
 #>  "v"  "m" "vn" "nr" "zg"  "a"
 
-# data.frame：term + tag 两列
+# data.frame: term + tag columns
 tagging("这是一个测试，小明很聪明。", tagger, format = "data.frame")
 #>   term tag
 #> 1 这是   v
@@ -148,27 +153,27 @@ tagging("这是一个测试，小明很聪明。", tagger, format = "data.frame"
 #> 5   很  zg
 #> 6 聪明   a
 
-# legacy：jiebaR 风格（词为值，标签为名称）
+# legacy: jiebaR-style (terms as values, tags as names)
 tagging("这是一个测试，小明很聪明。", tagger, format = "legacy")
 #>      v      m     vn     nr     zg      a 
 #> "这是" "一个" "测试" "小明"   "很" "聪明"
 ```
 
-### 关键词提取
+### Keyword Extraction
 
-使用 `keywords()` 函数通过 TF-IDF 提取关键词：
+You can extract keywords using TF-IDF with the `keywords()` function:
 
 ``` r
 keys <- worker(type = "keywords", topn = 3)
 
 text <- "今天纽约的天气真好啊，京华大酒店的张尧经理吃了一只北京烤鸭。后天纽约的天气不好，昨天纽约的天气也不好，北京烤鸭真好吃。"
 
-# 命名数值向量（关键词 -> 权重）
+# Named numeric vector (keyword -> weight)
 keywords(text, keys)
 #>  北京烤鸭      纽约      天气 
 #> 1.2514383 1.0095837 0.9689916
 
-# 含 term + weight 两列的数据框
+# Data frame with term + weight columns
 keywords_df(text, keys)
 #>       term    weight
 #> 1 北京烤鸭 1.2514383
@@ -176,9 +181,9 @@ keywords_df(text, keys)
 #> 3     天气 0.9689916
 ```
 
-你也可以使用 `textrank()` 函数基于 TextRank 算法提取关键词。该功能在
-Python 的 [jieba](https://github.com/fxsjy/jieba) 库中可用，但 jiebaR
-中没有提供该功能。
+You can also use the TextRank algorithm with the `textrank()` function.
+This is available in [Python’s jieba](https://github.com/fxsjy/jieba)
+but not in jiebaR.
 
 ``` r
 ranker <- worker(type = "textrank", topn = 3)
@@ -194,13 +199,14 @@ textrank_df(text, ranker)
 #> 3 不好 13769693283
 ```
 
-### 自定义词典
+### Custom Dictionaries
 
-加载自定义**主词典**（`dict` — 替换内置词典）或**用户词典** （`user` —
-追加到主词典）。两个文件都使用如下行格式：`word [freq] [tag]`。
+Load a custom **main dictionary** (`dict` — replaces the embedded
+dictionary) or a **user dictionary** (`user` — appends to the main
+dictionary). Both files use the line format: `word [freq] [tag]`.
 
 ``` r
-# 用户词典：向默认词典添加新词
+# User dictionary: add new words to the default dictionary
 user_file <- withr::local_tempfile()
 writeLines(c("量子机器狗 1000 n", "超导量子比特 1000"), user_file, useBytes = TRUE)
 
@@ -209,7 +215,7 @@ segment("量子机器狗和超导量子比特", cutter2)
 #> [1] "量子机器狗"   "和"           "超导量子比特"
 ```
 
-使用 `new_user_word()`（别名：`add_word()`）动态添加词语：
+Add words dynamically with `new_user_word()` (alias: `add_word()`):
 
 ``` r
 cutter3 <- worker()
@@ -218,16 +224,17 @@ segment("量子机器狗和超导量子比特", cutter3)
 
 new_user_word(cutter3, "量子机器狗", "n")
 #> NULL
-add_word(cutter3, "超导量子比特", "n")  # 别名
+add_word(cutter3, "超导量子比特", "n")  # alias
 #> NULL
 segment("量子机器狗和超导量子比特", cutter3)
 #> [1] "量子机器狗"   "和"           "超导量子比特"
 ```
 
-### 停用词
+### Stop Words
 
-通过 `stop_word` 参数以字符向量形式提供停用词，或通过 `stop_word_file`
-参数 以文件路径形式提供。停用词会从分词和关键词提取结果中过滤掉。
+Supply stop words as a character vector via the `stop_word` parameter or
+a file path via the `stop_word_file` parameter. Stop words are filtered
+from segmentation and keyword extraction results.
 
 ``` r
 cutter4 <- worker(stop_word = c("这是", "一个"))
@@ -235,9 +242,10 @@ segment("这是一个测试", cutter4)
 #> [1] "测试"
 ```
 
-### 自定义 IDF + `get_idf()`
+### Custom IDF + `get_idf()`
 
-从你自己的已分词语料库计算 IDF 词典，然后用于 TF-IDF 关键词提取：
+Compute an IDF dictionary from your own corpus of segmented documents,
+then use it for TF-IDF keyword extraction:
 
 ``` r
 docs <- list(
@@ -255,55 +263,56 @@ keywords(text, keys_custom)
 #> 0.06081977 0.06081977 0.04054651
 ```
 
-### 词频与 N-gram
+### Word Frequency & N-grams
 
-提供两个小巧实用的函数用于词频统计和 n-gram 计数：
+Two small but useful functions are provided for word frequency and
+n-gram counts:
 
 ``` r
 tokens <- segment("南京市长江大桥南京市", worker())
 
-# 词频
+# Word frequency
 freq(tokens)
 #>       char freq
 #> 1   南京市    2
 #> 2 长江大桥    1
 
-# 按词频降序排列
+# Sorted by descending frequency
 freq(tokens, sort = TRUE)
 #>       char freq
 #> 1   南京市    2
 #> 2 长江大桥    1
 
-# N-gram 计数（默认：二元组）
+# N-gram counts (default: bigrams)
 count_ngrams(tokens, n = 2)
 #>              term n count
 #> 1 南京市 长江大桥 2     1
 #> 2 长江大桥 南京市 2     1
 
-# 多个 n 值，以命名向量返回
+# Multiple n sizes, as a named vector
 count_ngrams(tokens, n = 1:2, format = "vector")
 #>          南京市        长江大桥 南京市 长江大桥 长江大桥 南京市 
 #>               2               1               1               1
 ```
 
-## 与 jiebaR 的比较
+## Compare with jiebaR
 
 结果和性能比较
 
-## 致谢
+## Acknowledgments
 
-jiebaRS 构建于以下开源项目的基础之上：
+jiebaRS builds on the work of open-source projects:
 
-- **[jieba-rs](https://github.com/messense/jieba-rs)**：messense
-  及贡献者对 Jieba 引擎的 Rust 移植。
-- **[jiebaR](https://github.com/qinwf/jiebaR)**：qinwf 创建的原始 R 包，
-  jiebaRS 即为其替代实现。
-- **[extendr](https://github.com/extendr/extendr)**：extendr 团队让 Rust
-  与 R 的互操作变得切实可行。
-- 更广泛的 **Rust** 与 **R** 社区。
+- **[jieba-rs](https://github.com/messense/jieba-rs)**: messense and
+  contributors for the Rust port of the Jieba engine.
+- **[jiebaR](https://github.com/qinwf/jiebaR)**: qinwf for the original
+  R package that jiebaRS replaces.
+- **[extendr](https://github.com/extendr/extendr)**: the extendr team
+  for making Rust–R interoperability practical.
+- The broader **Rust** and **R** communities.
 
-没有这些项目，jiebaRS 就不会存在。
+Without these projects, jiebaRS would not exist.
 
-## 许可证
+## License
 
-jiebaRS 基于 [MIT 许可证](LICENSE.md) 授权。
+jiebaRS is licensed under the [MIT License](LICENSE.md).
