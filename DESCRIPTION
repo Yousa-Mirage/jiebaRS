@@ -2,9 +2,14 @@ Package: jiebaRS
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
-    person("Hao", "Cheng", , "Yousa-Mirage@foxmail.com", role = c("aut", "cre", "cph"))
+    c(person(given = "Hao",
+             family = "Cheng",
+             role = c("aut", "cre", "cph"),
+             email = "Yousa-Mirage@foxmail.com"))
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
+URL: https://yousa-mirage.github.io/jiebaRS/, https://github.com/Yousa-Mirage/jiebaRS
+BugReports: https://github.com/Yousa-Mirage/jiebaRS/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Config/rextendr/version: 0.5.0
