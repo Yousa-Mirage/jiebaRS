@@ -85,3 +85,31 @@ jobs:
           extra-packages: any::rcmdcheck
 
       - uses: r-lib/actions/check-r-package@v2
+
+      - name: Show check logs on failure
+        if: failure()
+        shell: pwsh
+        run: |
+          $logs = @(
+            "check/jiebaRS.Rcheck/00install.out",
+            "check/jiebaRS.Rcheck/00check.log",
+            "check/jiebaRS.Rcheck/tests/testthat.Rout",
+            "check/jiebaRS.Rcheck/tests/spelling.Rout"
+          )
+
+          foreach ($log in $logs) {
+            if (Test-Path $log) {
+              Write-Host "::group::$log"
+              Get-Content $log -Raw
+              Write-Host "::endgroup::"
+            } else {
+              Write-Host "Missing $log"
+            }
+          }
+
+      - name: Upload check results on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-Rcheck
+          path: check/jiebaRS.Rcheck
