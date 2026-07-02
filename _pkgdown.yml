@@ -9,6 +9,9 @@ template:
 toc:
   depth: 3
 
+redirects:
+  - ["README.html", "index.html"]
+
 authors:
   Hao Cheng:
     href: https://github.com/Yousa-Mirage

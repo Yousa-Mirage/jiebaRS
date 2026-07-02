@@ -17,7 +17,7 @@ Version](https://img.shields.io/badge/docs-dev-blue.svg)](https://yousa-mirage.g
 DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Yousa-Mirage/jiebaRS)
 <!-- badges: end -->
 
-[简体中文](./) \| [English](README_en.md)
+[简体中文](README.md) \| [English](README_en.md)
 
 </div>
 
