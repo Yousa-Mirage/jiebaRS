@@ -53,6 +53,10 @@ jobs:
           use-public-rspm: true
           extra-repositories: https://community.r-multiverse.org
 
+      - name: Set macOS deployment target
+        if: runner.os == 'macOS'
+        run: echo "MACOSX_DEPLOYMENT_TARGET=15.0" >> "$GITHUB_ENV"
+
       - name: Install Linux system dependencies
         if: runner.os == 'Linux'
         run: |
