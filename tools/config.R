@@ -70,28 +70,6 @@ cfg <- if (is_debug) "debug" else "release"
   ""
 )
 
-get_r_config <- function(name) {
-  out <- tryCatch(
-    system2(file.path(R.home("bin"), "R"), c("CMD", "config", name), stdout = TRUE, stderr = FALSE),
-    error = function(e) character()
-  )
-  trimws(paste(out, collapse = " "))
-}
-
-macos_deployment_target <- ""
-if (Sys.info()[["sysname"]] == "Darwin") {
-  macos_deployment_target <- Sys.getenv("MACOSX_DEPLOYMENT_TARGET", unset = "")
-  if (!nzchar(macos_deployment_target)) {
-    macos_deployment_target <- get_r_config("MACOSX_DEPLOYMENT_TARGET")
-  }
-}
-
-.macos_deployment_env <- if (nzchar(macos_deployment_target)) {
-  sprintf("MACOSX_DEPLOYMENT_TARGET=\"%s\" ", macos_deployment_target)
-} else {
-  ""
-}
-
 # read in the Makevars.in file checking
 is_windows <- .Platform[["OS.type"]] == "windows"
 
@@ -124,8 +102,7 @@ new_txt <- gsub("@CRAN_FLAGS@", .cran_flags, mv_txt) |>
   gsub("@CLEAN_TARGET@", .clean_targets, x = _) |>
   gsub("@LIBDIR@", .libdir, x = _) |>
   gsub("@TARGET@", .target, x = _) |>
-  gsub("@PANIC_EXPORTS@", .panic_exports, x = _) |>
-  gsub("@MACOS_DEPLOYMENT_ENV@", .macos_deployment_env, x = _)
+  gsub("@PANIC_EXPORTS@", .panic_exports, x = _)
 
 message("Writing `", mv_ofp, "`.")
 con <- file(mv_ofp, open = "wb")

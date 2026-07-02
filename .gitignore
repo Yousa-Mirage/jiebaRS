@@ -43,3 +43,4 @@ jieba-rs.xml
 # editor directories
 .vscode/
 .zed/
+src/rust/vendor
