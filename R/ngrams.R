@@ -1,5 +1,3 @@
-# TODO: Implement n-gram counting in Rust to improve performance.
-
 .validate_ngrams_input <- function(x) {
   if (rlang::is_character(x)) {
     return(list(enc2utf8(x)))

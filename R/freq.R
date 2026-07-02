@@ -1,5 +1,3 @@
-# TODO: Implement `freq()` in Rust to improve performance.
-
 #' The frequency of words
 #'
 #' This function returns the frequency of words.
