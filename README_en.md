@@ -128,7 +128,7 @@ segment_batch(texts, cutter, batch = "data.frame")
 ```
 
 If you want to segment a very long text parallelly, you can split it
-into 32~64 chunks and then use `segment_batch()`.
+into 32~128 chunks and then use `segment_batch()`.
 
 ### Speech Tagging
 
