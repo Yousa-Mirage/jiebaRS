@@ -17,7 +17,7 @@ Version](https://img.shields.io/badge/docs-dev-blue.svg)](https://yousa-mirage.g
 DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Yousa-Mirage/jiebaRS)
 <!-- badges: end -->
 
-[简体中文](README.md) \| [English](README_en.md)
+[简体中文](./) \| [English](README_en.md)
 
 </div>
 
@@ -288,7 +288,34 @@ count_ngrams(tokens, n = 1:2, format = "vector")
 
 ## 与 jiebaR 的比较
 
-结果和性能比较
+jiebaRS 与 jiebaR 都基于 jieba 的分词算法，但在 Rust 后端（jieba-rs）和
+C++ 后端
+（cppjieba）的实现上不可避免地存在细微差异。以下是使用《围城》和《红楼梦》全文作为测试语料的
+实测结果。
+
+### 分词结果相似度
+
+| 语料 | 字符数 | jiebaRS 词元数 | jiebaR 词元数 | jiebaRS 词条数 | jiebaR 词条数 | 词表 Jaccard 相似度 |
+|----|---:|---:|---:|---:|---:|:--:|
+| 《围城》 | 246,871 | 128,985 | 129,560 | 18,375 | 18,794 | 0.929 |
+| 《红楼梦》 | 860,933 | 451,792 | 451,228 | 44,634 | 45,596 | 0.865 |
+
+两份分词结果的词元总数接近（差异在 0.2%
+以内），词条表重叠度高。主要差异来自部分专有名词的切分粒度不同（如
+jiebaRS 将主角名 “鸿渐” 合并为一个词，jiebaR 则 切为 “鸿” +
+“渐”），以及未登录词的 HMM 推断边界存在少量差异。
+
+### 分词速度
+
+| 语料       | 输入模式    | jiebaRS（秒） | jiebaR（秒） | 加速比 |
+|------------|-------------|--------------:|-------------:|:------:|
+| 《围城》   | 单长文本    |         0.039 |        0.065 | 1.66x  |
+| 《围城》   | 10 万句并行 |         0.246 |        2.930 | 11.91x |
+| 《红楼梦》 | 单长文本    |         0.129 |        0.246 | 1.91x  |
+| 《红楼梦》 | 10 万句并行 |         0.639 |        4.601 | 7.20x  |
+
+单文本分词时 jiebaRS 约快 1.7~1.9 倍；当输入为大量短句并并行切分时，
+jiebaRS 可达 7~12 倍加速。
 
 ## 致谢
 

@@ -17,7 +17,7 @@ Version](https://img.shields.io/badge/docs-dev-blue.svg)](https://yousa-mirage.g
 DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Yousa-Mirage/jiebaRS)
 <!-- badges: end -->
 
-[简体中文](README.md) \| [English](README_en.md)
+[简体中文](./) \| [English](README_en.md)
 
 </div>
 
@@ -297,7 +297,38 @@ count_ngrams(tokens, n = 1:2, format = "vector")
 
 ## Compare with jiebaR
 
-结果和性能比较
+jiebaRS and jiebaR are both based on the jieba segmentation algorithm,
+but there are inevitably subtle differences between the Rust backend
+(jieba-rs) and the C++ backend (cppjieba). The results below are
+measured on the full text of *Fortress Besieged* (围城) and *Dream of
+the Red Chamber* (红楼梦).
+
+### Segmentation Similarity
+
+| Corpus | Characters | jiebaRS tokens | jiebaR tokens | jiebaRS vocab | jiebaR vocab | Vocab Jaccard |
+|----|---:|---:|---:|---:|---:|:--:|
+| Fortress Besieged | 246,871 | 128,985 | 129,560 | 18,375 | 18,794 | 0.929 |
+| Dream of the Red Chamber | 860,933 | 451,792 | 451,228 | 44,634 | 45,596 | 0.865 |
+
+The total token counts are close (within 0.2%), and the vocabularies
+overlap heavily. The main differences come from the different
+segmentation granularity of some proper nouns (e.g. jiebaRS merges the
+protagonist name “鸿渐” into a single word, while jiebaR splits it into
+“鸿” + “渐”), as well as minor differences in HMM-based OOV
+(out-of-vocabulary) boundary inference.
+
+### Segmentation Speed
+
+| Corpus | Input mode | jiebaRS (s) | jiebaR (s) | Speedup |
+|----|----|---:|---:|:--:|
+| Fortress Besieged | whole text | 0.039 | 0.065 | 1.66x |
+| Fortress Besieged | 100k sentences (parallel) | 0.246 | 2.930 | 11.91x |
+| Dream of the Red Chamber | whole text | 0.129 | 0.246 | 1.91x |
+| Dream of the Red Chamber | 100k sentences (parallel) | 0.639 | 4.601 | 7.20x |
+
+For a single long text, jiebaRS is about 1.7~1.9x faster; when the input
+is many short sentences that are segmented in parallel, jiebaRS can
+reach 7~12x speedup.
 
 ## Acknowledgments
 
