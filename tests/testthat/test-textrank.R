@@ -5,7 +5,7 @@ textrank_text <- paste0(
   "目前在建吉林欧亚城市商业综合体项目。2013年，实现营业收入0万元，实现净利润-139.13万元。"
 )
 
-test_that("textrank returns a named numeric vector by default", {
+test_that("textrank returns a named vector by default", {
   ranker <- worker(type = "textrank", topn = 3)
   result <- textrank(textrank_text, ranker)
 

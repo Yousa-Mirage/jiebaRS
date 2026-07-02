@@ -8,14 +8,14 @@
 #' @param jiebar A `jieba_worker` object created with `worker(type = "textrank")`.
 #' @param ... Must be empty. This enforces that optional arguments such as
 #'   `format` are supplied with explicit names.
-#' @param format Output format. `"numeric"` returns a named numeric vector,
+#' @param format Output format. `"vector"` returns a named numeric vector,
 #'   `"data.frame"` returns a data frame with `term` and `weight` columns, and
 #'   `"legacy"` returns a `jiebaR`-style character vector with weights in
-#'   `names()`. Default is `"numeric"`.
+#'   `names()`. Default is `"vector"`.
 #'
 #' @return TextRank results in the requested format.
 #' @export
-textrank <- function(code, jiebar, ..., format = c("numeric", "data.frame", "legacy")) {
+textrank <- function(code, jiebar, ..., format = c("vector", "data.frame", "legacy")) {
   rlang::check_dots_empty()
   format <- rlang::arg_match(format)
 
@@ -40,7 +40,7 @@ textrank <- function(code, jiebar, ..., format = c("numeric", "data.frame", "leg
 
   switch(
     format,
-    "numeric" = stats::setNames(weights, terms),
+    "vector" = stats::setNames(weights, terms),
     "data.frame" = data.frame(
       term = terms,
       weight = weights

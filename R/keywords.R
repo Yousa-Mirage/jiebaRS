@@ -8,14 +8,14 @@
 #' @param jiebar A `jieba_worker` object created with `worker(type = "keywords")`.
 #' @param ... Must be empty. This enforces that optional arguments such as
 #'   `format` are supplied with explicit names.
-#' @param format Output format. `"numeric"` returns a named numeric vector,
+#' @param format Output format. `"vector"` returns a named numeric vector,
 #'   `"data.frame"` returns a data frame with `term` and `weight` columns, and
 #'   `"legacy"` returns the old `jiebaR` style character vector with weights in
-#'   `names()`. Default is `"numeric"`.
+#'   `names()`. Default is `"vector"`.
 #'
 #' @return Keyword results in the requested format.
 #' @export
-keywords <- function(code, jiebar, ..., format = c("numeric", "data.frame", "legacy")) {
+keywords <- function(code, jiebar, ..., format = c("vector", "data.frame", "legacy")) {
   rlang::check_dots_empty()
 
   format <- rlang::arg_match(format)
@@ -41,7 +41,7 @@ keywords <- function(code, jiebar, ..., format = c("numeric", "data.frame", "leg
 
   switch(
     format,
-    "numeric" = stats::setNames(weights, keywords),
+    "vector" = stats::setNames(weights, keywords),
     "data.frame" = data.frame(
       term = keywords,
       weight = weights

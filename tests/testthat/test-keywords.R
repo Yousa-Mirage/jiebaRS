@@ -3,7 +3,7 @@ keyword_text <- paste0(
   "后天纽约的天气不好，昨天纽约的天气也不好，北京烤鸭真好吃"
 )
 
-test_that("keyword worker returns a named numeric vector by default", {
+test_that("keyword worker returns a named vector by default", {
   keys_worker <- worker(type = "keywords", topn = 3)
   result <- keywords(keyword_text, keys_worker)
 

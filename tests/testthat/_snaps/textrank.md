@@ -31,7 +31,7 @@
       textrank(textrank_text, ranker, format = "bad-format")
     Condition
       Error in `textrank()`:
-      ! `format` must be one of "numeric", "data.frame", or "legacy", not "bad-format".
+      ! `format` must be one of "vector", "data.frame", or "legacy", not "bad-format".
 
 ---
 
