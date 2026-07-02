@@ -15,6 +15,5 @@ knitr::opts_chunk$set(
 # TODOs
 
 - [x] 自定义 IDF
-- [ ] vector\_\* 系列
 - [x] get_idf()
 - [ ] dict / user 路径
