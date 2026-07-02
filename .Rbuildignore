@@ -13,8 +13,6 @@
 
 # package-building infra (not for the installed package)
 ^tools/bench($|/)
-^tools/config\.R$
-^tools/msrv\.R$
 ^examples$
 
 # pkgdown site
