@@ -199,7 +199,7 @@ fn add_user_words(
 }
 
 extendr_module! {
-    mod jiebaRS;
+    mod jieba_rs;
 
     fn new_worker;
     fn segment_worker;

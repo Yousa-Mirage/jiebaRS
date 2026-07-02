@@ -9,6 +9,10 @@ rust-version = '1.65'
 crate-type = ['staticlib']
 name = 'jieba_rs'
 
+[[bin]]
+name = 'document'
+path = 'document.rs'
+
 [dependencies]
 ahash = "0.8"
 extendr-api = '0.9'

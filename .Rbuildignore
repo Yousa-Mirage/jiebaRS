@@ -31,6 +31,8 @@
 ^README_en\.md$
 ^LICENSE\.md$
 ^pkgdown$
+^cran-comments\.md$
+^CRAN-SUBMISSION$
 
 # reference dumps from jiebaR / jieba-rs (not part of the package)
 ^jiebaR\.xml$
