@@ -70,6 +70,14 @@ cfg <- if (is_debug) "debug" else "release"
   ""
 )
 
+# C objects built by Cargo dependencies must be position-independent when webR
+# links the package as an Emscripten side module.
+.wasm_cflags <- ifelse(
+  is_wasm,
+  "CFLAGS_wasm32_unknown_emscripten=\"$(CFLAGS_wasm32_unknown_emscripten) -fPIC\" ",
+  ""
+)
+
 # read in the Makevars.in file checking
 is_windows <- .Platform[["OS.type"]] == "windows"
 
@@ -102,7 +110,8 @@ new_txt <- gsub("@CRAN_FLAGS@", .cran_flags, mv_txt) |>
   gsub("@CLEAN_TARGET@", .clean_targets, x = _) |>
   gsub("@LIBDIR@", .libdir, x = _) |>
   gsub("@TARGET@", .target, x = _) |>
-  gsub("@PANIC_EXPORTS@", .panic_exports, x = _)
+  gsub("@PANIC_EXPORTS@", .panic_exports, x = _) |>
+  gsub("@WASM_CFLAGS@", .wasm_cflags, x = _)
 
 message("Writing `", mv_ofp, "`.")
 con <- file(mv_ofp, open = "wb")
