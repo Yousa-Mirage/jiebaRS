@@ -1,19 +1,70 @@
 ---
-output: github_document
+output:
+  github_document:
+    html_preview: false
 ---
 
-```r
-#| include: false
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r}
+#| label: setup
+#| echo: false
+
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  dpi = 144
 )
 ```
 
-# TODOs
+# jiebaRS
 
-- [x] 自定义 IDF
-- [x] get_idf()
-- [ ] dict / user 路径
+<div align="center">
+
+<!-- badges: start -->
+[![GitHub Stars](https://img.shields.io/github/stars/Yousa-Mirage/jiebaRS?style=social)](https://github.com/Yousa-Mirage/jiebaRS/stargazers)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Docs dev Version](https://img.shields.io/badge/docs-dev-blue.svg)](https://yousa-mirage.github.io/jiebaRS/)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Yousa-Mirage/jiebaRS)
+<!-- badges: end -->
+
+</div>
+
+The goal of jiebaRS is to ...
+
+## Installation
+
+You can install the development version of jiebaRS from
+[GitHub](https://github.com/) with:
+
+```r
+# install.packages("pak")
+pak::pak("Yousa-Mirage/jiebaRS")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r}
+#| label: example
+
+library(jiebaRS)
+## basic example code
+```
+
+What is special about using `README.Rmd` instead of just `README.md`? You can
+include R chunks like so:
+
+```{r}
+#| label: cars
+
+summary(cars)
+```
+
+You'll still need to render `README.Rmd` regularly, to keep `README.md`
+up-to-date. `devtools::build_readme()` is handy for this.
+
+In that case, don't forget to commit and push the resulting figure files, so
+they display on GitHub and CRAN.
