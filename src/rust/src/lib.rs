@@ -6,7 +6,7 @@ mod worker;
 
 use extendr_api::prelude::*;
 use extendr_api::Result;
-use worker::JiebaWorker;
+use worker::{JiebaWorker, WorkerConfig};
 
 /// Create an internal native jieba worker.
 ///
@@ -45,7 +45,7 @@ fn new_worker(
     top_n: u32,
     stop_words: Vec<String>,
 ) -> Result<JiebaWorker> {
-    JiebaWorker::new(
+    JiebaWorker::new(WorkerConfig {
         worker_type,
         use_hmm,
         hmm_model,
@@ -54,7 +54,7 @@ fn new_worker(
         user_path,
         top_n,
         stop_words,
-    )
+    })
 }
 
 /// Segment text with an internal native worker.

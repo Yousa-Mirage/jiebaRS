@@ -9,6 +9,18 @@ use jieba_rs::{HmmModel, Jieba, KeywordExtractConfig, TextRank, TfIdf};
 
 pub const WORKER_ABI_VERSION: i32 = 1;
 
+/// Construction parameters for [`JiebaWorker`].
+pub struct WorkerConfig<'a> {
+    pub worker_type: &'a str,
+    pub use_hmm: bool,
+    pub hmm_model: &'a str,
+    pub idf_path: &'a str,
+    pub dict_path: &'a str,
+    pub user_path: &'a str,
+    pub top_n: u32,
+    pub stop_words: Vec<String>,
+}
+
 #[derive(Clone, Copy)]
 pub enum WorkerFamily {
     Segment(SegmentMode),
@@ -57,17 +69,18 @@ pub struct JiebaWorker {
 }
 
 impl JiebaWorker {
-    #[allow(clippy::too_many_arguments)]
-    pub fn new(
-        worker_type: &str,
-        use_hmm: bool,
-        hmm_model: &str,
-        idf_path: &str,
-        dict_path: &str,
-        user_path: &str,
-        top_n: u32,
-        stop_words: Vec<String>,
-    ) -> Result<Self> {
+    pub fn new(config: WorkerConfig<'_>) -> Result<Self> {
+        let WorkerConfig {
+            worker_type,
+            use_hmm,
+            hmm_model,
+            idf_path,
+            dict_path,
+            user_path,
+            top_n,
+            stop_words,
+        } = config;
+
         let family = WorkerFamily::from_type(worker_type)?;
         let top_n = top_n as usize;
         let stop_words: AHashSet<String> = stop_words
