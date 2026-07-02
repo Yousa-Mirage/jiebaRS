@@ -20,11 +20,11 @@
 #' - `"data.frame"`: a data frame with `term` and `tag` columns.
 #' - `"legacy"`: the old `jiebaR` layout with token values and tag names.
 #'
-#' In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
-#' texts, `jiebaRS::tagging()` is about **1.6x to 1.8x faster** than
-#' `jiebaR::tagging()` when each novel is tagged as one long string. When the
-#' same content is split into many strings and processed in batch,
-#' `jiebaRS::tagging()` is about **2x to 5x faster** than `jiebaR`.
+#' In the current release benchmarks on the bundled *Fortress Besieged* and
+#' *Dream of the Red Chamber* texts, `jiebaRS::tagging()` is about **1.6x to
+#' 1.8x faster** than `jiebaR::tagging()` when each novel is tagged as one long
+#' string. When the same content is split into many strings and processed in
+#' batch, `jiebaRS::tagging()` is about **2x to 5x faster** than `jiebaR`.
 #'
 #' For very long texts, splitting before tagging is usually faster than sending
 #' one huge string. In the same release benchmarks, the best results appeared
@@ -53,9 +53,9 @@
 #' @return Tagging results in the requested format.
 #' @examples
 #' tagger <- worker(type = "tag")
-#' tagging("这是一个测试", tagger)
-#' tagging(c("这是一个测试", "再来一次"), tagger)
-#' tagging(c("这是一个测试", "再来一次"), tagger, format = "data.frame", batch = "flatten")
+#' tagging("\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5", tagger)
+#' tagging(c("\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5", "\u518d\u6765\u4e00\u6b21"), tagger)
+#' tagging(c("\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5", "\u518d\u6765\u4e00\u6b21"), tagger, format = "data.frame", batch = "flatten")
 #' @export
 tagging <- function(
   code,
@@ -130,11 +130,12 @@ tagging <- function(
 #'   vector, while `"data.frame"` produces a combined data frame with a
 #'   `doc_id` column.
 #'
-#' In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
-#' texts, batch tagging is about **2x to 5x faster** than the comparable
-#' `jiebaR` workflow on many-string inputs. For very long texts, the best
-#' throughput was usually reached by splitting into about **32 to 128 chunks**,
-#' while much finer splitting still helped but was no longer optimal.
+#' In the current release benchmarks on the bundled *Fortress Besieged* and
+#' *Dream of the Red Chamber* texts, batch tagging is about **2x to 5x faster**
+#' than the comparable `jiebaR` workflow on many-string inputs. For very long
+#' texts, the best throughput was usually reached by splitting into about **32
+#' to 128 chunks**, while much finer splitting still helped but was no longer
+#' optimal.
 #'
 #' @param texts A non-empty character vector to tag.
 #' @param jiebar A `jieba_worker` object created with `worker(type = "tag")`.
@@ -147,7 +148,7 @@ tagging <- function(
 #' @return Tagging results in the requested format.
 #' @examples
 #' tagger <- worker(type = "tag")
-#' texts <- c("这是一个测试", "再来一次")
+#' texts <- c("\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5", "\u518d\u6765\u4e00\u6b21")
 #' tagging_batch(texts, tagger)
 #' tagging_batch(texts, tagger, format = "legacy", batch = "flatten")
 #' @export

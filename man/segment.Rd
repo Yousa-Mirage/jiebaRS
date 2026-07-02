@@ -36,16 +36,14 @@ Segment one or more strings with a \code{jieba_worker} created by \code{\link[=w
 For a single input string, \code{segment()} always returns a character vector of
 segmented tokens.
 
-In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
-texts, \code{jiebaRS::segment()} is about \strong{1.1x to 1.2x faster} than
-\code{jiebaR::segment()} when each novel is segmented as one long string.
-When the same content is split into many strings and processed in batch,
-\code{jiebaRS::segment()} is about \strong{3x to 7x faster} than \code{jiebaR}.
+In the current release benchmarks on the bundled \emph{Fortress Besieged} and
+\emph{Dream of the Red Chamber} texts, \code{jiebaRS::segment()} is about \strong{1.7x to
+1.9x faster} than \code{jiebaR::segment()} when each novel is segmented as one
+long string. When the input is many short strings segmented in parallel,
+\code{jiebaRS::segment()} reaches about \strong{7x to 12x speedup} over \code{jiebaR}.
 
-For very long texts, splitting before segmentation is usually faster than
-submitting one huge string. In the same release benchmarks, the best results
-appeared around \strong{32 to 64 chunks}, while going far beyond roughly \strong{128}
-chunks started to reduce the benefit.
+For very long texts, splitting into about \strong{32 to 128 chunks} before
+segmentation is recommended for good throughput.
 
 For multiple input strings, the argument \code{batch} controls how the
 per-string token vectors are aggregated:
@@ -66,7 +64,7 @@ is supplied, \code{jiebaRS} warns and ignores it.
 }
 \examples{
 seg <- worker()
-segment("南京市长江大桥", seg)
-segment(c("南京市长江大桥", "这是一个测试"), seg, batch = "list")
-segment(c("南京市长江大桥", "这是一个测试"), seg, batch = "data.frame")
+segment("\u5357\u4eac\u5e02\u957f\u6c5f\u5927\u6865", seg)
+segment(c("\u5357\u4eac\u5e02\u957f\u6c5f\u5927\u6865", "\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5"), seg, batch = "list")
+segment(c("\u5357\u4eac\u5e02\u957f\u6c5f\u5927\u6865", "\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5"), seg, batch = "data.frame")
 }

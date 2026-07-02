@@ -6,16 +6,14 @@
 #' For a single input string, `segment()` always returns a character vector of
 #' segmented tokens.
 #'
-#' In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
-#' texts, `jiebaRS::segment()` is about **1.1x to 1.2x faster** than
-#' `jiebaR::segment()` when each novel is segmented as one long string.
-#' When the same content is split into many strings and processed in batch,
-#' `jiebaRS::segment()` is about **3x to 7x faster** than `jiebaR`.
+#' In the current release benchmarks on the bundled *Fortress Besieged* and
+#' *Dream of the Red Chamber* texts, `jiebaRS::segment()` is about **1.7x to
+#' 1.9x faster** than `jiebaR::segment()` when each novel is segmented as one
+#' long string. When the input is many short strings segmented in parallel,
+#' `jiebaRS::segment()` reaches about **7x to 12x speedup** over `jiebaR`.
 #'
-#' For very long texts, splitting before segmentation is usually faster than
-#' submitting one huge string. In the same release benchmarks, the best results
-#' appeared around **32 to 64 chunks**, while going far beyond roughly **128**
-#' chunks started to reduce the benefit.
+#' For very long texts, splitting into about **32 to 128 chunks** before
+#' segmentation is recommended for good throughput.
 #'
 #' For multiple input strings, the argument `batch` controls how the
 #' per-string token vectors are aggregated:
@@ -44,9 +42,9 @@
 #' @return Segmented tokens in the requested aggregation form.
 #' @examples
 #' seg <- worker()
-#' segment("南京市长江大桥", seg)
-#' segment(c("南京市长江大桥", "这是一个测试"), seg, batch = "list")
-#' segment(c("南京市长江大桥", "这是一个测试"), seg, batch = "data.frame")
+#' segment("\u5357\u4eac\u5e02\u957f\u6c5f\u5927\u6865", seg)
+#' segment(c("\u5357\u4eac\u5e02\u957f\u6c5f\u5927\u6865", "\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5"), seg, batch = "list")
+#' segment(c("\u5357\u4eac\u5e02\u957f\u6c5f\u5927\u6865", "\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5"), seg, batch = "data.frame")
 #' @export
 segment <- function(code, jiebar, ..., mod = NULL, batch = c("list", "data.frame", "flatten")) {
   rlang::check_dots_empty()
@@ -103,11 +101,11 @@ segment <- function(code, jiebar, ..., mod = NULL, batch = c("list", "data.frame
 #' - `"data.frame"`: a data frame with `doc_id` and `word` columns.
 #' - `"flatten"`: one concatenated character vector.
 #'
-#' In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
-#' texts, batch segmentation is about **3x to 7x faster** than the comparable
-#' `jiebaR` workflow on many-string inputs. For very long texts, the best
-#' throughput was usually reached by splitting into about **32 to 64 chunks**,
-#' while much finer splitting still helped but was no longer optimal.
+#' In the current release benchmarks on the bundled *Fortress Besieged* and
+#' *Dream of the Red Chamber* texts, batch segmentation reaches about **7x to
+#' 12x speedup** over the comparable `jiebaR` workflow on many-string inputs.
+#' For very long texts, splitting into about **32 to 128 chunks** before calling
+#' `segment_batch()` is recommended for good throughput.
 #'
 #' @param texts A character vector of strings to segment.
 #' @param jiebar A `jieba_worker` object.
@@ -119,7 +117,7 @@ segment <- function(code, jiebar, ..., mod = NULL, batch = c("list", "data.frame
 #' @return Segmented tokens in the requested aggregation form.
 #' @examples
 #' seg <- worker()
-#' texts <- c("南京市长江大桥", "这是一个测试")
+#' texts <- c("\u5357\u4eac\u5e02\u957f\u6c5f\u5927\u6865", "\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5")
 #' segment_batch(texts, seg)
 #' segment_batch(texts, seg, batch = "flatten")
 #' @export

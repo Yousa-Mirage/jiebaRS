@@ -121,8 +121,8 @@
 #' @return N-gram counts in the requested format.
 #' @seealso [get_tuple()]
 #' @examples
-#' count_ngrams(c("我", "爱", "R"), n = 2)
-#' count_ngrams(c("我", "爱", "R"), n = 1:2, format = "data.frame")
+#' count_ngrams(c("\u6211", "\u7231", "R"), n = 2)
+#' count_ngrams(c("\u6211", "\u7231", "R"), n = 1:2, format = "data.frame")
 #' count_ngrams(c("a", "b", "b", "b", "a"), n = 1, sort = FALSE)
 #' count_ngrams(list(c("a", "b", "c"), c("a", "b")), n = 2)
 #' @export

@@ -34,15 +34,15 @@ returned object depends on \code{batch}:
 \item \code{"flatten"}: one concatenated character vector.
 }
 
-In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
-texts, batch segmentation is about \strong{3x to 7x faster} than the comparable
-\code{jiebaR} workflow on many-string inputs. For very long texts, the best
-throughput was usually reached by splitting into about \strong{32 to 64 chunks},
-while much finer splitting still helped but was no longer optimal.
+In the current release benchmarks on the bundled \emph{Fortress Besieged} and
+\emph{Dream of the Red Chamber} texts, batch segmentation reaches about \strong{7x to
+12x speedup} over the comparable \code{jiebaR} workflow on many-string inputs.
+For very long texts, splitting into about \strong{32 to 128 chunks} before calling
+\code{segment_batch()} is recommended for good throughput.
 }
 \examples{
 seg <- worker()
-texts <- c("南京市长江大桥", "这是一个测试")
+texts <- c("\u5357\u4eac\u5e02\u957f\u6c5f\u5927\u6865", "\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5")
 segment_batch(texts, seg)
 segment_batch(texts, seg, batch = "flatten")
 }

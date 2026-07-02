@@ -40,11 +40,11 @@ Tag one or more strings with a \code{jieba_worker} created by \code{\link[=worke
 \item \code{"legacy"}: the old \code{jiebaR} layout with token values and tag names.
 }
 
-In the current release benchmarks on the bundled 《围城》 and 《红楼梦》
-texts, \code{jiebaRS::tagging()} is about \strong{1.6x to 1.8x faster} than
-\code{jiebaR::tagging()} when each novel is tagged as one long string. When the
-same content is split into many strings and processed in batch,
-\code{jiebaRS::tagging()} is about \strong{2x to 5x faster} than \code{jiebaR}.
+In the current release benchmarks on the bundled \emph{Fortress Besieged} and
+\emph{Dream of the Red Chamber} texts, \code{jiebaRS::tagging()} is about \strong{1.6x to
+1.8x faster} than \code{jiebaR::tagging()} when each novel is tagged as one long
+string. When the same content is split into many strings and processed in
+batch, \code{jiebaRS::tagging()} is about \strong{2x to 5x faster} than \code{jiebaR}.
 
 For very long texts, splitting before tagging is usually faster than sending
 one huge string. In the same release benchmarks, the best results appeared
@@ -65,7 +65,7 @@ input and \code{"list"} for multi-string input.
 }
 \examples{
 tagger <- worker(type = "tag")
-tagging("这是一个测试", tagger)
-tagging(c("这是一个测试", "再来一次"), tagger)
-tagging(c("这是一个测试", "再来一次"), tagger, format = "data.frame", batch = "flatten")
+tagging("\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5", tagger)
+tagging(c("\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5", "\u518d\u6765\u4e00\u6b21"), tagger)
+tagging(c("\u8fd9\u662f\u4e00\u4e2a\u6d4b\u8bd5", "\u518d\u6765\u4e00\u6b21"), tagger, format = "data.frame", batch = "flatten")
 }

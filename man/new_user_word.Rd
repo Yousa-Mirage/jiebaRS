@@ -26,17 +26,17 @@ Add one or more custom words to a jieba worker.
 }
 \examples{
 cutter <- worker()
-segment("量子机器狗", cutter)
-new_user_word(cutter, "量子机器狗", tags = "n", freq = 1000L)
-segment("量子机器狗", cutter)
+segment("\u91cf\u5b50\u673a\u5668\u72d7", cutter)
+new_user_word(cutter, "\u91cf\u5b50\u673a\u5668\u72d7", tags = "n", freq = 1000L)
+segment("\u91cf\u5b50\u673a\u5668\u72d7", cutter)
 
 cutter2 <- worker()
 add_word(
   cutter2,
-  c("超导量子比特", "量子机器狗"),
+  c("\u8d85\u5bfc\u91cf\u5b50\u6bd4\u7279", "\u91cf\u5b50\u673a\u5668\u72d7"),
   tags = c(NA, "n"),
   freq = c(NA, 1000L)
 )
-segment("超导量子比特", cutter2)
+segment("\u8d85\u5bfc\u91cf\u5b50\u6bd4\u7279", cutter2)
 
 }

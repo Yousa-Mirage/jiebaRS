@@ -32,5 +32,5 @@ faster than \code{jiebaR::filter_segment()} on the tested workloads.
 \examples{
 filter_segment(c("abc", "def", " ", "."), c("abc"))
 filter_segment(c("a", NA, "b", "a"), c("b"), keep_na = FALSE)
-filter_segment(list(c("我", "是", "测试"), c("测试", "文本", "我")), "我")
+filter_segment(list(c("\u6211", "\u662f", "\u6d4b\u8bd5"), c("\u6d4b\u8bd5", "\u6587\u672c", "\u6211")), "\u6211")
 }
