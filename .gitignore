@@ -44,3 +44,6 @@ jieba-rs.xml
 .vscode/
 .zed/
 src/rust/vendor
+
+# cran info
+CRAN-SUBMISSION

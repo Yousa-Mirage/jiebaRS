@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Yousa-Mirage/jiebaRS)
 <!-- badges: end -->
 
-[简体中文](README.md) | [English](README_en.md)
+[简体中文](https://yousa-mirage.github.io/jiebaRS/index.html) | [English](https://yousa-mirage.github.io/jiebaRS/README_en.html)
 
 </div>
 
@@ -43,8 +43,7 @@ knitr::opts_chunk$set(
 语言中文分词的首选工具。然而，[qinwf](https://github.com/qinwf) 已停止维护
 [jiebaR](https://github.com/qinwf/jiebaR)，并且
 [jiebaR](https://github.com/qinwf/jiebaR) 已被
-[CRAN](https://CRAN.R-project.org/package=jiebaR) 移除，
-无法直接安装。这给 R
+[CRAN](https://CRAN.R-project.org/package=jiebaR) 移除， 无法直接安装。这给 R
 语言的教学与研究带来了不便和困扰。因此，基于功能完善、性能出色、 持续维护的 Rust
 [jieba-rs](https://github.com/messense/jieba-rs) crate， 我开发了
 **jiebaRS**，为 R 用户提供一个现代化、易用的中文分词工具， 并尽可能保持与原
@@ -303,4 +302,4 @@ jiebaRS 构建于以下开源项目的基础之上：
 
 ## 许可证
 
-jiebaRS 基于 [MIT 许可证](LICENSE.md) 授权。
+MIT license
