@@ -6,6 +6,8 @@
 - User dictionary entries with an omitted frequency now infer one automatically,
   zero frequencies are rejected.
 - Legacy `word tag` entries are supported.
+- `worker()` now accepts `min_keyword_length` to control the minimum Unicode
+  length of terms returned by TF-IDF and TextRank keyword extraction.
 - `worker()` now accepts one or more user dictionary paths through `user`;
   dictionaries are appended in the supplied order
   ([qinwf/jiebaR#69](https://github.com/qinwf/jiebaR/issues/69)).

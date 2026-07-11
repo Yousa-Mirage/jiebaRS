@@ -53,6 +53,9 @@
 #'   HMM fallback is enabled with that model. Default is `TRUE`.
 #' @param topn Integer. The number of terms returned by `keywords` and
 #'   `textrank` workers. Default is `5`.
+#' @param min_keyword_length Positive integer. The minimum number of Unicode
+#'   scalar values in terms returned by `keywords` and `textrank` workers.
+#'   Default is `2`.
 #' @param idf Optional character scalar. A path to a custom IDF dictionary
 #'   file for `keywords` workers. Each line should be `word idf_value`. When
 #'   `NULL`, the embedded default IDF dictionary is used. Ignored by non-keyword
@@ -80,6 +83,7 @@ worker <- function(
   stop_word_file = NULL,
   hmm = TRUE,
   topn = 5L,
+  min_keyword_length = 2L,
   idf = NULL,
   dict = NULL,
   user = NULL,
@@ -128,6 +132,14 @@ worker <- function(
     cli::cli_abort("`topn` must be a non-negative integer.")
   }
   topn <- as.integer(topn)
+
+  if (
+    !rlang::is_integerish(min_keyword_length, n = 1) ||
+      min_keyword_length < 1
+  ) {
+    cli::cli_abort("`min_keyword_length` must be a positive integer.")
+  }
+  min_keyword_length <- as.integer(min_keyword_length)
 
   idf_path <- ""
   if (!is.null(idf)) {
@@ -190,12 +202,23 @@ worker <- function(
 
   structure(
     list(
-      ptr = new_worker(type, hmm, hmm_model, idf_path, dict_path, user_paths, topn, stop_words),
+      ptr = new_worker(
+        type,
+        hmm,
+        hmm_model,
+        idf_path,
+        dict_path,
+        user_paths,
+        topn,
+        min_keyword_length,
+        stop_words
+      ),
       type = type,
       config = list(
         hmm = hmm,
         hmm_model = if (nzchar(hmm_model)) hmm_model else NULL,
         topn = topn,
+        min_keyword_length = min_keyword_length,
         idf = if (nzchar(idf_path)) idf_path else NULL,
         dict = if (nzchar(dict_path)) dict_path else NULL,
         user = if (length(user_paths)) user_paths else NULL,

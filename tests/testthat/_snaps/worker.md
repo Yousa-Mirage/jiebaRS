@@ -70,6 +70,30 @@
       Error in `worker()`:
       ! `type` must be one of "mix", "mp", "hmm", "full", "query", "tag", "keywords", or "textrank", not "nope".
 
+# worker validates minimum keyword length
+
+    Code
+      worker(min_keyword_length = 0)
+    Condition
+      Error in `worker()`:
+      ! `min_keyword_length` must be a positive integer.
+
+---
+
+    Code
+      worker(min_keyword_length = 1.5)
+    Condition
+      Error in `worker()`:
+      ! `min_keyword_length` must be a positive integer.
+
+---
+
+    Code
+      worker(min_keyword_length = NA)
+    Condition
+      Error in `worker()`:
+      ! `min_keyword_length` must be a positive integer.
+
 # worker validates custom HMM model paths
 
     Code

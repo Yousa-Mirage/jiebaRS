@@ -12,6 +12,7 @@ new_worker(
   dict_path,
   user_paths,
   top_n,
+  min_keyword_length,
   stop_words
 )
 }
@@ -38,6 +39,9 @@ entries are \emph{appended} to the main dictionary in the supplied order.}
 
 \item{top_n}{Integer scalar giving the number of keywords retained by
 keyword workers.}
+
+\item{min_keyword_length}{Positive integer scalar giving the minimum number
+of Unicode scalar values in terms retained by keyword workers.}
 
 \item{stop_words}{Character vector of normalized UTF-8 stop words passed to
 the native worker.}

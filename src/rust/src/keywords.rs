@@ -27,7 +27,16 @@ impl JiebaWorker {
             ));
         };
 
-        let keywords = extractor.extract_keywords(&self.engine, text, self.top_n, vec![]);
+        let candidate_count = self.engine.tag(text, self.use_hmm).len();
+        let keywords = extractor
+            .extract_keywords(&self.engine, text, candidate_count, vec![])
+            .into_iter()
+            .filter(|keyword| {
+                keyword.keyword.chars().count() >= self.min_keyword_length
+                    && !self.stop_words.contains(&keyword.keyword.to_lowercase())
+            })
+            .take(self.top_n)
+            .collect();
 
         Ok(keywords)
     }

@@ -14,6 +14,18 @@ test_that("keyword worker returns a named vector by default", {
   expect_true(all(is.finite(unname(result))))
 })
 
+test_that("keyword worker supports single-character terms", {
+  text <- "今天股票跌很厉害，股票又跌"
+  default_result <- keywords(text, worker(type = "keywords", topn = 100))
+  single_result <- keywords(
+    text,
+    worker(type = "keywords", topn = 100, min_keyword_length = 1)
+  )
+
+  expect_identical("跌" %in% names(default_result), FALSE)
+  expect_identical("跌" %in% names(single_result), TRUE)
+})
+
 test_that("keyword worker can return a data frame", {
   keys_worker <- worker(type = "keywords", topn = 3)
   result <- keywords(keyword_text, keys_worker, format = "data.frame")

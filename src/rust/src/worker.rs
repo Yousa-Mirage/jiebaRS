@@ -19,6 +19,7 @@ pub struct WorkerConfig<'a> {
     pub dict_path: &'a str,
     pub user_paths: Vec<String>,
     pub top_n: u32,
+    pub min_keyword_length: u32,
     pub stop_words: Vec<String>,
 }
 
@@ -63,6 +64,7 @@ pub struct JiebaWorker {
     pub family: WorkerFamily,
     pub use_hmm: bool,
     pub top_n: usize,
+    pub min_keyword_length: usize,
     pub stop_words: AHashSet<String>,
     pub keyword_extractor: Option<TfIdf>,
     pub textrank_extractor: Option<TextRank>,
@@ -79,11 +81,13 @@ impl JiebaWorker {
             dict_path,
             user_paths,
             top_n,
+            min_keyword_length,
             stop_words,
         } = config;
 
         let family = WorkerFamily::from_type(worker_type)?;
         let top_n = top_n as usize;
+        let min_keyword_length = min_keyword_length as usize;
         let stop_words: AHashSet<String> = stop_words
             .into_iter()
             .map(|word| word.to_lowercase())
@@ -96,6 +100,7 @@ impl JiebaWorker {
                 let config = KeywordExtractConfig::builder()
                     .set_stop_words(keyword_stop_words)
                     .use_hmm(use_hmm)
+                    .min_keyword_length(min_keyword_length)
                     .build();
 
                 let extractor = if idf_path.is_empty() {
@@ -117,6 +122,7 @@ impl JiebaWorker {
                 let config = KeywordExtractConfig::builder()
                     .set_stop_words(textrank_stop_words)
                     .use_hmm(use_hmm)
+                    .min_keyword_length(min_keyword_length)
                     .build();
                 Some(TextRank::new(5, config))
             }
@@ -171,6 +177,7 @@ impl JiebaWorker {
             family,
             use_hmm,
             top_n,
+            min_keyword_length,
             stop_words,
             keyword_extractor,
             textrank_extractor,

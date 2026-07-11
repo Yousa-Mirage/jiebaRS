@@ -29,6 +29,8 @@ use worker::{JiebaWorker, WorkerConfig};
 ///   entries are *appended* to the main dictionary in the supplied order.
 /// @param top_n Integer scalar giving the number of keywords retained by
 ///   keyword workers.
+/// @param min_keyword_length Positive integer scalar giving the minimum number
+///   of Unicode scalar values in terms retained by keyword workers.
 /// @param stop_words Character vector of normalized UTF-8 stop words passed to
 ///   the native worker.
 ///
@@ -44,6 +46,7 @@ fn new_worker(
     dict_path: &str,
     user_paths: Vec<String>,
     top_n: u32,
+    min_keyword_length: u32,
     stop_words: Vec<String>,
 ) -> Result<JiebaWorker> {
     JiebaWorker::new(WorkerConfig {
@@ -54,6 +57,7 @@ fn new_worker(
         dict_path,
         user_paths,
         top_n,
+        min_keyword_length,
         stop_words,
     })
 }
