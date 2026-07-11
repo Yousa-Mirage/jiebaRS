@@ -10,7 +10,7 @@ new_worker(
   hmm_model,
   idf_path,
   dict_path,
-  user_path,
+  user_paths,
   top_n,
   stop_words
 )
@@ -33,8 +33,8 @@ an empty string to use the embedded dictionary.}
 or an empty string to use the embedded dictionary. When provided, the
 custom file \emph{replaces} the embedded main dictionary entirely.}
 
-\item{user_path}{Character scalar containing a user dictionary path, or an
-empty string to skip. User entries are \emph{appended} to the main dictionary.}
+\item{user_paths}{Character vector containing user dictionary paths. User
+entries are \emph{appended} to the main dictionary in the supplied order.}
 
 \item{top_n}{Integer scalar giving the number of keywords retained by
 keyword workers.}

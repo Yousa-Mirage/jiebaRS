@@ -20,7 +20,7 @@
       worker(user = 5)
     Condition
       Error in `worker()`:
-      ! `user` must be `NULL` or a path to a user dictionary file.
+      ! `user` must be `NULL` or a non-empty character vector of user dictionary file paths.
 
 ---
 
@@ -28,7 +28,7 @@
       worker(user = "/nonexistent/user.txt")
     Condition
       Error in `worker()`:
-      ! `user` must point to an existing user dictionary file.
+      ! Every path in `user` must point to an existing user dictionary file.
 
 # worker snapshots invalid type input
 

@@ -1,3 +1,7 @@
+# jiebaRS (development version)
+
+- `worker()` now accepts one or more user dictionary paths through `user`; dictionaries are appended in the supplied order ([qinwf/jiebaR#69](https://github.com/qinwf/jiebaR/issues/69)).
+
 # jiebaRS 0.1.0
 
 Initial CRAN submission.

@@ -88,6 +88,19 @@ test_that("user dictionary appends to the default dictionary", {
   expect_null(worker()$config$user)
 })
 
+test_that("multiple user dictionaries are loaded in order", {
+  user_file1 <- withr::local_tempfile()
+  user_file2 <- withr::local_tempfile()
+  writeLines("量子机器狗 1000 n", user_file1, useBytes = TRUE)
+  writeLines("超导量子比特 1000 n", user_file2, useBytes = TRUE)
+
+  engine <- worker(user = c(user_file1, user_file2))
+
+  expect_identical(segment("量子机器狗", engine), "量子机器狗")
+  expect_identical(segment("超导量子比特", engine), "超导量子比特")
+  expect_identical(engine$config$user, c(user_file1, user_file2))
+})
+
 test_that("dict dictionary replaces the default dictionary", {
   dict_file <- withr::local_tempfile()
   writeLines(c("我们 1000 r", "北京 1000 ns", "量子机器狗 1000 n"), dict_file, useBytes = TRUE)

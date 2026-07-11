@@ -33,12 +33,13 @@
 #' do not use this runtime switch.
 #'
 #' `dict` and `user` load dictionary files at worker creation time. `dict`
-#' *replaces* the embedded main dictionary entirely; `user` *appends* entries
-#' to whatever main dictionary is in place (default or custom `dict`). Both
-#' files use the same line format: `word [freq] [tag]`, whitespace-separated,
-#' one entry per line. `freq` is an integer word frequency (default `0` if
-#' omitted); `tag` is a part-of-speech tag string (default empty if omitted).
-#' For `user` files, a word with no `freq` is assigned frequency `0`.
+#' *replaces* the embedded main dictionary entirely; `user` accepts one or more
+#' file paths whose entries are appended, in the supplied order, to whatever
+#' main dictionary is in place (default or custom `dict`). Both kinds of files
+#' use the same line format: `word [freq] [tag]`, whitespace-separated, one
+#' entry per line. `freq` is an integer word frequency (default `0` if omitted);
+#' `tag` is a part-of-speech tag string (default empty if omitted). For `user`
+#' files, a word with no `freq` is assigned frequency `0`.
 #'
 #' @param type Worker type. Supported values are `"mix"`, `"mp"`, `"hmm"`,
 #'   `"full"`, `"query"`, `"tag"`, `"keywords"`, and `"textrank"`.
@@ -60,9 +61,10 @@
 #'   `word [freq] [tag]` (whitespace-separated; `freq` defaults to `0`, `tag`
 #'   defaults to empty). When `NULL`, the embedded dictionary is used. Default
 #'   is `NULL`.
-#' @param user Optional character scalar. A path to a user dictionary file
-#'   whose entries are *appended* to the main dictionary. Same line format as
-#'   `dict`: `word [freq] [tag]`. Default is `NULL`.
+#' @param user Optional character vector containing one or more paths to user
+#'   dictionary files whose entries are *appended* to the main dictionary in
+#'   the supplied order. Same line format as `dict`: `word [freq] [tag]`.
+#'   Default is `NULL`.
 #' @param symbol Logical. Whether to keep symbol-like tokens in the sentence. Default is `FALSE`.
 #' @param bylines [Deprecated] compatibility argument retained from `jiebaR`.
 #'   `jiebaRS` no longer uses this value; control batch aggregation directly
@@ -147,15 +149,17 @@ worker <- function(
     dict_path <- enc2utf8(dict)
   }
 
-  user_path <- ""
+  user_paths <- character()
   if (!is.null(user)) {
-    if (!rlang::is_string(user)) {
-      cli::cli_abort("`user` must be `NULL` or a path to a user dictionary file.")
+    if (!rlang::is_character(user) || rlang::is_empty(user) || anyNA(user)) {
+      cli::cli_abort(
+        "`user` must be `NULL` or a non-empty character vector of user dictionary file paths."
+      )
     }
-    if (!file.exists(user)) {
-      cli::cli_abort("`user` must point to an existing user dictionary file.")
+    if (!all(file.exists(user))) {
+      cli::cli_abort("Every path in `user` must point to an existing user dictionary file.")
     }
-    user_path <- enc2utf8(user)
+    user_paths <- enc2utf8(user)
   }
 
   if (!rlang::is_bool(symbol)) {
@@ -184,7 +188,7 @@ worker <- function(
 
   structure(
     list(
-      ptr = new_worker(type, hmm, hmm_model, idf_path, dict_path, user_path, topn, stop_words),
+      ptr = new_worker(type, hmm, hmm_model, idf_path, dict_path, user_paths, topn, stop_words),
       type = type,
       config = list(
         hmm = hmm,
@@ -192,7 +196,7 @@ worker <- function(
         topn = topn,
         idf = if (nzchar(idf_path)) idf_path else NULL,
         dict = if (nzchar(dict_path)) dict_path else NULL,
-        user = if (nzchar(user_path)) user_path else NULL,
+        user = if (length(user_paths)) user_paths else NULL,
         stop_word = stop_words,
         symbol = symbol,
         bylines = bylines

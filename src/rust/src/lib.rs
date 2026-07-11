@@ -24,8 +24,8 @@ use worker::{JiebaWorker, WorkerConfig};
 /// @param dict_path Character scalar containing a custom main dictionary path,
 ///   or an empty string to use the embedded dictionary. When provided, the
 ///   custom file *replaces* the embedded main dictionary entirely.
-/// @param user_path Character scalar containing a user dictionary path, or an
-///   empty string to skip. User entries are *appended* to the main dictionary.
+/// @param user_paths Character vector containing user dictionary paths. User
+///   entries are *appended* to the main dictionary in the supplied order.
 /// @param top_n Integer scalar giving the number of keywords retained by
 ///   keyword workers.
 /// @param stop_words Character vector of normalized UTF-8 stop words passed to
@@ -41,7 +41,7 @@ fn new_worker(
     hmm_model: &str,
     idf_path: &str,
     dict_path: &str,
-    user_path: &str,
+    user_paths: Vec<String>,
     top_n: u32,
     stop_words: Vec<String>,
 ) -> Result<JiebaWorker> {
@@ -51,7 +51,7 @@ fn new_worker(
         hmm_model,
         idf_path,
         dict_path,
-        user_path,
+        user_paths,
         top_n,
         stop_words,
     })

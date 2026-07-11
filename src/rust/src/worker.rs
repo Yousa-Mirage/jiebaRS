@@ -16,7 +16,7 @@ pub struct WorkerConfig<'a> {
     pub hmm_model: &'a str,
     pub idf_path: &'a str,
     pub dict_path: &'a str,
-    pub user_path: &'a str,
+    pub user_paths: Vec<String>,
     pub top_n: u32,
     pub stop_words: Vec<String>,
 }
@@ -76,7 +76,7 @@ impl JiebaWorker {
             hmm_model,
             idf_path,
             dict_path,
-            user_path,
+            user_paths,
             top_n,
             stop_words,
         } = config;
@@ -146,7 +146,7 @@ impl JiebaWorker {
 
         // `user` appends to whatever dictionary is in place (default or
         // custom `dict`).
-        if !user_path.is_empty() {
+        for user_path in &user_paths {
             let file = File::open(user_path).map_err(|err| {
                 Error::Other(format!(
                     "Failed to open user dictionary `{user_path}`: {err}"

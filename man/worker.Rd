@@ -45,9 +45,10 @@ file that \emph{replaces} the embedded dictionary. Each line should be
 defaults to empty). When \code{NULL}, the embedded dictionary is used. Default
 is \code{NULL}.}
 
-\item{user}{Optional character scalar. A path to a user dictionary file
-whose entries are \emph{appended} to the main dictionary. Same line format as
-\code{dict}: \code{word [freq] [tag]}. Default is \code{NULL}.}
+\item{user}{Optional character vector containing one or more paths to user
+dictionary files whose entries are \emph{appended} to the main dictionary in
+the supplied order. Same line format as \code{dict}: \code{word [freq] [tag]}.
+Default is \code{NULL}.}
 
 \item{symbol}{Logical. Whether to keep symbol-like tokens in the sentence. Default is \code{FALSE}.}
 
@@ -92,10 +93,11 @@ and \code{keywords} workers through TF-IDF keyword extraction. \code{mp}, \code{
 do not use this runtime switch.
 
 \code{dict} and \code{user} load dictionary files at worker creation time. \code{dict}
-\emph{replaces} the embedded main dictionary entirely; \code{user} \emph{appends} entries
-to whatever main dictionary is in place (default or custom \code{dict}). Both
-files use the same line format: \code{word [freq] [tag]}, whitespace-separated,
-one entry per line. \code{freq} is an integer word frequency (default \code{0} if
-omitted); \code{tag} is a part-of-speech tag string (default empty if omitted).
-For \code{user} files, a word with no \code{freq} is assigned frequency \code{0}.
+\emph{replaces} the embedded main dictionary entirely; \code{user} accepts one or more
+file paths whose entries are appended, in the supplied order, to whatever
+main dictionary is in place (default or custom \code{dict}). Both kinds of files
+use the same line format: \code{word [freq] [tag]}, whitespace-separated, one
+entry per line. \code{freq} is an integer word frequency (default \code{0} if omitted);
+\code{tag} is a part-of-speech tag string (default empty if omitted). For \code{user}
+files, a word with no \code{freq} is assigned frequency \code{0}.
 }
