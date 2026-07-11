@@ -60,7 +60,15 @@
       new_user_word(engine1, "量子机器狗", freq = -1L)
     Condition
       Error in `new_user_word()`:
-      ! `freq` must be `NULL` or a non-negative integer vector.
+      ! `freq` must be `NULL` or a positive integer vector.
+
+---
+
+    Code
+      new_user_word(engine1, "量子机器狗", freq = 0L)
+    Condition
+      Error in `new_user_word()`:
+      ! `freq` must be `NULL` or a positive integer vector.
 
 ---
 
@@ -68,7 +76,7 @@
       new_user_word(engine1, "量子机器狗", freq = 1.5)
     Condition
       Error in `new_user_word()`:
-      ! `freq` must be `NULL` or a non-negative integer vector.
+      ! `freq` must be `NULL` or a positive integer vector.
 
 ---
 
@@ -76,5 +84,5 @@
       new_user_word(engine1, "量子机器狗", freq = "100")
     Condition
       Error in `new_user_word()`:
-      ! `freq` must be `NULL` or a non-negative integer vector.
+      ! `freq` must be `NULL` or a positive integer vector.
 

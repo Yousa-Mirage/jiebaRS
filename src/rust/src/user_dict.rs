@@ -38,12 +38,18 @@ impl JiebaWorker {
                         let value: Option<i32> = (*freq).into();
                         match value {
                             None => Ok(None),
-                            Some(value) => usize::try_from(value).map(Some).map_err(|_| {
-                                Error::Other(
-                                    "`freq` must contain only non-negative integers or `NA` values."
-                                        .to_string(),
-                                )
-                            }),
+                            Some(value) if value > 0 => {
+                                usize::try_from(value).map(Some).map_err(|_| {
+                                    Error::Other(
+                                        "`freq` must contain only positive integers or `NA` values."
+                                            .to_string(),
+                                    )
+                                })
+                            }
+                            Some(_) => Err(Error::Other(
+                                "`freq` must contain only positive integers or `NA` values."
+                                    .to_string(),
+                            )),
                         }
                     })
                     .collect::<Result<Vec<_>>>()?

@@ -17,9 +17,9 @@ add_word(worker, words, tags = "n", freq = NULL)
 \item{tags}{A single tag or a character vector of tags. Defaults to \code{"n"}
 for each supplied word. \code{NA} values are allowed and will be interpreted as missing tags.}
 
-\item{freq}{Optional non-negative integer frequency or integer vector of
+\item{freq}{Optional positive integer frequency or integer vector of
 frequencies. Defaults to \code{NULL}. \code{NA} values are allowed and will be
-interpreted as missing frequencies.}
+interpreted as frequencies to infer from the current dictionary.}
 }
 \value{
 \code{NULL}, invisibly. Called for its side effect of adding the supplied

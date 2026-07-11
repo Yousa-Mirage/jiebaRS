@@ -41,14 +41,15 @@ workers. Default is \code{NULL}.}
 
 \item{dict}{Optional character scalar. A path to a custom main dictionary
 file that \emph{replaces} the embedded dictionary. Each line should be
-\code{word [freq] [tag]} (whitespace-separated; \code{freq} defaults to \code{0}, \code{tag}
+\code{word [freq] [tag]} (whitespace-separated; \code{freq} defaults to \code{1}, \code{tag}
 defaults to empty). When \code{NULL}, the embedded dictionary is used. Default
 is \code{NULL}.}
 
 \item{user}{Optional character vector containing one or more paths to user
 dictionary files whose entries are \emph{appended} to the main dictionary in
-the supplied order. Same line format as \code{dict}: \code{word [freq] [tag]}.
-Default is \code{NULL}.}
+the supplied order. Supported line formats are \code{word}, \verb{word freq},
+\verb{word tag}, and \verb{word freq tag}. Omitted frequencies are inferred from the
+current dictionary. Default is \code{NULL}.}
 
 \item{symbol}{Logical. Whether to keep symbol-like tokens in the sentence. Default is \code{FALSE}.}
 
@@ -95,9 +96,10 @@ do not use this runtime switch.
 \code{dict} and \code{user} load dictionary files at worker creation time. \code{dict}
 \emph{replaces} the embedded main dictionary entirely; \code{user} accepts one or more
 file paths whose entries are appended, in the supplied order, to whatever
-main dictionary is in place (default or custom \code{dict}). Both kinds of files
-use the same line format: \code{word [freq] [tag]}, whitespace-separated, one
-entry per line. \code{freq} is an integer word frequency (default \code{0} if omitted);
-\code{tag} is a part-of-speech tag string (default empty if omitted). For \code{user}
-files, a word with no \code{freq} is assigned frequency \code{0}.
+main dictionary is in place (default or custom \code{dict}). Main dictionary
+entries use \code{word [freq] [tag]}; an omitted frequency defaults to \code{1}. User
+dictionary entries may use \code{word}, \verb{word freq}, \verb{word tag} (the legacy
+two-column \code{jiebaR} format), or \verb{word freq tag}. User frequencies must be
+positive integers; when omitted, a frequency is inferred from the current
+dictionary. Files must be UTF-8; a leading byte order mark (BOM) is allowed.
 }

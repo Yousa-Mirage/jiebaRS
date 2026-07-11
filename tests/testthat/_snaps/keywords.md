@@ -1,3 +1,19 @@
+# custom IDF dictionaries reject invalid formats
+
+    Code
+      worker(type = "keywords", idf = empty_idf)
+    Condition
+      Error in `new_worker()`:
+      ! The custom IDF dictionary `<empty-idf>` contains no entries.
+
+---
+
+    Code
+      worker(type = "keywords", idf = invalid_idf)
+    Condition
+      Error in `new_worker()`:
+      ! Invalid custom IDF dictionary `<invalid-idf>` at line 1: IDF value must be numeric.
+
 # keyword worker snapshots invalid IDF input
 
     Code

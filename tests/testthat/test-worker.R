@@ -88,6 +88,50 @@ test_that("user dictionary appends to the default dictionary", {
   expect_null(worker()$config$user)
 })
 
+test_that("dictionary files handle a UTF-8 BOM and omitted frequencies", {
+  user_file <- withr::local_tempfile()
+  user_contents <- c(
+    as.raw(c(0xef, 0xbb, 0xbf)),
+    charToRaw("量子机器狗 n\n超导量子比特\n")
+  )
+  writeBin(user_contents, user_file)
+
+  user_engine <- worker(user = user_file)
+  tag_engine <- worker(type = "tag", user = user_file)
+
+  expect_identical(segment("量子机器狗", user_engine), "量子机器狗")
+  expect_identical(segment("超导量子比特", user_engine), "超导量子比特")
+  expect_identical(tagging("量子机器狗", tag_engine), stats::setNames("n", "量子机器狗"))
+
+  dict_file <- withr::local_tempfile()
+  dict_contents <- c(
+    as.raw(c(0xef, 0xbb, 0xbf)),
+    charToRaw("量子机器狗\n")
+  )
+  writeBin(dict_contents, dict_file)
+
+  dict_engine <- worker(dict = dict_file, hmm = FALSE)
+  expect_identical(segment("量子机器狗", dict_engine), "量子机器狗")
+})
+
+test_that("dictionary files reject zero frequencies and invalid formats", {
+  user_zero <- withr::local_tempfile(lines = "量子机器狗 0 n")
+  dict_zero <- withr::local_tempfile(lines = "量子机器狗 0 n")
+  user_bad_frequency <- withr::local_tempfile(lines = "量子机器狗 -1")
+  user_too_many <- withr::local_tempfile(lines = "量子机器狗 1000 n extra")
+  scrub_paths <- function(x) {
+    x <- gsub(user_zero, "<user-zero>", x, fixed = TRUE)
+    x <- gsub(dict_zero, "<dict-zero>", x, fixed = TRUE)
+    x <- gsub(user_bad_frequency, "<user-bad-frequency>", x, fixed = TRUE)
+    gsub(user_too_many, "<user-too-many>", x, fixed = TRUE)
+  }
+
+  expect_snapshot(worker(user = user_zero), error = TRUE, transform = scrub_paths)
+  expect_snapshot(worker(dict = dict_zero), error = TRUE, transform = scrub_paths)
+  expect_snapshot(worker(user = user_bad_frequency), error = TRUE, transform = scrub_paths)
+  expect_snapshot(worker(user = user_too_many), error = TRUE, transform = scrub_paths)
+})
+
 test_that("multiple user dictionaries are loaded in order", {
   user_file1 <- withr::local_tempfile()
   user_file2 <- withr::local_tempfile()

@@ -6,9 +6,9 @@
 #' @param words A non-empty string or a non-empty character vector of new words.
 #' @param tags A single tag or a character vector of tags. Defaults to `"n"`
 #'   for each supplied word. `NA` values are allowed and will be interpreted as missing tags.
-#' @param freq Optional non-negative integer frequency or integer vector of
+#' @param freq Optional positive integer frequency or integer vector of
 #'   frequencies. Defaults to `NULL`. `NA` values are allowed and will be
-#'   interpreted as missing frequencies.
+#'   interpreted as frequencies to infer from the current dictionary.
 #' @return `NULL`, invisibly. Called for its side effect of adding the supplied
 #'   words to `worker`, thereby modifying the state used by subsequent
 #'   operations with the same worker.
@@ -54,8 +54,8 @@ new_user_word <- function(worker, words, tags = "n", freq = NULL) {
   }
 
   if (!is.null(freq)) {
-    if (!rlang::is_integerish(freq) || any(freq < 0L, na.rm = TRUE)) {
-      cli::cli_abort("`freq` must be `NULL` or a non-negative integer vector.")
+    if (!rlang::is_integerish(freq) || any(freq <= 0L, na.rm = TRUE)) {
+      cli::cli_abort("`freq` must be `NULL` or a positive integer vector.")
     }
     n_freq <- length(freq)
     if (n_freq != 1L && n_freq != n_words) {

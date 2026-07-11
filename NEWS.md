@@ -1,6 +1,13 @@
 # jiebaRS (development version)
 
-- `worker()` now accepts one or more user dictionary paths through `user`; dictionaries are appended in the supplied order ([qinwf/jiebaR#69](https://github.com/qinwf/jiebaR/issues/69)).
+- Custom dictionary and model files are now read through a common UTF-8 layer
+  that handles a leading BOM and reports invalid formats.
+- User dictionary entries with an omitted frequency now infer one automatically,
+  zero frequencies are rejected.
+- Legacy `word tag` entries are supported.
+- `worker()` now accepts one or more user dictionary paths through `user`;
+  dictionaries are appended in the supplied order
+  ([qinwf/jiebaR#69](https://github.com/qinwf/jiebaR/issues/69)).
 
 # jiebaRS 0.1.0
 

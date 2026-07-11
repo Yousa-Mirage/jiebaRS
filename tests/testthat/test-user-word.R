@@ -80,6 +80,10 @@ test_that("new_user_word snapshots invalid inputs", {
     error = TRUE
   )
   expect_snapshot(
+    new_user_word(engine1, "量子机器狗", freq = 0L),
+    error = TRUE
+  )
+  expect_snapshot(
     new_user_word(engine1, "量子机器狗", freq = 1.5),
     error = TRUE
   )

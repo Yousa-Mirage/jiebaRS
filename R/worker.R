@@ -35,11 +35,12 @@
 #' `dict` and `user` load dictionary files at worker creation time. `dict`
 #' *replaces* the embedded main dictionary entirely; `user` accepts one or more
 #' file paths whose entries are appended, in the supplied order, to whatever
-#' main dictionary is in place (default or custom `dict`). Both kinds of files
-#' use the same line format: `word [freq] [tag]`, whitespace-separated, one
-#' entry per line. `freq` is an integer word frequency (default `0` if omitted);
-#' `tag` is a part-of-speech tag string (default empty if omitted). For `user`
-#' files, a word with no `freq` is assigned frequency `0`.
+#' main dictionary is in place (default or custom `dict`). Main dictionary
+#' entries use `word [freq] [tag]`; an omitted frequency defaults to `1`. User
+#' dictionary entries may use `word`, `word freq`, `word tag` (the legacy
+#' two-column `jiebaR` format), or `word freq tag`. User frequencies must be
+#' positive integers; when omitted, a frequency is inferred from the current
+#' dictionary. Files must be UTF-8; a leading byte order mark (BOM) is allowed.
 #'
 #' @param type Worker type. Supported values are `"mix"`, `"mp"`, `"hmm"`,
 #'   `"full"`, `"query"`, `"tag"`, `"keywords"`, and `"textrank"`.
@@ -58,13 +59,14 @@
 #'   workers. Default is `NULL`.
 #' @param dict Optional character scalar. A path to a custom main dictionary
 #'   file that *replaces* the embedded dictionary. Each line should be
-#'   `word [freq] [tag]` (whitespace-separated; `freq` defaults to `0`, `tag`
+#'   `word [freq] [tag]` (whitespace-separated; `freq` defaults to `1`, `tag`
 #'   defaults to empty). When `NULL`, the embedded dictionary is used. Default
 #'   is `NULL`.
 #' @param user Optional character vector containing one or more paths to user
 #'   dictionary files whose entries are *appended* to the main dictionary in
-#'   the supplied order. Same line format as `dict`: `word [freq] [tag]`.
-#'   Default is `NULL`.
+#'   the supplied order. Supported line formats are `word`, `word freq`,
+#'   `word tag`, and `word freq tag`. Omitted frequencies are inferred from the
+#'   current dictionary. Default is `NULL`.
 #' @param symbol Logical. Whether to keep symbol-like tokens in the sentence. Default is `FALSE`.
 #' @param bylines [Deprecated] compatibility argument retained from `jiebaR`.
 #'   `jiebaRS` no longer uses this value; control batch aggregation directly

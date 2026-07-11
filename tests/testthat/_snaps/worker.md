@@ -1,3 +1,35 @@
+# dictionary files reject zero frequencies and invalid formats
+
+    Code
+      worker(user = user_zero)
+    Condition
+      Error in `new_worker()`:
+      ! Invalid user dictionary `<user-zero>` at line 1: frequency must be greater than zero; omit it to infer it automatically.
+
+---
+
+    Code
+      worker(dict = dict_zero)
+    Condition
+      Error in `new_worker()`:
+      ! Invalid main dictionary `<dict-zero>` at line 1: frequency must be greater than zero.
+
+---
+
+    Code
+      worker(user = user_bad_frequency)
+    Condition
+      Error in `new_worker()`:
+      ! Invalid user dictionary `<user-bad-frequency>` at line 1: frequency must be a positive integer.
+
+---
+
+    Code
+      worker(user = user_too_many)
+    Condition
+      Error in `new_worker()`:
+      ! Invalid user dictionary `<user-too-many>` at line 1: expected `word`, `word freq`, `word tag`, or `word freq tag`.
+
 # worker snapshots invalid dict and user inputs
 
     Code

@@ -62,6 +62,44 @@ test_that("keyword worker loads a custom IDF dictionary", {
   expect_null(keys_default$config$idf)
 })
 
+test_that("custom IDF dictionaries handle a UTF-8 BOM", {
+  idf_file <- withr::local_tempfile()
+  contents <- c(
+    as.raw(c(0xef, 0xbb, 0xbf)),
+    charToRaw("北京烤鸭 99.0\n纽约 7.0\n天气 6.0\n")
+  )
+  writeBin(contents, idf_file)
+
+  keys_default <- worker(type = "keywords", topn = 3)
+  keys_custom <- worker(type = "keywords", topn = 3, idf = idf_file)
+
+  expect_gt(
+    keywords(keyword_text, keys_custom)[["北京烤鸭"]],
+    keywords(keyword_text, keys_default)[["北京烤鸭"]]
+  )
+})
+
+test_that("custom IDF dictionaries reject invalid formats", {
+  empty_idf <- withr::local_tempfile()
+  invalid_idf <- withr::local_tempfile(lines = "北京烤鸭 not-a-number")
+  writeLines(character(), empty_idf)
+  scrub_paths <- function(x) {
+    x <- gsub(empty_idf, "<empty-idf>", x, fixed = TRUE)
+    gsub(invalid_idf, "<invalid-idf>", x, fixed = TRUE)
+  }
+
+  expect_snapshot(
+    worker(type = "keywords", idf = empty_idf),
+    error = TRUE,
+    transform = scrub_paths
+  )
+  expect_snapshot(
+    worker(type = "keywords", idf = invalid_idf),
+    error = TRUE,
+    transform = scrub_paths
+  )
+})
+
 test_that("keyword worker snapshots invalid IDF input", {
   expect_snapshot(
     worker(type = "keywords", idf = 5),

@@ -1,11 +1,12 @@
-use std::fs::File;
-use std::io::BufReader;
+use std::io::Cursor;
 
 use ahash::AHashSet;
 
 use extendr_api::prelude::*;
 use extendr_api::{Error, Result};
 use jieba_rs::{HmmModel, Jieba, KeywordExtractConfig, TextRank, TfIdf};
+
+use crate::file_reader::{read_dictionary, read_idf_dictionary, read_utf8_file, DictionaryKind};
 
 pub const WORKER_ABI_VERSION: i32 = 1;
 
@@ -102,12 +103,8 @@ impl JiebaWorker {
                     *e.config_mut() = config;
                     e
                 } else {
-                    let file = File::open(idf_path).map_err(|err| {
-                        Error::Other(format!(
-                            "Failed to open custom IDF dictionary `{idf_path}`: {err}"
-                        ))
-                    })?;
-                    let mut reader = BufReader::new(file);
+                    let contents = read_idf_dictionary(idf_path)?;
+                    let mut reader = Cursor::new(contents);
                     TfIdf::new(Some(&mut reader), config)
                 };
                 Some(extractor)
@@ -131,12 +128,18 @@ impl JiebaWorker {
             Jieba::new()
         } else {
             // `dict` replaces the main dictionary entirely.
-            let file = File::open(dict_path).map_err(|err| {
-                Error::Other(format!(
-                    "Failed to open custom main dictionary `{dict_path}`: {err}"
-                ))
-            })?;
-            let mut reader = BufReader::new(file);
+            let entries = read_dictionary(dict_path, DictionaryKind::Main)?;
+            let normalized = entries
+                .into_iter()
+                .map(|entry| {
+                    let frequency = entry.frequency.unwrap_or(1);
+                    match entry.tag {
+                        Some(tag) => format!("{} {frequency} {tag}\n", entry.word),
+                        None => format!("{} {frequency}\n", entry.word),
+                    }
+                })
+                .collect::<String>();
+            let mut reader = Cursor::new(normalized);
             Jieba::with_dict(&mut reader).map_err(|err| {
                 Error::Other(format!(
                     "Failed to load custom main dictionary `{dict_path}`: {err}"
@@ -147,26 +150,14 @@ impl JiebaWorker {
         // `user` appends to whatever dictionary is in place (default or
         // custom `dict`).
         for user_path in &user_paths {
-            let file = File::open(user_path).map_err(|err| {
-                Error::Other(format!(
-                    "Failed to open user dictionary `{user_path}`: {err}"
-                ))
-            })?;
-            let mut reader = BufReader::new(file);
-            engine.load_dict(&mut reader).map_err(|err| {
-                Error::Other(format!(
-                    "Failed to load user dictionary `{user_path}`: {err}"
-                ))
-            })?;
+            for entry in read_dictionary(user_path, DictionaryKind::User)? {
+                engine.add_word(&entry.word, entry.frequency, entry.tag.as_deref());
+            }
         }
 
         if !hmm_model.is_empty() {
-            let file = File::open(hmm_model).map_err(|err| {
-                Error::Other(format!(
-                    "Failed to open custom HMM model `{hmm_model}`: {err}"
-                ))
-            })?;
-            let mut reader = BufReader::new(file);
+            let contents = read_utf8_file(hmm_model, "custom HMM model")?;
+            let mut reader = Cursor::new(contents);
             let model = HmmModel::load(&mut reader).map_err(|err| {
                 Error::Other(format!(
                     "Failed to load custom HMM model `{hmm_model}`: {err}"

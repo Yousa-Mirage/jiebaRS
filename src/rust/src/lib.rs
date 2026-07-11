@@ -1,3 +1,4 @@
+mod file_reader;
 mod keywords;
 mod segment;
 mod tag;
