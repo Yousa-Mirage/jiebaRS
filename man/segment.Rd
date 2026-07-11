@@ -36,6 +36,13 @@ Segment one or more strings with a \code{jieba_worker} created by \code{\link[=w
 For a single input string, \code{segment()} always returns a character vector of
 segmented tokens.
 
+When the worker was created with \code{symbol = TRUE}, symbol-like characters are
+retained during preprocessing. For example, \code{AK-47}, \code{N95}, \code{X-900}, and
+\code{4.55} remain intact. With \code{symbol = FALSE} (the default), non-letter,
+non-number, and non-mark characters are replaced with spaces before
+segmentation, so the same input is returned as \code{AK}, \code{47}, \code{N95}, \code{X},
+\code{900}, \code{4}, and \code{55}.
+
 In the current release benchmarks on the bundled \emph{Fortress Besieged} and
 \emph{Dream of the Red Chamber} texts, \code{jiebaRS::segment()} is about \strong{1.7x to
 1.9x faster} than \code{jiebaR::segment()} when each novel is segmented as one

@@ -6,6 +6,13 @@
 #' For a single input string, `segment()` always returns a character vector of
 #' segmented tokens.
 #'
+#' When the worker was created with `symbol = TRUE`, symbol-like characters are
+#' retained during preprocessing. For example, `AK-47`, `N95`, `X-900`, and
+#' `4.55` remain intact. With `symbol = FALSE` (the default), non-letter,
+#' non-number, and non-mark characters are replaced with spaces before
+#' segmentation, so the same input is returned as `AK`, `47`, `N95`, `X`,
+#' `900`, `4`, and `55`.
+#'
 #' In the current release benchmarks on the bundled *Fortress Besieged* and
 #' *Dream of the Red Chamber* texts, `jiebaRS::segment()` is about **1.7x to
 #' 1.9x faster** than `jiebaR::segment()` when each novel is segmented as one

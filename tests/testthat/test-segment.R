@@ -12,6 +12,20 @@ test_that("segment tokenizes a simple sentence", {
   )
 })
 
+test_that("symbol controls whether symbol-like characters are retained", {
+  text <- "AK-47 N95 X-900 4.55"
+
+  expect_identical(
+    segment(text, worker(symbol = TRUE)),
+    c("AK-47", "N95", "X-900", "4.55")
+  )
+
+  expect_identical(
+    segment(text, worker(symbol = FALSE)),
+    c("AK", "47", "N95", "X", "900", "4", "55")
+  )
+})
+
 test_that("segment warns and ignores deprecated mod", {
   engine1 <- worker()
 
