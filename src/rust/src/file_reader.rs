@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fs;
 
 use extendr_api::{Error, Result};
@@ -110,6 +111,7 @@ pub fn read_dictionary(path: &str, kind: DictionaryKind) -> Result<Vec<Dictionar
 pub fn read_idf_dictionary(path: &str) -> Result<String> {
     let contents = read_utf8_file(path, "custom IDF dictionary")?;
     let mut entries = 0usize;
+    let mut first_lines = HashMap::new();
 
     for (index, line) in contents.lines().enumerate() {
         let fields: Vec<&str> = line.split_whitespace().collect();
@@ -139,6 +141,17 @@ pub fn read_idf_dictionary(path: &str) -> Result<String> {
                 "custom IDF dictionary",
                 index + 1,
                 "IDF value must be finite",
+            ));
+        }
+        if let Some(first_line) = first_lines.insert(fields[0], index + 1) {
+            return Err(invalid_entry(
+                path,
+                "custom IDF dictionary",
+                index + 1,
+                &format!(
+                    "duplicate word `{}`; first defined at line {first_line}",
+                    fields[0]
+                ),
             ));
         }
         entries += 1;
@@ -210,5 +223,24 @@ mod tests {
             .unwrap_or_default();
         assert!(error.contains("line 2"));
         assert!(error.contains("greater than zero"));
+    }
+
+    #[test]
+    fn rejects_duplicate_idf_words() {
+        let path = std::env::temp_dir().join(format!(
+            "jiebars-duplicate-idf-test-{}.txt",
+            std::process::id()
+        ));
+        assert!(fs::write(&path, "word 1\nother 2\nword 3\n").is_ok());
+        let path_string = path.to_string_lossy().to_string();
+
+        let error = read_idf_dictionary(&path_string)
+            .err()
+            .map(|error| error.to_string())
+            .unwrap_or_default();
+
+        assert!(fs::remove_file(path).is_ok());
+        assert!(error.contains("line 3"));
+        assert!(error.contains("duplicate word `word`; first defined at line 1"));
     }
 }

@@ -82,10 +82,14 @@ test_that("custom IDF dictionaries handle a UTF-8 BOM", {
 test_that("custom IDF dictionaries reject invalid formats", {
   empty_idf <- withr::local_tempfile()
   invalid_idf <- withr::local_tempfile(lines = "北京烤鸭 not-a-number")
+  duplicate_idf <- withr::local_tempfile(
+    lines = c("北京烤鸭 10", "纽约 8", "北京烤鸭 20")
+  )
   writeLines(character(), empty_idf)
   scrub_paths <- function(x) {
     x <- gsub(empty_idf, "<empty-idf>", x, fixed = TRUE)
-    gsub(invalid_idf, "<invalid-idf>", x, fixed = TRUE)
+    x <- gsub(invalid_idf, "<invalid-idf>", x, fixed = TRUE)
+    gsub(duplicate_idf, "<duplicate-idf>", x, fixed = TRUE)
   }
 
   expect_snapshot(
@@ -95,6 +99,11 @@ test_that("custom IDF dictionaries reject invalid formats", {
   )
   expect_snapshot(
     worker(type = "keywords", idf = invalid_idf),
+    error = TRUE,
+    transform = scrub_paths
+  )
+  expect_snapshot(
+    worker(type = "keywords", idf = duplicate_idf),
     error = TRUE,
     transform = scrub_paths
   )

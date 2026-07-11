@@ -14,6 +14,14 @@
       Error in `new_worker()`:
       ! Invalid custom IDF dictionary `<invalid-idf>` at line 1: IDF value must be numeric.
 
+---
+
+    Code
+      worker(type = "keywords", idf = duplicate_idf)
+    Condition
+      Error in `new_worker()`:
+      ! Invalid custom IDF dictionary `<duplicate-idf>` at line 3: duplicate word `北京烤鸭`; first defined at line 1.
+
 # keyword worker snapshots invalid IDF input
 
     Code

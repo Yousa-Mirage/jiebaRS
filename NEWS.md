@@ -2,6 +2,7 @@
 
 - Custom dictionary and model files are now read through a common UTF-8 layer
   that handles a leading BOM and reports invalid formats.
+- Reject duplicate entries in custom IDF dictionaries now.
 - User dictionary entries with an omitted frequency now infer one automatically,
   zero frequencies are rejected.
 - Legacy `word tag` entries are supported.
