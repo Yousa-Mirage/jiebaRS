@@ -26,6 +26,32 @@ test_that("symbol controls whether symbol-like characters are retained", {
   )
 })
 
+test_that("segment preserves rare Han characters and optional emoji", {
+  texts <- c("㸌㸌", "的𠝹刀", "中文😀测试")
+
+  expect_identical(
+    segment(texts, worker(), batch = "list"),
+    list(
+      "㸌㸌",
+      c("的", "𠝹", "刀"),
+      c("中文", "测试")
+    )
+  )
+
+  expect_identical(
+    segment(texts, worker(symbol = TRUE), batch = "list"),
+    list(
+      "㸌㸌",
+      c("的", "𠝹", "刀"),
+      c("中文", "😀", "测试")
+    )
+  )
+
+  engine <- worker()
+  new_user_word(engine, "的𠝹刀")
+  expect_identical(segment("的𠝹刀", engine), "的𠝹刀")
+})
+
 test_that("segment warns and ignores deprecated mod", {
   engine1 <- worker()
 
