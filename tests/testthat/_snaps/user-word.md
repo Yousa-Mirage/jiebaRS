@@ -12,7 +12,7 @@
       new_user_word(engine1, 1:3)
     Condition
       Error in `new_user_word()`:
-      ! `words` must be a character vector without NAs.
+      ! `words` must be a non-empty character vector of non-empty strings.
 
 ---
 
@@ -20,7 +20,23 @@
       new_user_word(engine1, c("量子机器狗", NA_character_))
     Condition
       Error in `new_user_word()`:
-      ! `words` must be a character vector without NAs.
+      ! `words` must be a non-empty character vector of non-empty strings.
+
+---
+
+    Code
+      new_user_word(engine1, character())
+    Condition
+      Error in `new_user_word()`:
+      ! `words` must be a non-empty character vector of non-empty strings.
+
+---
+
+    Code
+      new_user_word(engine1, "")
+    Condition
+      Error in `new_user_word()`:
+      ! `words` must be a non-empty character vector of non-empty strings.
 
 ---
 

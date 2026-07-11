@@ -60,6 +60,14 @@ test_that("new_user_word snapshots invalid inputs", {
     error = TRUE
   )
   expect_snapshot(
+    new_user_word(engine1, character()),
+    error = TRUE
+  )
+  expect_snapshot(
+    new_user_word(engine1, ""),
+    error = TRUE
+  )
+  expect_snapshot(
     new_user_word(engine1, c("量子机器狗", "超导量子比特"), c("n", "nz", "v")),
     error = TRUE
   )

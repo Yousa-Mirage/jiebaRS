@@ -3,12 +3,15 @@
 #' Add one or more custom words to a jieba worker.
 #'
 #' @param worker A `jieba_worker` object.
-#' @param words A single string or a character vector of new words.
+#' @param words A non-empty string or a non-empty character vector of new words.
 #' @param tags A single tag or a character vector of tags. Defaults to `"n"`
 #'   for each supplied word. `NA` values are allowed and will be interpreted as missing tags.
 #' @param freq Optional non-negative integer frequency or integer vector of
 #'   frequencies. Defaults to `NULL`. `NA` values are allowed and will be
 #'   interpreted as missing frequencies.
+#' @return `NULL`, invisibly. Called for its side effect of adding the supplied
+#'   words to `worker`, thereby modifying the state used by subsequent
+#'   operations with the same worker.
 #' @examples
 #' cutter <- worker()
 #' segment("\u91cf\u5b50\u673a\u5668\u72d7", cutter)
@@ -29,8 +32,15 @@ new_user_word <- function(worker, words, tags = "n", freq = NULL) {
   if (!inherits(worker, "jieba_worker")) {
     cli::cli_abort("`worker` must be a `jieba_worker` object.")
   }
-  if (!rlang::is_character(words) || anyNA(words)) {
-    cli::cli_abort("`words` must be a character vector without NAs.")
+  if (
+    !rlang::is_character(words) ||
+      rlang::is_empty(words) ||
+      anyNA(words) ||
+      any(words == "")
+  ) {
+    cli::cli_abort(
+      "`words` must be a non-empty character vector of non-empty strings."
+    )
   }
 
   n_words <- length(words)
@@ -59,6 +69,7 @@ new_user_word <- function(worker, words, tags = "n", freq = NULL) {
   tags <- enc2utf8(tags)
 
   add_user_words(worker$ptr, words, tags, freq)
+  invisible(NULL)
 }
 
 #' @rdname new_user_word

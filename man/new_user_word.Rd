@@ -12,7 +12,7 @@ add_word(worker, words, tags = "n", freq = NULL)
 \arguments{
 \item{worker}{A \code{jieba_worker} object.}
 
-\item{words}{A single string or a character vector of new words.}
+\item{words}{A non-empty string or a non-empty character vector of new words.}
 
 \item{tags}{A single tag or a character vector of tags. Defaults to \code{"n"}
 for each supplied word. \code{NA} values are allowed and will be interpreted as missing tags.}
@@ -20,6 +20,11 @@ for each supplied word. \code{NA} values are allowed and will be interpreted as 
 \item{freq}{Optional non-negative integer frequency or integer vector of
 frequencies. Defaults to \code{NULL}. \code{NA} values are allowed and will be
 interpreted as missing frequencies.}
+}
+\value{
+\code{NULL}, invisibly. Called for its side effect of adding the supplied
+words to \code{worker}, thereby modifying the state used by subsequent
+operations with the same worker.
 }
 \description{
 Add one or more custom words to a jieba worker.

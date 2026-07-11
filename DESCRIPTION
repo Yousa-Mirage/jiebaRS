@@ -1,5 +1,5 @@
 Package: jiebaRS
-Title: Chinese Text Segmentation, POS Tagging, and Keyword Extraction for R
+Title: Chinese Text Segmentation, POS Tagging, and Keyword Extraction
 Version: 0.1.0
 Authors@R: 
     c(person(given = "Hao",
