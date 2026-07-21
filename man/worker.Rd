@@ -10,6 +10,7 @@ worker(
   stop_word_file = NULL,
   hmm = TRUE,
   topn = 5L,
+  min_keyword_length = 2L,
   idf = NULL,
   dict = NULL,
   user = NULL,
@@ -33,6 +34,10 @@ HMM fallback is enabled with that model. Default is \code{TRUE}.}
 
 \item{topn}{Integer. The number of terms returned by \code{keywords} and
 \code{textrank} workers. Default is \code{5}.}
+
+\item{min_keyword_length}{Positive integer. The minimum number of Unicode
+scalar values in terms returned by \code{keywords} and \code{textrank} workers.
+Default is \code{2}.}
 
 \item{idf}{Optional character scalar. A path to a custom IDF dictionary
 file for \code{keywords} workers. Each line should be \verb{word idf_value}. When

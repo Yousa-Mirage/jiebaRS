@@ -6,6 +6,7 @@ test_that("segment worker returns a S3 object", {
   expect_identical(engine1$type, "mix")
   expect_identical(engine1$config$hmm, TRUE)
   expect_identical(engine1$config$topn, 5L)
+  expect_identical(engine1$config$min_keyword_length, 2L)
   expect_identical(engine1$config$symbol, FALSE)
   expect_identical(engine1$config$bylines, FALSE)
 })
@@ -40,13 +41,14 @@ test_that("tag worker returns a tagger object", {
 })
 
 test_that("keyword worker returns a S3 object", {
-  engine1 <- worker(type = "keywords", topn = 3)
+  engine1 <- worker(type = "keywords", topn = 3, min_keyword_length = 1)
 
   expect_s3_class(engine1, "jieba_keywords")
   expect_s3_class(engine1, "jieba_worker")
   expect_identical(engine1$type, "keywords")
   expect_identical(engine1$config$hmm, TRUE)
   expect_identical(engine1$config$topn, 3L)
+  expect_identical(engine1$config$min_keyword_length, 1L)
   expect_identical(engine1$config$idf, NULL)
   expect_identical(engine1$config$symbol, FALSE)
   expect_identical(engine1$config$bylines, FALSE)
@@ -54,13 +56,14 @@ test_that("keyword worker returns a S3 object", {
 
 
 test_that("TextRank worker returns a S3 object", {
-  engine1 <- worker(type = "textrank", topn = 3)
+  engine1 <- worker(type = "textrank", topn = 3, min_keyword_length = 1)
 
   expect_s3_class(engine1, "jieba_textrank")
   expect_s3_class(engine1, "jieba_worker")
   expect_identical(engine1$type, "textrank")
   expect_identical(engine1$config$hmm, TRUE)
   expect_identical(engine1$config$topn, 3L)
+  expect_identical(engine1$config$min_keyword_length, 1L)
   expect_identical(engine1$config$symbol, FALSE)
   expect_identical(engine1$config$bylines, FALSE)
 })
@@ -206,6 +209,12 @@ test_that("worker snapshots invalid type input", {
     worker(type = "nope"),
     error = TRUE
   )
+})
+
+test_that("worker validates minimum keyword length", {
+  expect_snapshot(worker(min_keyword_length = 0), error = TRUE)
+  expect_snapshot(worker(min_keyword_length = 1.5), error = TRUE)
+  expect_snapshot(worker(min_keyword_length = NA), error = TRUE)
 })
 
 test_that("worker accepts a custom HMM model path", {

@@ -16,6 +16,18 @@ test_that("textrank returns a named vector by default", {
   expect_true(all(is.finite(unname(result))))
 })
 
+test_that("textrank supports single-character terms", {
+  text <- "今天股票跌很厉害，股票又跌"
+  default_result <- textrank(text, worker(type = "textrank", topn = 100))
+  single_result <- textrank(
+    text,
+    worker(type = "textrank", topn = 100, min_keyword_length = 1)
+  )
+
+  expect_identical("跌" %in% names(default_result), FALSE)
+  expect_identical("跌" %in% names(single_result), TRUE)
+})
+
 test_that("textrank can return a data frame", {
   ranker <- worker(type = "textrank", topn = 3)
   result <- textrank(textrank_text, ranker, format = "data.frame")
