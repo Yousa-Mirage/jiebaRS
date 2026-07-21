@@ -191,13 +191,13 @@ ranker <- worker(type = "textrank", topn = 3)
 
 textrank(text, ranker)
 #>        天气        纽约        不好 
-#> 19307224922 19179746649 13769693283
+#> 19308397026 19181002755 13770391787
 
 textrank_df(text, ranker)
 #>   term      weight
-#> 1 天气 19307224922
-#> 2 纽约 19179746649
-#> 3 不好 13769693283
+#> 1 天气 19308397026
+#> 2 纽约 19181002755
+#> 3 不好 13770391787
 ```
 
 ### Custom Dictionaries
@@ -224,9 +224,7 @@ segment("量子机器狗和超导量子比特", cutter3)
 #> [1] "量子" "机器" "狗"   "和"   "超导" "量子" "比特"
 
 new_user_word(cutter3, "量子机器狗", "n")
-#> NULL
 add_word(cutter3, "超导量子比特", "n")  # alias
-#> NULL
 segment("量子机器狗和超导量子比特", cutter3)
 #> [1] "量子机器狗"   "和"           "超导量子比特"
 ```
