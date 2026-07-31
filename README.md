@@ -322,7 +322,7 @@ jiebaRS 构建于以下开源项目的基础之上：
 - **[jieba-rs](https://github.com/messense/jieba-rs)**：messense
   及贡献者对 Jieba 引擎的 Rust 移植。
 - **[jiebaR](https://github.com/qinwf/jiebaR)**：qinwf 创建的原始 R 包，
-  jiebaRS 即为其替代实现。
+  基于 [cppjieba](https://github.com/yanyiwu/cppjieba) 实现。
 - **[extendr](https://github.com/extendr/extendr)**：extendr 团队让 Rust
   与 R 的互操作变得切实可行。
 - 更广泛的 **Rust** 与 **R** 社区。
