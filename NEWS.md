@@ -1,16 +1,21 @@
+# jiebaRS (development version)
+
+- Bundled `stopwords_cn`, `stopwords_en`, and `stopwords_full` stopwords datasets are now available for
+  explicit use; stopword filtering remains disabled by default.
+- Documentation for internal native bridge functions is no longer generated for users.
+
 # jiebaRS 0.2.0
 
-- Custom dictionary and model files are now read through a common UTF-8 layer
-  that handles a leading BOM and reports invalid formats.
+- Custom dictionary and model files are now read through a common UTF-8 layer that handles a leading BOM
+  and reports invalid formats.
 - Reject duplicate entries in custom IDF dictionaries now.
-- User dictionary entries with an omitted frequency now infer one automatically,
-  zero frequencies are rejected.
+- User dictionary entries with an omitted frequency now infer one automatically, zero frequencies are
+  rejected.
 - Legacy `word tag` entries from `jiebaR` are supported.
-- `worker()` now accepts `min_keyword_length` to control the minimum Unicode
-  length of terms returned by TF-IDF and TextRank keyword extraction.
-- `worker()` now accepts one or more user dictionary paths through `user`;
-  dictionaries are appended in the supplied order
-  ([qinwf/jiebaR#69](https://github.com/qinwf/jiebaR/issues/69)).
+- `worker()` now accepts `min_keyword_length` to control the minimum Unicode length of terms returned by
+  TF-IDF and TextRank keyword extraction.
+- `worker()` now accepts one or more user dictionary paths through `user`; dictionaries are appended in
+  the supplied order ([qinwf/jiebaR#69](https://github.com/qinwf/jiebaR/issues/69)).
 
 # jiebaRS 0.1.0
 
