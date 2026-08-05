@@ -50,6 +50,10 @@ DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Yousa-Mirage/jie
 install.packages("jiebaRS")
 ```
 
+> 如果您使用的是 Linux，您可以尝试为不同的 Linux 发行版安装[来自
+> P3M](https://packagemanager.posit.co/client/#/repos/cran/packages/jiebaRS/overview)
+> 编译二进制文件，避免从源代码编译。
+
 ### R-universe / R-multiverse
 
 R-universe 和 R-multiverse 上提供了预编译的二进制包：

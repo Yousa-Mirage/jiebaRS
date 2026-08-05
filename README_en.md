@@ -53,6 +53,12 @@ You can install the released version of jiebaRS from CRAN:
 install.packages("jiebaRS")
 ```
 
+> If you are on Linux, you can try to install pre-compiled binaries
+> [from
+> P3M](https://packagemanager.posit.co/client/#/repos/cran/packages/jiebaRS/overview)
+> for different Linux distributions, so don’t need to compile from
+> source.
+
 ### From R-universe / R-multiverse
 
 A prebuilt binary is hosted on R-universe and R-multiverse:
