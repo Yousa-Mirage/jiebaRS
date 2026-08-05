@@ -9,9 +9,6 @@
 # User-specific files
 .Ruserdata
 
-# Example code in package build process
-*-Ex.R
-
 # Output files from R CMD build
 /*.tar.gz
 jiebaRS.Rcheck
@@ -47,3 +44,7 @@ src/rust/vendor
 
 # cran info
 CRAN-SUBMISSION
+
+# Temporary files
+/test.R
+/test.r

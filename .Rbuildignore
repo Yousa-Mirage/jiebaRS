@@ -37,3 +37,7 @@
 # reference dumps from jiebaR / jieba-rs (not part of the package)
 ^jiebaR\.xml$
 ^jieba-rs\.xml$
+
+# temporary files
+^test\.r$
+^test\.R$
