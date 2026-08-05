@@ -1,0 +1,18 @@
+version: 2
+updates:
+  - package-ecosystem: cargo
+    directory: "/src/rust"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Shanghai
+    open-pull-requests-limit: 1
+    versioning-strategy: "increase-if-necessary"
+    allow:
+      - dependency-name: "jieba-rs"
+    labels:
+      - dependencies
+      - rust
+    commit-message:
+      prefix: "deps"
