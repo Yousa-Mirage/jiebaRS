@@ -3,6 +3,19 @@ keyword_stopword_text <- paste0(
   "后天纽约的天气不好，昨天纽约的天气也不好，北京烤鸭真好吃"
 )
 
+test_that("bundled stopword data can be passed to worker", {
+  for (words in list(stopwords_cn, stopwords_en, stopwords_full)) {
+    expect_type(words, "character")
+    expect_true(length(words) > 0L)
+    expect_false(anyNA(words))
+    expect_true(all(nzchar(words)))
+    expect_identical(anyDuplicated(words), 0L)
+
+    cutter <- worker(stop_word = words)
+    expect_identical(cutter$config$stop_word, words)
+  }
+})
+
 test_that("worker stores normalized stop words in config", {
   stop_file <- withr::local_tempfile()
   writeLines(c(" 一个 ", "测试", "", "一个", "  "), stop_file, useBytes = TRUE)

@@ -16,6 +16,7 @@ License: MIT + file LICENSE
 URL: https://yousa-mirage.github.io/jiebaRS/, https://github.com/Yousa-Mirage/jiebaRS
 BugReports: https://github.com/Yousa-Mirage/jiebaRS/issues
 Encoding: UTF-8
+LazyData: true
 Roxygen: list(markdown = TRUE)
 Config/rextendr/version: 0.5.0
 SystemRequirements: Cargo (Rust's package manager), rustc >= 1.65.0, xz
