@@ -34,20 +34,18 @@ knitr::opts_chunk$set(
 </div>
 
 **jiebaRS** 是 [jiebaR](https://github.com/qinwf/jiebaR) 的 Rust 后端替代实现，
-用于中文分词、词性标注和关键词提取。它使用
-[jieba-rs](https://github.com/messense/jieba-rs) 作为分词引擎，
-带来了现代化的性能与可维护性。
+用于中文分词、词性标注和关键词提取。它使用 [jieba-rs](https://github.com/messense/jieba-rs)
+作为分词引擎， 带来了现代化的性能与可维护性。
 
 多年前，[qinwf](https://github.com/qinwf) 基于 cppjieba 创建了
 [jiebaR](https://github.com/qinwf/jiebaR)，长期以来一直是 R
 语言中文分词的首选工具。然而，[qinwf](https://github.com/qinwf) 已停止维护
-[jiebaR](https://github.com/qinwf/jiebaR)，并且
-[jiebaR](https://github.com/qinwf/jiebaR) 已被
+[jiebaR](https://github.com/qinwf/jiebaR)，并且 [jiebaR](https://github.com/qinwf/jiebaR) 已被
 [CRAN](https://CRAN.R-project.org/package=jiebaR) 移除， 无法直接安装。这给 R
 语言的教学与研究带来了不便和困扰。因此，基于功能完善、性能出色、 持续维护的 Rust
-[jieba-rs](https://github.com/messense/jieba-rs) crate， 我开发了
-**jiebaRS**，为 R 用户提供一个现代化、易用的中文分词工具， 并尽可能保持与原
-[jiebaR](https://github.com/qinwf/jiebaR) API 的兼容性。
+[jieba-rs](https://github.com/messense/jieba-rs) crate， 我开发了 **jiebaRS**，为 R
+用户提供一个现代化、易用的中文分词工具， 并尽可能保持与原 [jiebaR](https://github.com/qinwf/jiebaR) API
+的兼容性。
 
 ## 安装
 
@@ -73,13 +71,10 @@ install.packages("jiebaRS", repos = "https://community.r-multiverse.org")
 
 ### 从源码安装
 
-使用 [pak](https://pak.r-lib.org/) 或 [remotes](https://remotes.r-lib.org/)
-从源码安装：
+使用 [pak](https://pak.r-lib.org/) 从源码安装：
 
 ```r
 pak::pak("Yousa-Mirage/jiebaRS")
-# 或
-remotes::install_github("Yousa-Mirage/jiebaRS")
 ```
 
 > **注意：** 从源码构建需要 Rust 工具链来编译 Rust 后端。
@@ -103,8 +98,8 @@ cutter <- worker()
 segment("南京市长江大桥", cutter)
 ```
 
-批量分词支持多个字符串，通过 `batch` 参数控制聚合方式。当输入多于一个字符串时，
-会自动并行分词，速度远超 jiebaR。
+批量分词支持多个字符串，通过 `batch` 参数控制聚合方式。当输入多于一个字符串时， 会自动并行分词，速度远超
+jiebaR。
 
 ```{r}
 #| label: segment-batch
@@ -121,8 +116,7 @@ segment_batch(texts, cutter, batch = "flatten")
 segment_batch(texts, cutter, batch = "data.frame")
 ```
 
-如果你想对一段很长的文本进行并行分词，可以先将其拆分为 32\~128 个片段， 再使用
-`segment_batch()`。
+如果你想对一段很长的文本进行并行分词，可以先将其拆分为 32\~128 个片段， 再使用 `segment_batch()`。
 
 ### 词性标注
 
@@ -270,9 +264,8 @@ jiebaRS 与 jiebaR 都基于 jieba 的分词算法，但在 Rust 后端（jieba-
   | 《红楼梦》 | 860,933 |        451,792 |       451,228 |         44,634 |        45,596 |        0.865        |
 
 两份分词结果的词元总数接近（差异在 0.2%
-以内），词条表重叠度较高。主要差异来自部分专有名词的切分粒度不同（如 jiebaRS
-将主角名 "鸿渐" 合并为一个词，jiebaR 则切为 "鸿" + "渐"），以及未登录词的 HMM
-推断边界存在少量差异。
+以内），词条表重叠度较高。主要差异来自部分专有名词的切分粒度不同（如 jiebaRS 将主角名 "鸿渐"
+合并为一个词，jiebaR 则切为 "鸿" + "渐"），以及未登录词的 HMM 推断边界存在少量差异。
 
 ### 分词速度
 
@@ -283,19 +276,15 @@ jiebaRS 与 jiebaR 都基于 jieba 的分词算法，但在 Rust 后端（jieba-
   | 《红楼梦》 | 单长文本    |         0.129 |        0.246 | 1.91x  |
   | 《红楼梦》 | 10 万句并行 |         0.639 |        4.601 | 7.20x  |
 
-单文本分词时 jiebaRS 约快 1.7\~1.9 倍；当输入为大量短句并并行切分时， jiebaRS
-可达 7\~12 倍加速。
+单文本分词时 jiebaRS 约快 1.7 \~ 1.9 倍；当输入为大量短句并并行切分时， jiebaRS 可达 7 \~ 12 倍加速。
 
 ## 致谢
 
 jiebaRS 构建于以下开源项目的基础之上：
 
-- **[jieba-rs](https://github.com/messense/jieba-rs)**：messense 及贡献者对
-  Jieba 引擎的 Rust 移植。
-- **[jiebaR](https://github.com/qinwf/jiebaR)**：qinwf 创建的原始 R 包， jiebaRS
-  即为其替代实现。
-- **[extendr](https://github.com/extendr/extendr)**：extendr 团队让 Rust 与 R
-  的互操作变得切实可行。
+- **[jieba-rs](https://github.com/messense/jieba-rs)**：messense 及贡献者对 Jieba 引擎的 Rust 移植。
+- **[jiebaR](https://github.com/qinwf/jiebaR)**：qinwf 创建的原始 R 包， jiebaRS 即为其替代实现。
+- **[extendr](https://github.com/extendr/extendr)**：extendr 团队让 Rust 与 R 的互操作变得切实可行。
 - 更广泛的 **Rust** 与 **R** 社区。
 
 没有这些项目，jiebaRS 就不会存在。

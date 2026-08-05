@@ -64,13 +64,10 @@ install.packages("jiebaRS", repos = "https://community.r-multiverse.org")
 
 ### 从源码安装
 
-使用 [pak](https://pak.r-lib.org/) 或
-[remotes](https://remotes.r-lib.org/) 从源码安装：
+使用 [pak](https://pak.r-lib.org/) 从源码安装：
 
 ``` r
 pak::pak("Yousa-Mirage/jiebaRS")
-# 或
-remotes::install_github("Yousa-Mirage/jiebaRS")
 ```
 
 > **注意：** 从源码构建需要 Rust 工具链来编译 Rust 后端。
@@ -312,8 +309,8 @@ jiebaRS 将主角名 “鸿渐” 合并为一个词，jiebaR 则切为 “鸿�
 | 《红楼梦》 | 单长文本    |         0.129 |        0.246 | 1.91x  |
 | 《红楼梦》 | 10 万句并行 |         0.639 |        4.601 | 7.20x  |
 
-单文本分词时 jiebaRS 约快 1.7~1.9 倍；当输入为大量短句并并行切分时，
-jiebaRS 可达 7~12 倍加速。
+单文本分词时 jiebaRS 约快 1.7 ~ 1.9 倍；当输入为大量短句并并行切分时，
+jiebaRS 可达 7 ~ 12 倍加速。
 
 ## 致谢
 
@@ -322,7 +319,7 @@ jiebaRS 构建于以下开源项目的基础之上：
 - **[jieba-rs](https://github.com/messense/jieba-rs)**：messense
   及贡献者对 Jieba 引擎的 Rust 移植。
 - **[jiebaR](https://github.com/qinwf/jiebaR)**：qinwf 创建的原始 R 包，
-  基于 [cppjieba](https://github.com/yanyiwu/cppjieba) 实现。
+  jiebaRS 即为其替代实现。
 - **[extendr](https://github.com/extendr/extendr)**：extendr 团队让 Rust
   与 R 的互操作变得切实可行。
 - 更广泛的 **Rust** 与 **R** 社区。

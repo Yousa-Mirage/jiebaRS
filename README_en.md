@@ -67,13 +67,10 @@ install.packages("jiebaRS", repos = "https://community.r-multiverse.org")
 
 ### From Source Code
 
-Install from source with [pak](https://pak.r-lib.org/) or
-[remotes](https://remotes.r-lib.org/):
+Install from source with [pak](https://pak.r-lib.org/):
 
 ``` r
 pak::pak("Yousa-Mirage/jiebaRS")
-# or
-remotes::install_github("Yousa-Mirage/jiebaRS")
 ```
 
 > **Note:** Building from source requires Rust tool chain to compile the
@@ -325,9 +322,9 @@ protagonist name “鸿渐” into a single word, while jiebaR splits it into
 | Dream of the Red Chamber | whole text | 0.129 | 0.246 | 1.91x |
 | Dream of the Red Chamber | 100k sentences (parallel) | 0.639 | 4.601 | 7.20x |
 
-For a single long text, jiebaRS is about 1.7~1.9x faster; when the input
-is many short sentences that are segmented in parallel, jiebaRS can
-reach 7~12x speedup.
+For a single long text, jiebaRS is about 1.7 ~ 1.9x faster; when the
+input is many short sentences that are segmented in parallel, jiebaRS
+can reach 7 ~ 12x speedup.
 
 ## Acknowledgments
 

@@ -33,25 +33,20 @@ knitr::opts_chunk$set(
 
 </div>
 
-**jiebaRS** is a Rust-backed replacement of
-[jiebaR](https://github.com/qinwf/jiebaR) for Chinese text segmentation,
-part-of-speech tagging, and keyword extraction. It uses
-[jieba-rs](https://github.com/messense/jieba-rs) as the segmentation engine,
-bringing modern performance and maintainability.
+**jiebaRS** is a Rust-backed replacement of [jiebaR](https://github.com/qinwf/jiebaR) for Chinese text
+segmentation, part-of-speech tagging, and keyword extraction. It uses
+[jieba-rs](https://github.com/messense/jieba-rs) as the segmentation engine, bringing modern performance
+and maintainability.
 
-[qinwf](https://github.com/qinwf) created
-[jiebaR](https://github.com/qinwf/jiebaR) based on cppjieba many years ago,
-which has long been the go-to tool for Chinese text segmentation in R. However,
-[qinwf](https://github.com/qinwf) has stopped maintaining
-[jiebaR](https://github.com/qinwf/jiebaR), and
+[qinwf](https://github.com/qinwf) created [jiebaR](https://github.com/qinwf/jiebaR) based on cppjieba
+many years ago, which has long been the go-to tool for Chinese text segmentation in R. However,
+[qinwf](https://github.com/qinwf) has stopped maintaining [jiebaR](https://github.com/qinwf/jiebaR), and
 [jiebaR](https://github.com/qinwf/jiebaR) has been removed from
-[CRAN](https://CRAN.R-project.org/package=jiebaR), making it unavailable for
-direct installation. This has caused inconvenience and confusion in R teaching
-and research. Therefore, based on the well-featured, performant, and actively
-maintained Rust [jieba-rs](https://github.com/messense/jieba-rs) crate, I
-developed **jiebaRS** to provide R users with a modern and easy-to-use Chinese
-text segmentation tool, maintaining much compatibility with the original
-[jiebaR](https://github.com/qinwf/jiebaR) API.
+[CRAN](https://CRAN.R-project.org/package=jiebaR), making it unavailable for direct installation. This
+has caused inconvenience and confusion in R teaching and research. Therefore, based on the well-featured,
+performant, and actively maintained Rust [jieba-rs](https://github.com/messense/jieba-rs) crate, I
+developed **jiebaRS** to provide R users with a modern and easy-to-use Chinese text segmentation tool,
+maintaining much compatibility with the original [jiebaR](https://github.com/qinwf/jiebaR) API.
 
 ## Installation
 
@@ -77,17 +72,13 @@ install.packages("jiebaRS", repos = "https://community.r-multiverse.org")
 
 ### From Source Code
 
-Install from source with [pak](https://pak.r-lib.org/) or
-[remotes](https://remotes.r-lib.org/):
+Install from source with [pak](https://pak.r-lib.org/):
 
 ```r
 pak::pak("Yousa-Mirage/jiebaRS")
-# or
-remotes::install_github("Yousa-Mirage/jiebaRS")
 ```
 
-> **Note:** Building from source requires Rust tool chain to compile the Rust
-> backend.
+> **Note:** Building from source requires Rust tool chain to compile the Rust backend.
 
 ## Usage
 
@@ -108,9 +99,8 @@ cutter <- worker()
 segment("南京市长江大桥", cutter)
 ```
 
-Batch segmentation supports multiple strings with `batch` aggregation. It will
-automatically segment parallelly if more than one strings are provided, making
-it much faster than jiebaR.
+Batch segmentation supports multiple strings with `batch` aggregation. It will automatically segment
+parallelly if more than one strings are provided, making it much faster than jiebaR.
 
 ```{r}
 #| label: segment-batch
@@ -127,13 +117,12 @@ segment_batch(texts, cutter, batch = "flatten")
 segment_batch(texts, cutter, batch = "data.frame")
 ```
 
-If you want to segment a very long text parallelly, you can split it into
-32\~128 chunks and then use `segment_batch()`.
+If you want to segment a very long text parallelly, you can split it into 32\~128 chunks and then use
+`segment_batch()`.
 
 ### Speech Tagging
 
-You can tag segmented words with part-of-speech (POS) tags using the `tagging()`
-function:
+You can tag segmented words with part-of-speech (POS) tags using the `tagging()` function:
 
 ```{r}
 #| label: tagging
@@ -168,8 +157,8 @@ keywords(text, keys)
 keywords_df(text, keys)
 ```
 
-You can also use the TextRank algorithm with the `textrank()` function. This is
-available in [Python's jieba](https://github.com/fxsjy/jieba) but not in jiebaR.
+You can also use the TextRank algorithm with the `textrank()` function. This is available in [Python's
+jieba](https://github.com/fxsjy/jieba) but not in jiebaR.
 
 ```{r}
 #| label: textrank
@@ -183,9 +172,8 @@ textrank_df(text, ranker)
 
 ### Custom Dictionaries
 
-Load a custom **main dictionary** (`dict` --- replaces the embedded dictionary)
-or a **user dictionary** (`user` --- appends to the main dictionary). Both files
-use the line format: `word [freq] [tag]`.
+Load a custom **main dictionary** (`dict` --- replaces the embedded dictionary) or a **user dictionary**
+(`user` --- appends to the main dictionary). Both files use the line format: `word [freq] [tag]`.
 
 ```{r}
 #| label: custom-dict
@@ -213,9 +201,8 @@ segment("量子机器狗和超导量子比特", cutter3)
 
 ### Stop Words
 
-Supply stop words as a character vector via the `stop_word` parameter or a file
-path via the `stop_word_file` parameter. Stop words are filtered from
-segmentation and keyword extraction results.
+Supply stop words as a character vector via the `stop_word` parameter or a file path via the
+`stop_word_file` parameter. Stop words are filtered from segmentation and keyword extraction results.
 
 ```{r}
 #| label: stop-words
@@ -226,8 +213,8 @@ segment("这是一个测试", cutter4)
 
 ### Custom IDF + `get_idf()`
 
-Compute an IDF dictionary from your own corpus of segmented documents, then use
-it for TF-IDF keyword extraction:
+Compute an IDF dictionary from your own corpus of segmented documents, then use it for TF-IDF keyword
+extraction:
 
 ```{r}
 #| label: custom-idf
@@ -247,8 +234,7 @@ keywords(text, keys_custom)
 
 ### Word Frequency & N-grams
 
-Two small but useful functions are provided for word frequency and n-gram
-counts:
+Two small but useful functions are provided for word frequency and n-gram counts:
 
 ```{r}
 #| label: freq-ngrams
@@ -270,10 +256,9 @@ count_ngrams(tokens, n = 1:2, format = "vector")
 
 ## Compare with jiebaR
 
-jiebaRS and jiebaR are both based on the jieba segmentation algorithm, but there
-are inevitably subtle differences between the Rust backend (jieba-rs) and the
-C++ backend (cppjieba). The results below are measured on the full text of
-*Fortress Besieged* (围城) and *Dream of the Red Chamber* (红楼梦).
+jiebaRS and jiebaR are both based on the jieba segmentation algorithm, but there are inevitably subtle
+differences between the Rust backend (jieba-rs) and the C++ backend (cppjieba). The results below are
+measured on the full text of *Fortress Besieged* (围城) and *Dream of the Red Chamber* (红楼梦).
 
 ### Segmentation Similarity
 
@@ -282,11 +267,10 @@ C++ backend (cppjieba). The results below are measured on the full text of
   | Fortress Besieged        |    246,871 |        128,985 |       129,560 |        18,375 |       18,794 |     0.929     |
   | Dream of the Red Chamber |    860,933 |        451,792 |       451,228 |        44,634 |       45,596 |     0.865     |
 
-The total token counts are close (within 0.2%), and the vocabularies overlap
-heavily. The main differences come from the different segmentation granularity
-of some proper nouns (e.g. jiebaRS merges the protagonist name "鸿渐" into a
-single word, while jiebaR splits it into "鸿" + "渐"), as well as minor
-differences in HMM-based OOV (out-of-vocabulary) boundary inference.
+The total token counts are close (within 0.2%), and the vocabularies overlap heavily. The main
+differences come from the different segmentation granularity of some proper nouns (e.g. jiebaRS merges
+the protagonist name "鸿渐" into a single word, while jiebaR splits it into "鸿" + "渐"), as well as
+minor differences in HMM-based OOV (out-of-vocabulary) boundary inference.
 
 ### Segmentation Speed
 
@@ -297,20 +281,18 @@ differences in HMM-based OOV (out-of-vocabulary) boundary inference.
   | Dream of the Red Chamber | whole text                |       0.129 |      0.246 |  1.91x  |
   | Dream of the Red Chamber | 100k sentences (parallel) |       0.639 |      4.601 |  7.20x  |
 
-For a single long text, jiebaRS is about 1.7\~1.9x faster; when the input is
-many short sentences that are segmented in parallel, jiebaRS can reach 7\~12x
-speedup.
+For a single long text, jiebaRS is about 1.7 \~ 1.9x faster; when the input is many short sentences that
+are segmented in parallel, jiebaRS can reach 7 \~ 12x speedup.
 
 ## Acknowledgments
 
 jiebaRS builds on the work of open-source projects:
 
-- **[jieba-rs](https://github.com/messense/jieba-rs)**: messense and
-  contributors for the Rust port of the Jieba engine.
-- **[jiebaR](https://github.com/qinwf/jiebaR)**: qinwf for the original R
-  package that jiebaRS replaces.
-- **[extendr](https://github.com/extendr/extendr)**: the extendr team for making
-  Rust--R interoperability practical.
+- **[jieba-rs](https://github.com/messense/jieba-rs)**: messense and contributors for the Rust port of
+  the Jieba engine.
+- **[jiebaR](https://github.com/qinwf/jiebaR)**: qinwf for the original R package that jiebaRS replaces.
+- **[extendr](https://github.com/extendr/extendr)**: the extendr team for making Rust--R interoperability
+  practical.
 - The broader **Rust** and **R** communities.
 
 Without these projects, jiebaRS would not exist.

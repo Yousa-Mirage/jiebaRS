@@ -20,6 +20,7 @@ document:
     cd src && cargo run --quiet --manifest-path rust/Cargo.toml --bin document
     Rscript -e "devtools::document()"
     Rscript -e "devtools::build_readme()"
+    Rscript -e "devtools::build_rmd('README_en.Rmd')"
 
 test:
     TESTTHAT_CPUS=4 Rscript -e "devtools::test(reporter = 'summary')"
