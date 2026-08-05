@@ -35,6 +35,7 @@ use worker::{JiebaWorker, WorkerConfig};
 ///   the native worker.
 ///
 /// @return A native `JiebaWorker` handle.
+/// @noRd
 /// @keywords internal
 #[extendr]
 #[allow(clippy::too_many_arguments)]
@@ -71,6 +72,7 @@ fn new_worker(
 ///   constructor.
 ///
 /// @return A character vector of segmented tokens.
+/// @noRd
 /// @keywords internal
 #[extendr]
 fn segment_worker(text: &str, worker: &JiebaWorker) -> Result<Strings> {
@@ -87,6 +89,7 @@ fn segment_worker(text: &str, worker: &JiebaWorker) -> Result<Strings> {
 ///   constructor.
 ///
 /// @return A list of character vectors, one per input string.
+/// @noRd
 /// @keywords internal
 #[extendr]
 fn segment_batch_worker(texts: Strings, worker: &JiebaWorker) -> Result<List> {
@@ -107,6 +110,7 @@ fn segment_batch_worker(texts: Strings, worker: &JiebaWorker) -> Result<List> {
 ///   constructor.
 ///
 /// @return A named list with `term` and `tag` vectors.
+/// @noRd
 /// @keywords internal
 #[extendr]
 fn tagging_worker(text: &str, worker: &JiebaWorker) -> Result<List> {
@@ -127,6 +131,7 @@ fn tagging_worker(text: &str, worker: &JiebaWorker) -> Result<List> {
 ///
 /// @return A list where each element is a named list with `term` and `tag`
 ///   vectors.
+/// @noRd
 /// @keywords internal
 #[extendr]
 fn tagging_batch_worker(texts: Strings, worker: &JiebaWorker) -> Result<List> {
@@ -151,6 +156,7 @@ fn tagging_batch_worker(texts: Strings, worker: &JiebaWorker) -> Result<List> {
 ///   constructor.
 ///
 /// @return A named list with `keyword` and `weight` vectors.
+/// @noRd
 /// @keywords internal
 #[extendr]
 fn keywords_worker(text: &str, worker: &JiebaWorker) -> Result<List> {
@@ -171,6 +177,7 @@ fn keywords_worker(text: &str, worker: &JiebaWorker) -> Result<List> {
 ///   constructor.
 ///
 /// @return A named list with `keyword` and `weight` vectors.
+/// @noRd
 /// @keywords internal
 #[extendr]
 fn textrank_worker(text: &str, worker: &JiebaWorker) -> Result<List> {
@@ -192,6 +199,7 @@ fn textrank_worker(text: &str, worker: &JiebaWorker) -> Result<List> {
 /// @param freq Optional integer vector of frequencies aligned with `words`.
 ///
 /// @return `NULL`, invisibly, after the worker has been updated.
+/// @noRd
 /// @keywords internal
 #[extendr]
 fn add_user_words(

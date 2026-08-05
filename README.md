@@ -51,8 +51,8 @@ install.packages("jiebaRS")
 ```
 
 > 如果您使用 Linux，您可以尝试从
-> [P3M](https://packagemanager.posit.co/client/#/repos/cran/packages/jiebaRS/overview) 为不同的 Linux
-> 发行版安装预编译的二进制文件，避免从源代码编译。
+> [P3M](https://packagemanager.posit.co/client/#/repos/cran/packages/jiebaRS/overview)
+> 为不同的 Linux 发行版安装预编译的二进制文件，避免从源代码编译。
 
 ### R-universe / R-multiverse
 
