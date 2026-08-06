@@ -1,3 +1,4 @@
+mod cidian;
 mod file_reader;
 mod keywords;
 mod segment;
@@ -235,6 +236,26 @@ fn import_cidian_worker(
     worker.import_cidian(path, format, tag)
 }
 
+/// Read an input-method dictionary through the internal native bridge.
+///
+/// Internal bridge used by `read_cidian()` to parse a supported input-method
+/// dictionary and return its entries and coding components.
+///
+/// @param path Character scalar containing the input-method dictionary path.
+/// @param format Character scalar identifying the parser to use.
+///
+/// @return A named list with `entry` and `code` character vectors.
+/// @noRd
+/// @keywords internal
+#[extendr]
+fn read_cidian_worker(path: &str, format: &str) -> Result<List> {
+    let (entries, codes) = cidian::read_cidian(path, format)?;
+    Ok(list!(
+        entry = Strings::from_values(entries),
+        code = Strings::from_values(codes)
+    ))
+}
+
 extendr_module! {
     mod jieba_rs;
 
@@ -248,4 +269,5 @@ extendr_module! {
 
     fn add_user_words;
     fn import_cidian_worker;
+    fn read_cidian_worker;
 }

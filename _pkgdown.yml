@@ -72,6 +72,7 @@ reference:
       - filter_segment
       - new_user_word
       - import_cidian
+      - read_cidian
       - get_idf
   - title: Built-in Data
     contents:

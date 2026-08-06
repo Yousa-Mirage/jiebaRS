@@ -44,6 +44,38 @@ test_that("象棋 SCEL imports specialized terms", {
   )
 })
 
+test_that("read_cidian returns dictionary entries and codes", {
+  fixture1 <- testthat::test_path("fixtures", "cidian", "动漫大全.bdict")
+  fixture2 <- testthat::test_path("fixtures", "cidian", "象棋.scel")
+  testthat::skip_if_not(file.exists(fixture1), "Real cidian fixtures are not available.")
+  testthat::skip_if_not(file.exists(fixture2), "Real cidian fixtures are not available.")
+
+  dictionary <- read_cidian(fixture1)
+
+  expect_s3_class(dictionary, "data.frame")
+  expect_identical(names(dictionary), c("entry", "code"))
+  expect_type(dictionary$entry, "character")
+  expect_type(dictionary$code, "character")
+
+  words <- c("圣斗士星矢", "百变小樱", "东京食尸鬼", "十万个冷笑话", "妖精的尾巴")
+  entry_index <- match(words, dictionary$entry)
+  expect_identical(dictionary$entry[entry_index], words)
+  expect_identical(
+    dictionary$code[entry_index],
+    c(
+      "sheng dou shi xing shi",
+      "bai bian xiao ying",
+      "dong jing shi shi gui",
+      "shi wan ge leng xiao hua",
+      "yao jing de wei ba"
+    )
+  )
+  expect_identical(nrow(dictionary), 17830L)
+
+  dictionary <- read_cidian(fixture2)
+  expect_identical(nrow(dictionary), 1772L)
+})
+
 test_that("import_cidian snapshots missing file errors", {
   missing_file <- withr::local_tempfile(fileext = ".scel")
 

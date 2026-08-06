@@ -147,4 +147,17 @@ add_user_words <- function(worker, words, tags, freq) .Call(wrap__add_user_words
 #' @keywords internal
 import_cidian_worker <- function(worker, path, format, tag) .Call(wrap__import_cidian_worker, worker, path, format, tag)
 
+#' Read an input-method dictionary through the internal native bridge.
+#'
+#' Internal bridge used by `read_cidian()` to parse a supported input-method
+#' dictionary and return its entries and coding components.
+#'
+#' @param path Character scalar containing the input-method dictionary path.
+#' @param format Character scalar identifying the parser to use.
+#'
+#' @return A named list with `entry` and `code` character vectors.
+#' @noRd
+#' @keywords internal
+read_cidian_worker <- function(path, format) .Call(wrap__read_cidian_worker, path, format)
+
 # nolint end
