@@ -15,6 +15,7 @@
 ^tools/bench($|/)
 ^examples$
 ^data-raw$
+^tests/testthat/fixtures$
 
 # pkgdown site
 ^docs$

@@ -1,33 +1,34 @@
 [package]
-name = 'jieba_rs'
+name = "jieba_rs"
+version = "0.2.0"
+edition = "2024"
+rust-version = "1.85"
 publish = false
-version = '0.2.0'
-edition = '2021'
-rust-version = '1.65'
 
 [lib]
-crate-type = ['staticlib']
-name = 'jieba_rs'
+crate-type = ["staticlib"]
+name = "jieba_rs"
 
 [[bin]]
-name = 'document'
-path = 'document.rs'
+name = "document"
+path = "document.rs"
 
 [dependencies]
 ahash = "0.8"
-extendr-api = '0.9'
-jieba-rs = { version = "0.10", features = ["tfidf", "textrank"] }
+cidian = "0.1"
+extendr-api = "0.9"
+jieba-rs = { version = "0.10", features = ["textrank", "tfidf"] }
 rayon = "1.12"
+
+[lints.clippy]
+expect_used = "deny"
+unwrap_used = "deny"
 
 [lints.rust]
 warnings = "deny"
 
-[lints.clippy]
-unwrap_used = "deny"
-expect_used = "deny"
-
 [profile.release]
-lto = true
 opt-level = 3
-codegen-units = 1
 strip = true
+lto = true
+codegen-units = 1

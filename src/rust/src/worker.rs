@@ -6,7 +6,7 @@ use extendr_api::prelude::*;
 use extendr_api::{Error, Result};
 use jieba_rs::{HmmModel, Jieba, KeywordExtractConfig, TextRank, TfIdf};
 
-use crate::file_reader::{read_dictionary, read_idf_dictionary, read_utf8_file, DictionaryKind};
+use crate::file_reader::{DictionaryKind, read_dictionary, read_idf_dictionary, read_utf8_file};
 
 pub const WORKER_ABI_VERSION: i32 = 1;
 

@@ -64,4 +64,28 @@ impl JiebaWorker {
 
         Ok(())
     }
+
+    pub fn import_cidian(&mut self, path: &str, format: &str, tag: Option<&str>) -> Result<()> {
+        self.validate()?;
+
+        let dictionary = match format {
+            "scel" => cidian::scel::parse_file(path),
+            "qcel" => cidian::qcel::parse_file(path),
+            "qpyd" => cidian::qpyd::parse_file(path),
+            "bdict" => cidian::bdict::parse_file(path),
+            "bcd" => cidian::bcd::parse_file(path),
+            _ => unreachable!("unsupported input-method dictionary format: {format}"),
+        }
+        .map_err(|error| {
+            Error::Other(format!(
+                "Failed to parse input-method dictionary `{path}`: {error}"
+            ))
+        })?;
+
+        for entry in dictionary.entries {
+            self.engine.add_word(&entry.word, None, tag);
+        }
+
+        Ok(())
+    }
 }

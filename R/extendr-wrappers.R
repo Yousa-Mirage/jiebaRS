@@ -131,4 +131,20 @@ textrank_worker <- function(text, worker) .Call(wrap__textrank_worker, text, wor
 #' @keywords internal
 add_user_words <- function(worker, words, tags, freq) .Call(wrap__add_user_words, worker, words, tags, freq)
 
+#' Import an input-method dictionary into an existing native jieba worker.
+#'
+#' Internal bridge used by `import_cidian()` to parse a supported input-method
+#' dictionary and add its words to an existing worker.
+#'
+#' @param worker A mutable native `JiebaWorker` handle.
+#' @param path Character scalar containing the input-method dictionary path.
+#' @param format Character scalar identifying the parser to use.
+#' @param tag Optional character scalar containing the tag assigned to every
+#'   imported word. `NULL` leaves the tag empty.
+#'
+#' @return `NULL`, invisibly, after the worker has been updated.
+#' @noRd
+#' @keywords internal
+import_cidian_worker <- function(worker, path, format, tag) .Call(wrap__import_cidian_worker, worker, path, format, tag)
+
 # nolint end

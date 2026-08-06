@@ -1,5 +1,7 @@
 # jiebaRS (development version)
 
+- Added `import_cidian()` to import words from SCEL, QCEL, QPYD, BDICT, and BCD
+  input-method dictionaries into an existing worker.
 - Bundled `stopwords_cn`, `stopwords_en`, and `stopwords_full` stopwords datasets are now available for
   explicit use; stopword filtering remains disabled by default.
 - Documentation for internal native bridge functions is no longer generated for users.

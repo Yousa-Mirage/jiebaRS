@@ -5,8 +5,8 @@ mod tag;
 mod user_dict;
 mod worker;
 
-use extendr_api::prelude::*;
 use extendr_api::Result;
+use extendr_api::prelude::*;
 use worker::{JiebaWorker, WorkerConfig};
 
 /// Create an internal native jieba worker.
@@ -211,6 +211,30 @@ fn add_user_words(
     worker.add_user_words(&words, &tags, &freq)
 }
 
+/// Import an input-method dictionary into an existing native jieba worker.
+///
+/// Internal bridge used by `import_cidian()` to parse a supported input-method
+/// dictionary and add its words to an existing worker.
+///
+/// @param worker A mutable native `JiebaWorker` handle.
+/// @param path Character scalar containing the input-method dictionary path.
+/// @param format Character scalar identifying the parser to use.
+/// @param tag Optional character scalar containing the tag assigned to every
+///   imported word. `NULL` leaves the tag empty.
+///
+/// @return `NULL`, invisibly, after the worker has been updated.
+/// @noRd
+/// @keywords internal
+#[extendr]
+fn import_cidian_worker(
+    worker: &mut JiebaWorker,
+    path: &str,
+    format: &str,
+    tag: Option<&str>,
+) -> Result<()> {
+    worker.import_cidian(path, format, tag)
+}
+
 extendr_module! {
     mod jieba_rs;
 
@@ -223,4 +247,5 @@ extendr_module! {
     fn textrank_worker;
 
     fn add_user_words;
+    fn import_cidian_worker;
 }

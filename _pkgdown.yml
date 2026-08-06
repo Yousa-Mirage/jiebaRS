@@ -71,6 +71,7 @@ reference:
     contents:
       - filter_segment
       - new_user_word
+      - import_cidian
       - get_idf
   - title: Built-in Data
     contents:
