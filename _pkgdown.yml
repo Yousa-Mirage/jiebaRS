@@ -48,31 +48,31 @@ reference:
     contents:
       - segment
       - segment_batch
-  - title: Speech Tagging
-    desc: Tag tokens with part-of-speech tags.
+  - title: Part-of-Speech Tagging
+    desc: Tag segmented text with part-of-speech labels.
     contents:
       - tagging
       - tagging_batch
   - title: Keyword Extraction
-    desc: Extract keywords via TF-IDF and TextRank.
+    desc: Extract keywords with TF-IDF and TextRank.
     contents:
       - keywords
       - keywords_df
       - textrank
       - textrank_df
-  - title: Word Frequency and N-grams
-    desc: Count word frequencies and n-grams from segmented tokens.
+      - get_idf
+  - title: User Dictionaries
+    desc: Add, import, and inspect custom dictionaries.
     contents:
-      - freq
-      - count_ngrams
-  - title: Utilities
-    desc: Filter tokens and manage user dictionaries.
-    contents:
-      - filter_segment
       - new_user_word
       - import_cidian
       - read_cidian
-      - get_idf
+  - title: Token Utilities
+    desc: Filter tokens and calculate frequencies or n-grams.
+    contents:
+      - filter_segment
+      - freq
+      - count_ngrams
   - title: Built-in Data
     contents:
       - stopwords
