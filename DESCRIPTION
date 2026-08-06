@@ -26,6 +26,7 @@ Imports:
     cli,
     rlang
 Suggests: 
+    jiebaR,
     pkgdown,
     rmarkdown,
     spelling,

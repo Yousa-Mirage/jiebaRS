@@ -61,7 +61,7 @@
 #' \dontrun{
 #' cutter <- worker()
 #' import_cidian(cutter, "dictionary.scel")
-#' segment("词库中的词语", cutter)
+#' segment("\u8bcd\u5e93\u4e2d\u7684\u8bcd\u8bed", cutter)
 #' }
 #' @export
 import_cidian <- function(worker, path, ..., tag = NULL) {

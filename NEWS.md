@@ -1,14 +1,13 @@
 # jiebaRS (development version)
 
-- Exported functions now reject unnamed optional arguments; supply optional
-  arguments by name.
-- Removed `get_tuple()`; use `count_ngrams()` for n-gram counting.
 - Added `import_cidian()` to import words from SCEL, QCEL, QPYD, BDICT, and BCD input-method dictionaries
   into an existing worker.
 - Added `read_cidian()` to read supported input-method dictionaries into a data frame of entries and
   coding components.
 - Bundled `stopwords_cn`, `stopwords_en`, and `stopwords_full` stopwords datasets are now available for
   explicit use; stopword filtering remains disabled by default.
+- Removed `get_tuple()`; use `count_ngrams()` for n-gram counting.\
+- Exported functions now reject unnamed optional arguments; supply optional arguments by name.
 - Documentation for internal native bridge functions is no longer generated for users.
 
 # jiebaRS 0.2.0
