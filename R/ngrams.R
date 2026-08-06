@@ -85,23 +85,9 @@
 #' Count contiguous n-grams from a segmented character vector or from each
 #' element of a list of segmented character vectors.
 #'
-#' This function is a drop-in replacement for `jiebaR::get_tuple()`, which
-#' is deprecated in `jiebaRS`. See Details for more information.
-#'
 #' @details
-#' The original `jiebaR::get_tuple()` interface has several design problems:
-#'
-#' 1. Its n-gram extraction behavior does not match the most obvious reading of
-#'    the argument name: `size = n` counts all contiguous n-grams from `2:n`,
-#'    not just the exact size `n`.
-#' 2. Its documentation says it accepts list input, but the original exported
-#'    implementation does not reliably support lists.
-#' 3. It concatenates tokens without a separator, which makes tuple boundaries
-#'    ambiguous.
-#'
-#' `count_ngrams()` addresses these issues, providing more explicit and
-#' abundant parameters. In addition, this function is about **1.3x** to
-#' **2.0x** faster than `jiebaR::get_tuple()`.
+#' Use `n` to select one or more n-gram sizes, and `sep` to control how tokens
+#' are joined in the returned term labels.
 #'
 #' @param x A character vector of tokens or a list of character vectors.
 #' @param ... Must be empty. This enforces that optional arguments such as `n`,
@@ -119,7 +105,6 @@
 #'   vector using the n-gram terms as names.
 #'
 #' @return N-gram counts in the requested format.
-#' @seealso [get_tuple()]
 #' @examples
 #' count_ngrams(c("\u6211", "\u7231", "R"), n = 2)
 #' count_ngrams(c("\u6211", "\u7231", "R"), n = 1:2, format = "data.frame")
@@ -154,89 +139,5 @@ count_ngrams <- function(
     format,
     "data.frame" = res,
     "vector" = stats::setNames(res$count, res$term)
-  )
-}
-
-#' Compatibility wrapper for `jiebaR::get_tuple()`
-#'
-#' `get_tuple()` is kept only for compatibility with `jiebaR`. New code should
-#' use [count_ngrams()] instead.
-#'
-#' @details
-#' This function is deprecated and should not be used in new code.
-#' It is provided only as a compatibility wrapper around [count_ngrams()]
-#' and replicates the behavior of `jiebaR::get_tuple()`.
-#'
-#' Prefer [count_ngrams()] because the original `jiebaR::get_tuple()` interface
-#' has several design problems:
-#'
-#' 1. Its n-gram extraction behavior does not match the most obvious reading of
-#'    the argument name: `size = n` counts all contiguous n-grams from `2:n`,
-#'    not just the exact size `n`.
-#' 2. Its documentation says it accepts list input, but the original exported
-#'    implementation does not reliably support lists.
-#' 3. It concatenates tokens without a separator, which makes tuple boundaries
-#'    ambiguous.
-#'
-#' @param x A character vector of tokens or a list of character vectors.
-#' @param size A single integer >= 2. The compatibility semantics count all
-#'   contiguous n-grams from 2 up to `size`.
-#' @param dataframe Whether to return a data frame. If `FALSE`, a named integer
-#'   vector is returned.
-#'
-#' @return If `dataframe = TRUE`, a data frame with `name` and `count` columns,
-#'   sorted by descending count. Otherwise, a named integer vector.
-#' @seealso [count_ngrams()]
-#' @examples
-#' suppressWarnings(get_tuple(c("sd", "sd", "sd", "rd"), 2))
-#' @export
-get_tuple <- function(x, size = 2, dataframe = TRUE) {
-  .Deprecated(
-    "count_ngrams",
-    package = "jiebaRS",
-    msg = paste(
-      "`get_tuple()` is deprecated; use `count_ngrams()` instead.",
-      "The legacy jiebaR API mixes 2:n grams into `size`, does not reliably",
-      "support list inputs, and cannot represent tuple boundaries because it",
-      "concatenates tokens without a separator."
-    )
-  )
-
-  if (!rlang::is_integerish(size, n = 1, finite = TRUE) || size < 2L) {
-    cli::cli_abort("`size` must be a single integer >= 2.")
-  }
-  size_int <- as.integer(size)
-
-  if (!rlang::is_bool(dataframe)) {
-    cli::cli_abort("`dataframe` must be a single `TRUE` or `FALSE` value.")
-  }
-
-  res <- count_ngrams(x, n = 2:size_int, sep = "", sort = FALSE, format = "data.frame")
-
-  if (nrow(res) == 0L) {
-    if (isTRUE(dataframe)) {
-      return(data.frame(
-        name = character(),
-        count = integer()
-      ))
-    }
-    return(stats::setNames(integer(), character()))
-  }
-
-  agg <- rowsum(res$count, res$term, reorder = FALSE)
-  counts <- as.integer(agg[, 1L])
-  terms <- rownames(agg)
-
-  ord <- order(counts, decreasing = TRUE)
-  terms <- terms[ord]
-  counts <- counts[ord]
-
-  if (isFALSE(dataframe)) {
-    return(stats::setNames(counts, terms))
-  }
-
-  data.frame(
-    name = terms,
-    count = counts
   )
 }

@@ -65,7 +65,6 @@ reference:
     contents:
       - freq
       - count_ngrams
-      - get_tuple
   - title: Utilities
     desc: Filter tokens and manage user dictionaries.
     contents:

@@ -1,5 +1,6 @@
 # jiebaRS (development version)
 
+- Removed `get_tuple()`; use `count_ngrams()` for n-gram counting.
 - Added `import_cidian()` to import words from SCEL, QCEL, QPYD, BDICT, and BCD input-method dictionaries
   into an existing worker.
 - Added `read_cidian()` to read supported input-method dictionaries into a data frame of entries and

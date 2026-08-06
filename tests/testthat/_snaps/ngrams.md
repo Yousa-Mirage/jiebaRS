@@ -33,11 +33,3 @@
       Error in `count_ngrams()`:
       ! `sort` must be a single `TRUE` or `FALSE` value.
 
-# get_tuple is a deprecated compatibility wrapper
-
-    `get_tuple()` is deprecated; use `count_ngrams()` instead. The legacy jiebaR API mixes 2:n grams into `size`, does not reliably support list inputs, and cannot represent tuple boundaries because it concatenates tokens without a separator.
-
----
-
-    `get_tuple()` is deprecated; use `count_ngrams()` instead. The legacy jiebaR API mixes 2:n grams into `size`, does not reliably support list inputs, and cannot represent tuple boundaries because it concatenates tokens without a separator.
-

@@ -40,32 +40,14 @@ N-gram counts in the requested format.
 \description{
 Count contiguous n-grams from a segmented character vector or from each
 element of a list of segmented character vectors.
-
-This function is a drop-in replacement for \code{jiebaR::get_tuple()}, which
-is deprecated in \code{jiebaRS}. See Details for more information.
 }
 \details{
-The original \code{jiebaR::get_tuple()} interface has several design problems:
-\enumerate{
-\item Its n-gram extraction behavior does not match the most obvious reading of
-the argument name: \code{size = n} counts all contiguous n-grams from \code{2:n},
-not just the exact size \code{n}.
-\item Its documentation says it accepts list input, but the original exported
-implementation does not reliably support lists.
-\item It concatenates tokens without a separator, which makes tuple boundaries
-ambiguous.
-}
-
-\code{count_ngrams()} addresses these issues, providing more explicit and
-abundant parameters. In addition, this function is about \strong{1.3x} to
-\strong{2.0x} faster than \code{jiebaR::get_tuple()}.
+Use \code{n} to select one or more n-gram sizes, and \code{sep} to control how tokens
+are joined in the returned term labels.
 }
 \examples{
 count_ngrams(c("\u6211", "\u7231", "R"), n = 2)
 count_ngrams(c("\u6211", "\u7231", "R"), n = 1:2, format = "data.frame")
 count_ngrams(c("a", "b", "b", "b", "a"), n = 1, sort = FALSE)
 count_ngrams(list(c("a", "b", "c"), c("a", "b")), n = 2)
-}
-\seealso{
-\code{\link[=get_tuple]{get_tuple()}}
 }
