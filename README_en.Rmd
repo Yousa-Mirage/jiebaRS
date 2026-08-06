@@ -59,8 +59,8 @@ install.packages("jiebaRS")
 ```
 
 > If you are on Linux, you can try to install pre-compiled binaries [from
-> P3M](https://packagemanager.posit.co/client/#/repos/cran/packages/jiebaRS/overview)
-> for different Linux distributions, so don't need to compile from source.
+> P3M](https://packagemanager.posit.co/client/#/repos/cran/packages/jiebaRS/overview) for different Linux
+> distributions, so don't need to compile from source.
 
 ### From R-universe / R-multiverse
 
@@ -201,6 +201,27 @@ segment("量子机器狗和超导量子比特", cutter3)
 new_user_word(cutter3, "量子机器狗", tags = "n")
 add_word(cutter3, "超导量子比特", tags = "n")  # alias
 segment("量子机器狗和超导量子比特", cutter3)
+```
+
+Input-method dictionaries can also be imported directly. The supported formats are `.scel`, `.qcel`,
+`.qpyd`, `.bdict`, and `.bcd`; the parser is selected automatically from the file extension. Words are
+added to the existing worker. The source dictionary's codes and weights are ignored by default, and
+imported words receive no tag unless one is supplied.
+
+```{r}
+#| label: import-cidian
+#| eval: false
+
+cutter_cidian <- worker()
+import_cidian(cutter_cidian, "dictionary.scel")
+segment("词库中的词语", cutter_cidian)
+
+# Assign one tag to all imported words
+import_cidian(cutter_cidian, "dictionary.qcel", tag = "n")
+
+# Read dictionary entries and their codes directly
+dictionary <- read_cidian("dictionary.scel")
+head(dictionary)
 ```
 
 ### Stop Words

@@ -224,6 +224,23 @@ segment("量子机器狗和超导量子比特", cutter3)
 #> [1] "量子机器狗"   "和"           "超导量子比特"
 ```
 
+也可以直接导入输入法词库。支持 `.scel`、`.qcel`、`.qpyd`、`.bdict` 和
+`.bcd` 格式，函数会根据文件扩展名自动选择解析器。词库中的词会直接添加到
+现有 worker；默认不使用输入法词库中的编码和权重，也不设置词性标签。
+
+``` r
+cutter_cidian <- worker()
+import_cidian(cutter_cidian, "dictionary.scel")
+segment("词库中的词语", cutter_cidian)
+
+# 也可以为导入的词统一设置词性标签
+import_cidian(cutter_cidian, "dictionary.qcel", tag = "n")
+
+# 直接读取词库中的词和编码
+dictionary <- read_cidian("dictionary.scel")
+head(dictionary)
+```
+
 ### 停用词
 
 通过 `stop_word` 参数以字符向量形式提供停用词，或通过 `stop_word_file`

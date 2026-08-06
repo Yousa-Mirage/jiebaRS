@@ -232,6 +232,26 @@ segment("量子机器狗和超导量子比特", cutter3)
 #> [1] "量子机器狗"   "和"           "超导量子比特"
 ```
 
+Input-method dictionaries can also be imported directly. The supported
+formats are `.scel`, `.qcel`, `.qpyd`, `.bdict`, and `.bcd`; the parser
+is selected automatically from the file extension. Words are added to
+the existing worker. The source dictionary’s codes and weights are
+ignored by default, and imported words receive no tag unless one is
+supplied.
+
+``` r
+cutter_cidian <- worker()
+import_cidian(cutter_cidian, "dictionary.scel")
+segment("词库中的词语", cutter_cidian)
+
+# Assign one tag to all imported words
+import_cidian(cutter_cidian, "dictionary.qcel", tag = "n")
+
+# Read dictionary entries and their codes directly
+dictionary <- read_cidian("dictionary.scel")
+head(dictionary)
+```
+
 ### Stop Words
 
 Supply stop words as a character vector via the `stop_word` parameter or
