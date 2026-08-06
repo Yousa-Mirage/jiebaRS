@@ -1,5 +1,7 @@
 # jiebaRS (development version)
 
+- Exported functions now reject unnamed optional arguments; supply optional
+  arguments by name.
 - Removed `get_tuple()`; use `count_ngrams()` for n-gram counting.
 - Added `import_cidian()` to import words from SCEL, QCEL, QPYD, BDICT, and BCD input-method dictionaries
   into an existing worker.

@@ -196,8 +196,8 @@ segment("量子机器狗和超导量子比特", cutter2)
 cutter3 <- worker()
 segment("量子机器狗和超导量子比特", cutter3)
 
-new_user_word(cutter3, "量子机器狗", "n")
-add_word(cutter3, "超导量子比特", "n")  # 别名
+new_user_word(cutter3, "量子机器狗", tags = "n")
+add_word(cutter3, "超导量子比特", tags = "n")  # 别名
 segment("量子机器狗和超导量子比特", cutter3)
 ```
 

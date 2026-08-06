@@ -4,12 +4,15 @@
 \alias{import_cidian}
 \title{Import an input-method dictionary into a worker}
 \usage{
-import_cidian(worker, path, tag = NULL)
+import_cidian(worker, path, ..., tag = NULL)
 }
 \arguments{
 \item{worker}{A \code{jieba_worker} object to update in place.}
 
 \item{path}{A path to a supported input-method dictionary file.}
+
+\item{...}{Must be empty. This enforces that the optional \code{tag} argument is
+supplied by name.}
 
 \item{tag}{An optional single non-empty character string assigned to every
 imported word. \code{NULL} leaves the tag empty.}

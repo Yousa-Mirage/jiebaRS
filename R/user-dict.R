@@ -4,6 +4,8 @@
 #'
 #' @param worker A `jieba_worker` object.
 #' @param words A non-empty string or a non-empty character vector of new words.
+#' @param ... Must be empty. This enforces that optional arguments such as
+#'   `tags` and `freq` are supplied with explicit names.
 #' @param tags A single tag or a character vector of tags. Defaults to `"n"`
 #'   for each supplied word. `NA` values are allowed and will be interpreted as missing tags.
 #' @param freq Optional positive integer frequency or integer vector of
@@ -28,7 +30,9 @@
 #' segment("\u8d85\u5bfc\u91cf\u5b50\u6bd4\u7279", cutter2)
 #'
 #' @export
-new_user_word <- function(worker, words, tags = "n", freq = NULL) {
+new_user_word <- function(worker, words, ..., tags = "n", freq = NULL) {
+  rlang::check_dots_empty()
+
   if (!inherits(worker, "jieba_worker")) {
     cli::cli_abort("`worker` must be a `jieba_worker` object.")
   }

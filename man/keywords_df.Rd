@@ -4,12 +4,14 @@
 \alias{keywords_df}
 \title{Extract keywords as a data frame}
 \usage{
-keywords_df(x, jiebar)
+keywords_df(x, jiebar, ...)
 }
 \arguments{
 \item{x}{A character to analyze.}
 
 \item{jiebar}{A \code{jieba_worker} object created with \code{worker(type = "keywords")}.}
+
+\item{...}{Must be empty. This prevents accidental unused arguments.}
 }
 \value{
 A data frame with \code{term} and \code{weight} columns.

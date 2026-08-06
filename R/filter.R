@@ -12,6 +12,8 @@
 #'
 #' @param input A character vector or a list of character vectors.
 #' @param filter_words A character vector of words to remove.
+#' @param ... Must be empty. This enforces that optional arguments such as
+#'   `keep_na` are supplied with explicit names.
 #' @param keep_na Whether to keep `NA` values in the returned result. The
 #'   default `TRUE` matches `jiebaR::filter_segment()`.
 #'
@@ -26,7 +28,9 @@
 #' )
 #' filter_segment(input, "\u6211")
 #' @export
-filter_segment <- function(input, filter_words, keep_na = TRUE) {
+filter_segment <- function(input, filter_words, ..., keep_na = TRUE) {
+  rlang::check_dots_empty()
+
   if (!rlang::is_character(filter_words)) {
     cli::cli_abort("`filter_words` must be a character vector.")
   }

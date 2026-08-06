@@ -12,6 +12,8 @@
 #'
 #' @param x a list of character vectors. Each vector represents a document of
 #'   already-segmented words.
+#' @param ... Must be empty. This enforces that optional arguments such as
+#'   `stop_word`, `stop_word_file`, and `path` are supplied with explicit names.
 #' @param stop_word Optional character vector of stop words supplied directly.
 #' @param stop_word_file Optional file path containing one stop word per line.
 #' @param path Optional output file path. When `NULL`, a data frame is returned.
@@ -26,7 +28,9 @@
 #' get_idf(list(c("abc", "def"),c("abc", " ")))
 #' @importFrom utils write.table
 #' @export
-get_idf <- function(x, stop_word = NULL, stop_word_file = NULL, path = NULL) {
+get_idf <- function(x, ..., stop_word = NULL, stop_word_file = NULL, path = NULL) {
+  rlang::check_dots_empty()
+
   if (!rlang::is_list(x)) {
     cli::cli_abort("`x` must be a list of character vectors.")
   }

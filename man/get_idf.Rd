@@ -4,11 +4,14 @@
 \alias{get_idf}
 \title{Generate IDF dict}
 \usage{
-get_idf(x, stop_word = NULL, stop_word_file = NULL, path = NULL)
+get_idf(x, ..., stop_word = NULL, stop_word_file = NULL, path = NULL)
 }
 \arguments{
 \item{x}{a list of character vectors. Each vector represents a document of
 already-segmented words.}
+
+\item{...}{Must be empty. This enforces that optional arguments such as
+\code{stop_word}, \code{stop_word_file}, and \code{path} are supplied with explicit names.}
 
 \item{stop_word}{Optional character vector of stop words supplied directly.}
 

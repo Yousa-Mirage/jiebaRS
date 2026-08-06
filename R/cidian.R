@@ -50,6 +50,8 @@
 #'
 #' @param worker A `jieba_worker` object to update in place.
 #' @param path A path to a supported input-method dictionary file.
+#' @param ... Must be empty. This enforces that the optional `tag` argument is
+#'   supplied by name.
 #' @param tag An optional single non-empty character string assigned to every
 #'   imported word. `NULL` leaves the tag empty.
 #'
@@ -62,7 +64,9 @@
 #' segment("词库中的词语", cutter)
 #' }
 #' @export
-import_cidian <- function(worker, path, tag = NULL) {
+import_cidian <- function(worker, path, ..., tag = NULL) {
+  rlang::check_dots_empty()
+
   if (!inherits(worker, "jieba_worker")) {
     cli::cli_abort("`worker` must be a `jieba_worker` object.")
   }
@@ -86,6 +90,7 @@ import_cidian <- function(worker, path, tag = NULL) {
 #' `.bdict`, and `.bcd`.
 #'
 #' @param path A path to a supported input-method dictionary file.
+#' @param ... Must be empty. This prevents accidental unused arguments.
 #'
 #' @return A data frame with `entry` and `code` character columns. Multiple
 #'   coding components are joined with a single space.
@@ -95,7 +100,9 @@ import_cidian <- function(worker, path, tag = NULL) {
 #' read_cidian("dictionary.scel")
 #' }
 #' @export
-read_cidian <- function(path) {
+read_cidian <- function(path, ...) {
+  rlang::check_dots_empty()
+
   dictionary <- .check_cidian_path(path)
   result <- read_cidian_worker(dictionary$path, dictionary$format)
   data.frame(

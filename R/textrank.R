@@ -56,9 +56,12 @@ textrank <- function(code, jiebar, ..., format = c("vector", "data.frame", "lega
 #'
 #' @param x A character to analyze.
 #' @param jiebar A `jieba_worker` object created with `worker(type = "textrank")`.
+#' @param ... Must be empty. This prevents accidental unused arguments.
 #'
 #' @return A data frame with `term` and `weight` columns.
 #' @export
-textrank_df <- function(x, jiebar) {
+textrank_df <- function(x, jiebar, ...) {
+  rlang::check_dots_empty()
+
   textrank(x, jiebar, format = "data.frame")
 }

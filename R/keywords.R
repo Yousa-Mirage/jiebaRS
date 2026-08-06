@@ -57,9 +57,12 @@ keywords <- function(code, jiebar, ..., format = c("vector", "data.frame", "lega
 #'
 #' @param x A character to analyze.
 #' @param jiebar A `jieba_worker` object created with `worker(type = "keywords")`.
+#' @param ... Must be empty. This prevents accidental unused arguments.
 #'
 #' @return A data frame with `term` and `weight` columns.
 #' @export
-keywords_df <- function(x, jiebar) {
+keywords_df <- function(x, jiebar, ...) {
+  rlang::check_dots_empty()
+
   keywords(x, jiebar, format = "data.frame")
 }

@@ -226,8 +226,8 @@ cutter3 <- worker()
 segment("量子机器狗和超导量子比特", cutter3)
 #> [1] "量子" "机器" "狗"   "和"   "超导" "量子" "比特"
 
-new_user_word(cutter3, "量子机器狗", "n")
-add_word(cutter3, "超导量子比特", "n")  # alias
+new_user_word(cutter3, "量子机器狗", tags = "n")
+add_word(cutter3, "超导量子比特", tags = "n")  # alias
 segment("量子机器狗和超导量子比特", cutter3)
 #> [1] "量子机器狗"   "和"           "超导量子比特"
 ```

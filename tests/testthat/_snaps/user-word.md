@@ -41,7 +41,7 @@
 ---
 
     Code
-      new_user_word(engine1, c("量子机器狗", "超导量子比特"), c("n", "nz", "v"))
+      new_user_word(engine1, c("量子机器狗", "超导量子比特"), tags = c("n", "nz", "v"))
     Condition
       Error in `new_user_word()`:
       ! `tags` must have length 1 or the same length as `words`.

@@ -198,8 +198,8 @@ Add words dynamically with `new_user_word()` (alias: `add_word()`):
 cutter3 <- worker()
 segment("量子机器狗和超导量子比特", cutter3)
 
-new_user_word(cutter3, "量子机器狗", "n")
-add_word(cutter3, "超导量子比特", "n")  # alias
+new_user_word(cutter3, "量子机器狗", tags = "n")
+add_word(cutter3, "超导量子比特", tags = "n")  # alias
 segment("量子机器狗和超导量子比特", cutter3)
 ```
 

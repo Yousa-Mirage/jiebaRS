@@ -4,12 +4,15 @@
 \alias{filter_segment}
 \title{Filter segmentation results}
 \usage{
-filter_segment(input, filter_words, keep_na = TRUE)
+filter_segment(input, filter_words, ..., keep_na = TRUE)
 }
 \arguments{
 \item{input}{A character vector or a list of character vectors.}
 
 \item{filter_words}{A character vector of words to remove.}
+
+\item{...}{Must be empty. This enforces that optional arguments such as
+\code{keep_na} are supplied with explicit names.}
 
 \item{keep_na}{Whether to keep \code{NA} values in the returned result. The
 default \code{TRUE} matches \code{jiebaR::filter_segment()}.}

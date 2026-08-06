@@ -4,12 +4,14 @@
 \alias{textrank_df}
 \title{Extract TextRank keywords as a data frame}
 \usage{
-textrank_df(x, jiebar)
+textrank_df(x, jiebar, ...)
 }
 \arguments{
 \item{x}{A character to analyze.}
 
 \item{jiebar}{A \code{jieba_worker} object created with \code{worker(type = "textrank")}.}
+
+\item{...}{Must be empty. This prevents accidental unused arguments.}
 }
 \value{
 A data frame with \code{term} and \code{weight} columns.

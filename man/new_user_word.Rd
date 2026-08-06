@@ -5,14 +5,17 @@
 \alias{add_word}
 \title{Add user word}
 \usage{
-new_user_word(worker, words, tags = "n", freq = NULL)
+new_user_word(worker, words, ..., tags = "n", freq = NULL)
 
-add_word(worker, words, tags = "n", freq = NULL)
+add_word(worker, words, ..., tags = "n", freq = NULL)
 }
 \arguments{
 \item{worker}{A \code{jieba_worker} object.}
 
 \item{words}{A non-empty string or a non-empty character vector of new words.}
+
+\item{...}{Must be empty. This enforces that optional arguments such as
+\code{tags} and \code{freq} are supplied with explicit names.}
 
 \item{tags}{A single tag or a character vector of tags. Defaults to \code{"n"}
 for each supplied word. \code{NA} values are allowed and will be interpreted as missing tags.}

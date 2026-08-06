@@ -45,6 +45,8 @@
 #' @param type Worker type. Supported values are `"mix"`, `"mp"`, `"hmm"`,
 #'   `"full"`, `"query"`, `"tag"`, `"keywords"`, and `"textrank"`.
 #'   Default is `"mix"`.
+#' @param ... Must be empty. This enforces that all worker configuration
+#'   arguments are supplied by name.
 #' @param stop_word Optional character vector of stop words supplied directly.
 #' @param stop_word_file Optional file path containing one stop word per line.
 #' @param hmm Logical scalar or character scalar. If logical, controls whether
@@ -78,6 +80,7 @@
 #' @return A `jieba_worker` S3 object.
 #' @export
 worker <- function(
+  ...,
   type = c("mix", "mp", "hmm", "full", "query", "tag", "keywords", "textrank"),
   stop_word = NULL,
   stop_word_file = NULL,
@@ -90,6 +93,8 @@ worker <- function(
   symbol = FALSE,
   bylines = FALSE
 ) {
+  rlang::check_dots_empty()
+
   type <- rlang::arg_match(type)
   stop_words <- normalize_stop_words(stop_word, stop_word_file)
   hmm_model <- ""

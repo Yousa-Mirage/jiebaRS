@@ -2,7 +2,7 @@ test_that("new_user_word updates worker segmentation for a single word", {
   engine1 <- worker()
 
   expect_identical(segment("量子机器狗", engine1), c("量子", "机器", "狗"))
-  expect_no_error(new_user_word(engine1, "量子机器狗", "n"))
+  expect_no_error(new_user_word(engine1, "量子机器狗", tags = "n"))
   expect_identical(segment("量子机器狗", engine1), "量子机器狗")
 })
 
@@ -12,7 +12,13 @@ test_that("new_user_word accepts multiple words", {
   expect_identical(segment("超导量子比特", engine1), c("超导", "量子", "比特"))
   expect_identical(segment("量子机器狗", engine1), c("量子", "机器", "狗"))
 
-  expect_no_error(new_user_word(engine1, c("超导量子比特", "量子机器狗"), "n"))
+  expect_no_error(
+    new_user_word(
+      engine1,
+      c("超导量子比特", "量子机器狗"),
+      tags = "n"
+    )
+  )
 
   expect_identical(segment("超导量子比特", engine1), "超导量子比特")
   expect_identical(segment("量子机器狗", engine1), "量子机器狗")
@@ -40,7 +46,7 @@ test_that("add_word is an alias of new_user_word", {
   engine1 <- worker()
 
   expect_identical(segment("量子机器狗", engine1), c("量子", "机器", "狗"))
-  expect_no_error(add_word(engine1, "量子机器狗", "n"))
+  expect_no_error(add_word(engine1, "量子机器狗", tags = "n"))
   expect_identical(segment("量子机器狗", engine1), "量子机器狗")
 })
 
@@ -68,7 +74,11 @@ test_that("new_user_word snapshots invalid inputs", {
     error = TRUE
   )
   expect_snapshot(
-    new_user_word(engine1, c("量子机器狗", "超导量子比特"), c("n", "nz", "v")),
+    new_user_word(
+      engine1,
+      c("量子机器狗", "超导量子比特"),
+      tags = c("n", "nz", "v")
+    ),
     error = TRUE
   )
   expect_snapshot(

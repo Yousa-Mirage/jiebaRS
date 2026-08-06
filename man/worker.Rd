@@ -5,6 +5,7 @@
 \title{Initialize a jiebaRS worker}
 \usage{
 worker(
+  ...,
   type = c("mix", "mp", "hmm", "full", "query", "tag", "keywords", "textrank"),
   stop_word = NULL,
   stop_word_file = NULL,
@@ -19,6 +20,9 @@ worker(
 )
 }
 \arguments{
+\item{...}{Must be empty. This enforces that all worker configuration
+arguments are supplied by name.}
+
 \item{type}{Worker type. Supported values are \code{"mix"}, \code{"mp"}, \code{"hmm"},
 \code{"full"}, \code{"query"}, \code{"tag"}, \code{"keywords"}, and \code{"textrank"}.
 Default is \code{"mix"}.}

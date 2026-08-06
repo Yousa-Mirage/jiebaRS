@@ -4,10 +4,12 @@
 \alias{read_cidian}
 \title{Read an input-method dictionary as a data frame}
 \usage{
-read_cidian(path)
+read_cidian(path, ...)
 }
 \arguments{
 \item{path}{A path to a supported input-method dictionary file.}
+
+\item{...}{Must be empty. This prevents accidental unused arguments.}
 }
 \value{
 A data frame with \code{entry} and \code{code} character columns. Multiple
