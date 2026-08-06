@@ -54,6 +54,7 @@
 #'   imported word. `NULL` leaves the tag empty.
 #'
 #' @return `NULL`, invisibly. The supplied `worker` is modified in place.
+#' @seealso [read_cidian()].
 #' @examples
 #' \dontrun{
 #' cutter <- worker()
@@ -88,6 +89,7 @@ import_cidian <- function(worker, path, tag = NULL) {
 #'
 #' @return A data frame with `entry` and `code` character columns. Multiple
 #'   coding components are joined with a single space.
+#' @seealso [import_cidian()].
 #' @examples
 #' \dontrun{
 #' read_cidian("dictionary.scel")

@@ -24,3 +24,6 @@ the parser automatically. Supported formats are \code{.scel}, \code{.qcel}, \cod
 read_cidian("dictionary.scel")
 }
 }
+\seealso{
+\code{\link[=import_cidian]{import_cidian()}}.
+}

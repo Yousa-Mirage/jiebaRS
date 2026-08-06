@@ -36,3 +36,6 @@ import_cidian(cutter, "dictionary.scel")
 segment("词库中的词语", cutter)
 }
 }
+\seealso{
+\code{\link[=read_cidian]{read_cidian()}}.
+}
