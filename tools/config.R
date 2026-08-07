@@ -70,6 +70,23 @@ cfg <- if (is_debug) "debug" else "release"
   ""
 )
 
+# Select the Rust target that matches the R binary on Windows.
+is_windows <- .Platform[["OS.type"]] == "windows"
+.windows_target <- if (is_windows) {
+  switch(
+    R.version$arch,
+    x86_64 = "x86_64-pc-windows-gnu",
+    x64 = "x86_64-pc-windows-gnu",
+    i386 = "i686-pc-windows-gnu",
+    i686 = "i686-pc-windows-gnu",
+    aarch64 = "aarch64-pc-windows-gnullvm",
+    arm64 = "aarch64-pc-windows-gnullvm",
+    stop("Unsupported Windows architecture: ", R.version$arch)
+  )
+} else {
+  ""
+}
+
 # C objects built by Cargo dependencies must be position-independent when webR
 # links the package as an Emscripten side module.
 .wasm_cflags <- ifelse(
@@ -77,9 +94,6 @@ cfg <- if (is_debug) "debug" else "release"
   "CFLAGS_wasm32_unknown_emscripten=\"$(CFLAGS_wasm32_unknown_emscripten) -fPIC\" ",
   ""
 )
-
-# read in the Makevars.in file checking
-is_windows <- .Platform[["OS.type"]] == "windows"
 
 # if windows we replace in the Makevars.win.in
 mv_fp <- ifelse(
@@ -110,6 +124,7 @@ new_txt <- gsub("@CRAN_FLAGS@", .cran_flags, mv_txt) |>
   gsub("@CLEAN_TARGET@", .clean_targets, x = _) |>
   gsub("@LIBDIR@", .libdir, x = _) |>
   gsub("@TARGET@", .target, x = _) |>
+  gsub("@WINDOWS_TARGET@", .windows_target, x = _) |>
   gsub("@PANIC_EXPORTS@", .panic_exports, x = _) |>
   gsub("@WASM_CFLAGS@", .wasm_cflags, x = _)
 

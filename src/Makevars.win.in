@@ -1,5 +1,10 @@
-TARGET = $(subst 64,x86_64,$(subst 32,i686,$(WIN)))-pc-windows-gnu
-CARGO = cargo +stable-x86_64-pc-windows-gnu
+TARGET = @WINDOWS_TARGET@
+CARGO = cargo +stable-$(TARGET)
+CARGO_LINKER =
+
+ifeq ($(TARGET),x86_64-pc-windows-gnu)
+CARGO_LINKER = CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(BINPREF)gcc"
+endif
 
 TARGET_DIR = ./rust/target
 LIBGCC_MOCK = $(TARGET_DIR)/libgcc_mock
@@ -36,8 +41,7 @@ $(STATLIB):
 	# Build the project using Cargo with additional flags
 	export CARGO_HOME=$(CARGOTMP) && \
 	export LIBRARY_PATH="$(LIBRARY_PATH);$(CURDIR)/$(LIBGCC_MOCK)" && \
-	export CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER="$(BINPREF)gcc" && \
-	RUSTFLAGS="$(RUSTFLAGS) -Lnative=$(CURDIR)/$(LIBGCC_MOCK) --print=native-static-libs" $(CARGO) build @CRAN_FLAGS@ --target=$(TARGET) --lib @PROFILE@ --manifest-path=rust/Cargo.toml --target-dir=$(TARGET_DIR)
+	$(CARGO_LINKER) RUSTFLAGS="$(RUSTFLAGS) -Lnative=$(CURDIR)/$(LIBGCC_MOCK) --print=native-static-libs" $(CARGO) build @CRAN_FLAGS@ --target=$(TARGET) --lib @PROFILE@ --manifest-path=rust/Cargo.toml --target-dir=$(TARGET_DIR)
 
 	# Always clean up CARGOTMP
 	rm -Rf $(CARGOTMP);
