@@ -15,7 +15,7 @@ path = "document.rs"
 
 [dependencies]
 ahash = "0.8"
-cidian = "0.1"
+cidian-rs = "0.1"
 extendr-api = "0.9"
 jieba-rs = { version = "0.10", features = ["textrank", "tfidf"] }
 rayon = "1.12"
