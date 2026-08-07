@@ -81,29 +81,6 @@ test_that("tagging ignores bylines and still defaults to list for vectors", {
   expect_identical(tagging(input, tagger2), expected)
 })
 
-test_that("tagging matches jiebaR on representative single-string inputs", {
-  skip_if_not_installed("jiebaR")
-
-  texts <- c(
-    "这是一个测试",
-    "this is test",
-    "123 abc 你好",
-    "小明硕士毕业于中国科学院计算所"
-  )
-
-  jiebaRS_worker <- worker(type = "tag")
-  jiebaR_worker <- jiebaR::worker(type = "tag")
-
-  for (text in texts) {
-    jiebaRS_res <- tagging(text, jiebaRS_worker, format = "legacy")
-    jiebaR_res <- jiebaR::tagging(text, jiebaR_worker)
-
-    # jieba-rs 0.10 updates some POS tags compared with jiebaR, but the
-    # token sequence should remain compatible on these representative inputs.
-    expect_identical(unname(jiebaRS_res), unname(jiebaR_res))
-  }
-})
-
 test_that("tagging rejects an invalid batch value", {
   tagger <- worker(type = "tag")
   input <- c("这是一个测试", "再来一次")

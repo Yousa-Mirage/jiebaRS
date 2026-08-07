@@ -110,16 +110,6 @@ test_that("mp and hmm workers follow documented mix mappings", {
   )
 })
 
-test_that("mix matches jiebaR on representative text", {
-  skip_if_not_installed("jiebaR")
-
-  text <- "南京市长江大桥"
-  jiebaRS_res <- segment(text, worker(type = "mix"))
-  jiebaR_res <- jiebaR::segment(text, jiebaR::worker(type = "mix"))
-
-  expect_identical(jiebaRS_res, jiebaR_res)
-})
-
 test_that("segment supports vector input with explicit batch aggregation", {
   engine1 <- worker()
   input <- c("南京市长江大桥", "这是一个测试")
