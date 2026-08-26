@@ -28,16 +28,13 @@ DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Yousa-Mirage/jie
 带来了现代化的性能与可维护性。
 
 多年前，[qinwf](https://github.com/qinwf) 基于 cppjieba 创建了
-[jiebaR](https://github.com/qinwf/jiebaR)，长期以来一直是 R
-语言中文分词的首选工具。然而，[qinwf](https://github.com/qinwf)
-已停止维护 [jiebaR](https://github.com/qinwf/jiebaR)，并且
-[jiebaR](https://github.com/qinwf/jiebaR) 已被
+jiebaR，长期以来一直是 R 语言中文分词的首选工具。然而，qinwf 已停止维护
+jiebaR，并且 jiebaR 已被
 [CRAN](https://CRAN.R-project.org/package=jiebaR) 移除，
 无法直接安装。这给 R
 语言的教学与研究带来了不便和困扰。因此，基于功能完善、性能出色、
-持续维护的 Rust [jieba-rs](https://github.com/messense/jieba-rs) crate，
-我开发了 **jiebaRS**，为 R 用户提供一个现代化、易用的中文分词工具，
-并尽可能保持与原 [jiebaR](https://github.com/qinwf/jiebaR) API
+持续维护的 Rust jieba-rs crate， 我开发了 **jiebaRS**，为 R
+用户提供一个现代化、易用的中文分词工具， 并尽可能保持与原 jiebaR API
 的兼容性。
 
 ## 安装
