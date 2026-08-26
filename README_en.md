@@ -255,10 +255,18 @@ Supply stop words as a character vector via the `stop_word` parameter or
 a file path via the `stop_word_file` parameter. Stop words are filtered
 from segmentation and keyword extraction results.
 
+jiebaRS bundles three stopword lists from
+[Northriven/Stopwords](https://github.com/Northriven/Stopwords). Pass
+one to `stop_word` when needed:
+
+- `stopwords_cn`: a comprehensive Chinese stopword list
+- `stopwords_en`: a commonly used English stopword list
+- `stopwords_full`: a comprehensive Chinese and English stopword list
+
 ``` r
-cutter4 <- worker(stop_word = c("这是", "一个"))
-segment("这是一个测试", cutter4)
-#> [1] "测试"
+cutter4 <- worker(stop_word = stopwords_cn)
+segment("这是一个关于中文分词的测试", cutter4)
+#> [1] "这是" "中文" "分词" "测试"
 ```
 
 ### Custom IDF + `get_idf()`

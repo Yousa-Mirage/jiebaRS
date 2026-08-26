@@ -243,10 +243,18 @@ head(dictionary)
 通过 `stop_word` 参数以字符向量形式提供停用词，或通过 `stop_word_file`
 参数 以文件路径形式提供。停用词会从分词和关键词提取结果中过滤掉。
 
+jiebaRS 内嵌了三份来自
+[Northriven/Stopwords](https://github.com/Northriven/Stopwords)
+的停用词表，可按需传给 `stop_word`：
+
+- `stopwords_cn`：汇总的中文停用词表
+- `stopwords_en`：常用的英文停用词表
+- `stopwords_full`：汇总的中英文停用词表
+
 ``` r
-cutter4 <- worker(stop_word = c("这是", "一个"))
-segment("这是一个测试", cutter4)
-#> [1] "测试"
+cutter4 <- worker(stop_word = stopwords_cn)
+segment("这是一个关于中文分词的测试", cutter4)
+#> [1] "这是" "中文" "分词" "测试"
 ```
 
 ### 自定义 IDF + `get_idf()`
