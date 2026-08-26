@@ -280,7 +280,7 @@ dependencies = [
 
 [[package]]
 name = "jieba_rs"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "ahash",
  "cidian-rs",

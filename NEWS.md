@@ -1,4 +1,4 @@
-# jiebaRS (development version)
+# jiebaRS 0.3.0
 
 - Fixed source installation on native Windows ARM64 by selecting the matching Rust target.
 - Added `import_cidian()` to import words from SCEL, QCEL, QPYD, BDICT, and BCD input-method dictionaries
