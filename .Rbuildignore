@@ -27,6 +27,7 @@
 ^\.zed$
 ^[.]?air[.]toml$
 ^justfile$
+^AGENTS\.md$
 ^README\.Rmd$
 ^README_zh\.Rmd$
 ^README_en\.Rmd$
