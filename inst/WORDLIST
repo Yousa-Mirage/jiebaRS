@@ -5,10 +5,12 @@ DeepWiki
 IDF
 Jaccard
 Jieba
+Northriven
 POS
 QCEL
 QPYD
 SCEL
+Stopwords
 TF
 TextRank
 cppjieba
