@@ -7,7 +7,7 @@
   coding components.
 - Bundled `stopwords_cn`, `stopwords_en`, and `stopwords_full` stopwords datasets are now available for
   explicit use; stopword filtering remains disabled by default.
-- Removed `get_tuple()`; use `count_ngrams()` for n-gram counting.\
+- Removed `get_tuple()`; use `count_ngrams()` for n-gram counting.
 - Exported functions now reject unnamed optional arguments; supply optional arguments by name.
 - Documentation for internal native bridge functions is no longer generated for users.
 
