@@ -7,12 +7,14 @@
 
 <!-- badges: start -->
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/jiebaRS)](https://CRAN.R-project.org/package=jiebaRS)
+[![R-universe
+version](https://Yousa-Mirage.r-universe.dev/jiebaRS/badges/version)](https://Yousa-Mirage.r-universe.dev/jiebaRS)
 [![GitHub
 Stars](https://img.shields.io/github/stars/Yousa-Mirage/jiebaRS?style=social)](https://github.com/Yousa-Mirage/jiebaRS)
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Docs dev
-Version](https://img.shields.io/badge/docs-dev-blue.svg)](https://yousa-mirage.github.io/jiebaRS/)
 [![Ask
 DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Yousa-Mirage/jiebaRS)
 <!-- badges: end -->
