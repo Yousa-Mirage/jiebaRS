@@ -1,12 +1,17 @@
 # Repository Guidelines
 
+`jiebaRS` is an R package for fast Chinese text segmentation, part-of-speech
+tagging, and keyword extraction (TF-IDF, TextRank), powered by a Rust backend
+(`jieba-rs`) bridged with extendr.
+
 ## Project Structure & Module Organization
 
 - `R/` contains the public R API and internal helpers. Roxygen comments generate
   files in `man/` and exports in `NAMESPACE`.
 - `src/` contains the R native entrypoint and build configuration. The Rust
   implementation is under `src/rust/src/`; its Cargo manifest and lockfile are
-  in `src/rust/`.
+  in `src/rust/`. Rust functions exposed to R carry `#[extendr]`; this
+  generates `R/extendr-wrappers.R`, which must never be edited by hand.
 - `tests/testthat/` contains edition-3 tests, snapshots, and optional real
   dictionary fixtures under `tests/testthat/fixtures/`.
 - `data-raw/` stores source stopword files and generation scripts. Compiled
@@ -28,10 +33,15 @@
 Run focused R tests with, for example,
 `Rscript -e "devtools::test(filter = 'cidian')"`.
 
+After changing Rust functions marked `#[extendr]` or any Roxygen comments, run
+`just document` so `R/extendr-wrappers.R`, `man/`, and both READMEs are
+regenerated; commit those generated outputs rather than hand-editing them.
+
 ## Coding Style & Naming Conventions
 
 Use two-space indentation in R, the base `|>` pipe, and `snake_case` names.
-Use standard Rust formatting with `cargo fmt`. Keep public R functions
+Use standard Rust formatting with `cargo fmt` and keep the Rust side
+compatible with rustc >= 1.85. Keep public R functions
 documented with Roxygen and keep internal generated wrappers out of the user
 reference where appropriate.
 
