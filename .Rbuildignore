@@ -44,3 +44,7 @@
 # temporary files
 ^test\.r$
 ^test\.R$
+
+# VCS
+^\.jj$
+^\.git$
