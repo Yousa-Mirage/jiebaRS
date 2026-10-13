@@ -1,7 +1,7 @@
 # jiebaRS 0.3.1
 
 - 更新至 jieba-rs 0.11
-- 优化了 README.md
+- 优化了 README
 
 # jiebaRS 0.3.0
 
