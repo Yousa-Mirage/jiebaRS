@@ -1,4 +1,4 @@
-# jiebaRS (development version)
+# jiebaRS 0.3.1
 
 - 更新至 jieba-rs 0.11
 - 优化了 README.md
