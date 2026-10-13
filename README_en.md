@@ -15,8 +15,6 @@ version](https://Yousa-Mirage.r-universe.dev/jiebaRS/badges/version)](https://Yo
 Stars](https://img.shields.io/github/stars/Yousa-Mirage/jiebaRS?style=social)](https://github.com/Yousa-Mirage/jiebaRS)
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Ask
-DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/Yousa-Mirage/jiebaRS)
 <!-- badges: end -->
 
 [简体中文](https://yousa-mirage.github.io/jiebaRS/index.html) \|
