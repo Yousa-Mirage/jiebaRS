@@ -5,7 +5,7 @@ default:
     @just --list
 
 format:
-    r-air format .
+    air format .
     cargo fmt --manifest-path src/rust/Cargo.toml
 
 check:
