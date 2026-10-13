@@ -371,8 +371,6 @@ jiebaRS builds on the work of open-source projects:
   for making Rust–R interoperability practical.
 - The broader **Rust** and **R** communities.
 
-Without these projects, jiebaRS would not exist.
-
 ## License
 
 MIT license

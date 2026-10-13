@@ -326,8 +326,6 @@ jiebaRS builds on the work of open-source projects:
   practical.
 - The broader **Rust** and **R** communities.
 
-Without these projects, jiebaRS would not exist.
-
 ## License
 
 MIT license

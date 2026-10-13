@@ -316,8 +316,6 @@ jiebaRS 构建于以下开源项目的基础之上：
 - **[extendr](https://github.com/extendr/extendr)**：extendr 团队让 Rust 与 R 的互操作变得切实可行。
 - 更广泛的 **Rust** 与 **R** 社区。
 
-没有这些项目，jiebaRS 就不会存在。
-
 ## 许可证
 
 MIT license
