@@ -1,5 +1,8 @@
 # jiebaRS (development version)
 
+- 更新至 jieba-rs 0.11
+- 优化了 README.md
+
 # jiebaRS 0.3.0
 
 - 通过选择匹配的 Rust 目标，修复了在原生 Windows ARM64 平台上的源代码安装问题。
